@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import {
   Heart, X, Lock, Check, Flame, Award, Trophy, Sparkles,
   Landmark, RotateCcw, ArrowRight, Star, PartyPopper, Zap,
-  Map, User, Dices, Medal, RefreshCw, Plus, Pencil,
+  Map, User, Dices, Medal, RefreshCw, Plus, Pencil, BookOpen,
 } from "lucide-react";
 import { supabase, cloudEnabled } from "./supabaseClient";
 
@@ -357,6 +357,72 @@ const AVATARS = ["🦅", "🛡️", "⚔️", "🔥", "🌿", "🦁", "🐺", "�
 const ALIAS_NOUNS = ["Aquila", "Lupus", "Leo", "Draco", "Falco", "Ursus", "Corvus", "Vulpes", "Taurus", "Phoenix", "Cato", "Nova"];
 
 /* ------------------------------------------------------------------ */
+/* VOKABELTRAINER: Wortschatz-Pool (spiegelt die Lektionsinhalte) */
+/* ------------------------------------------------------------------ */
+
+const VOCAB_POOL = [
+  { id: "v1", latin: "salve", german: "Hallo", lessonId: "u1-l1" },
+  { id: "v2", latin: "vale", german: "Leb wohl", lessonId: "u1-l1" },
+  { id: "v3", latin: "amicus", german: "Freund", lessonId: "u1-l1" },
+  { id: "v4", latin: "amica", german: "Freundin", lessonId: "u1-l1" },
+  { id: "v5", latin: "puer", german: "Junge", lessonId: "u1-l2" },
+  { id: "v6", latin: "puella", german: "Mädchen", lessonId: "u1-l2" },
+  { id: "v7", latin: "magister", german: "Lehrer", lessonId: "u1-l2" },
+  { id: "v8", latin: "magistra", german: "Lehrerin", lessonId: "u1-l2" },
+  { id: "v9", latin: "quis", german: "wer", lessonId: "u1-l2" },
+  { id: "v10", latin: "rosa", german: "Rose", lessonId: "u2-l1" },
+  { id: "v11", latin: "silva", german: "Wald", lessonId: "u2-l1" },
+  { id: "v12", latin: "aqua", german: "Wasser", lessonId: "u2-l1" },
+  { id: "v13", latin: "insula", german: "Insel", lessonId: "u2-l1" },
+  { id: "v14", latin: "via", german: "Weg", lessonId: "u2-l3" },
+  { id: "v15", latin: "filia", german: "Tochter", lessonId: "u2-l3" },
+  { id: "v16", latin: "familia", german: "Familie", lessonId: "u2-l3" },
+  { id: "v17", latin: "servus", german: "Sklave", lessonId: "u3-l1" },
+  { id: "v18", latin: "dominus", german: "Herr", lessonId: "u3-l1" },
+  { id: "v19", latin: "templum", german: "Tempel", lessonId: "u3-l1" },
+  { id: "v20", latin: "forum", german: "Markt", lessonId: "u3-l1" },
+  { id: "v21", latin: "amare", german: "lieben", lessonId: "u3-l2" },
+  { id: "v22", latin: "vocare", german: "rufen", lessonId: "u3-l2" },
+  { id: "v23", latin: "laborare", german: "arbeiten", lessonId: "u3-l2" },
+  { id: "v24", latin: "populus", german: "Volk", lessonId: "u3-l3" },
+  { id: "v25", latin: "deus", german: "Gott", lessonId: "u3-l3" },
+  { id: "v26", latin: "spectare", german: "betrachten", lessonId: "u3-l3" },
+  { id: "v27", latin: "liber", german: "Buch", lessonId: "u4-l1" },
+  { id: "v28", latin: "pater", german: "Vater", lessonId: "u4-l2" },
+  { id: "v29", latin: "dare", german: "geben", lessonId: "u4-l2" },
+  { id: "v30", latin: "narrare", german: "erzählen", lessonId: "u4-l3" },
+  { id: "v31", latin: "frater", german: "Bruder", lessonId: "u4-l3" },
+  { id: "v32", latin: "soror", german: "Schwester", lessonId: "u4-l3" },
+  { id: "v33", latin: "ancilla", german: "Sklavin", lessonId: "u4-l3" },
+  { id: "v34", latin: "fabula", german: "Geschichte", lessonId: "u4-l3" },
+  { id: "v35", latin: "Iuppiter", german: "oberster Gott", lessonId: "u5-l1" },
+  { id: "v36", latin: "Venus", german: "Göttin der Liebe", lessonId: "u5-l1" },
+  { id: "v37", latin: "Neptunus", german: "Gott des Meeres", lessonId: "u5-l1" },
+  { id: "v38", latin: "Mars", german: "Gott des Krieges", lessonId: "u5-l1" },
+  { id: "v39", latin: "Diana", german: "Göttin der Jagd", lessonId: "u5-l2" },
+  { id: "v40", latin: "servare", german: "beschützen", lessonId: "u5-l2" },
+  { id: "v41", latin: "bonus", german: "gut", lessonId: "u6-l1" },
+  { id: "v42", latin: "magnus", german: "groß", lessonId: "u6-l1" },
+  { id: "v43", latin: "multus", german: "viel", lessonId: "u6-l1" },
+  { id: "v44", latin: "parvus", german: "klein", lessonId: "u6-l1" },
+  { id: "v45", latin: "amavit", german: "hat geliebt", lessonId: "u7-l1" },
+  { id: "v46", latin: "vocavit", german: "hat gerufen", lessonId: "u7-l1" },
+  { id: "v47", latin: "laboravit", german: "hat gearbeitet", lessonId: "u7-l1" },
+  { id: "v48", latin: "narravit", german: "hat erzählt", lessonId: "u7-l1" },
+  { id: "v49", latin: "ego", german: "ich", lessonId: "u8-l1" },
+  { id: "v50", latin: "tu", german: "du", lessonId: "u8-l1" },
+  { id: "v51", latin: "nos", german: "wir", lessonId: "u8-l1" },
+  { id: "v52", latin: "vos", german: "ihr", lessonId: "u8-l1" },
+  { id: "v53", latin: "unus", german: "eins", lessonId: "u8-l2" },
+  { id: "v54", latin: "duo", german: "zwei", lessonId: "u8-l2" },
+  { id: "v55", latin: "tres", german: "drei", lessonId: "u8-l2" },
+  { id: "v56", latin: "quattuor", german: "vier", lessonId: "u8-l2" },
+  { id: "v57", latin: "quinque", german: "fünf", lessonId: "u8-l2" },
+];
+
+const BOX_INTERVAL_DAYS = [0, 1, 3, 7, 14, 30];
+
+/* ------------------------------------------------------------------ */
 /* HELPERS */
 /* ------------------------------------------------------------------ */
 
@@ -440,6 +506,51 @@ function saveActiveIdLS(id) {
   try {
     localStorage.setItem(LS_ACTIVE, id);
   } catch {}
+}
+
+function addDays(dateStr, days) {
+  const d = new Date(dateStr);
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
+function getAvailableVocab(completed) {
+  return VOCAB_POOL.filter((w) => completed.has(w.lessonId));
+}
+
+function getDueVocab(available, vocabProgress) {
+  const today = todayStr();
+  return available.filter((w) => {
+    const st = vocabProgress[w.id];
+    return !st || st.nextReview <= today;
+  });
+}
+
+function updateWordBox(state, isCorrect) {
+  const prev = state || { box: -1, seen: 0, correct: 0 };
+  if (isCorrect) {
+    const newBox = Math.min(prev.box + 1, 5);
+    return {
+      box: newBox,
+      nextReview: addDays(todayStr(), BOX_INTERVAL_DAYS[newBox]),
+      seen: prev.seen + 1,
+      correct: prev.correct + 1,
+    };
+  }
+  return { box: 0, nextReview: todayStr(), seen: prev.seen + 1, correct: prev.correct };
+}
+
+function buildVocabQuestion(word, pool) {
+  const direction = Math.random() < 0.5 ? "latin-de" : "de-latin";
+  const correctText = direction === "latin-de" ? word.german : word.latin;
+  const promptText = direction === "latin-de" ? word.latin : word.german;
+  const others = pool.filter((w) => w.id !== word.id);
+  const distractors = shuffle(others)
+    .slice(0, 3)
+    .map((w) => (direction === "latin-de" ? w.german : w.latin));
+  const options = shuffle([correctText, ...distractors]);
+  const correctIndex = options.indexOf(correctText);
+  return { wordId: word.id, direction, prompt: promptText, options, correctIndex, latin: word.latin, german: word.german };
 }
 
 function computeNewStreak(profile) {
@@ -595,6 +706,7 @@ function ComboToast({ text }) {
 function BottomNav({ screen, setScreen }) {
   const items = [
     { id: "path", label: "Pfad", icon: Map },
+    { id: "vocab-home", label: "Vokabeln", icon: BookOpen },
     { id: "leaderboard", label: "Rangliste", icon: Trophy },
     { id: "profile", label: "Profil", icon: User },
   ];
@@ -664,6 +776,16 @@ export default function App() {
   const [leaderboardLoading, setLeaderboardLoading] = useState(false);
   const animatedXp = useCountUp(sessionXp, 900);
 
+  const [vocabProgress, setVocabProgress] = useState({});
+  const [vocabRound, setVocabRound] = useState([]);
+  const [vocabIdx, setVocabIdx] = useState(0);
+  const [vocabSelected, setVocabSelected] = useState(null);
+  const [vocabChecked, setVocabChecked] = useState(false);
+  const [vocabIsCorrect, setVocabIsCorrect] = useState(null);
+  const [vocabCorrectCount, setVocabCorrectCount] = useState(0);
+  const [vocabXpEarned, setVocabXpEarned] = useState(0);
+  const [vocabMasteredCount, setVocabMasteredCount] = useState(0);
+
   const active = profiles.find((p) => p.id === activeId) || null;
   const rank = getRank(xp);
 
@@ -683,6 +805,7 @@ export default function App() {
       setStreak(found.streak);
       setCompleted(new Set(found.completedLessons));
       setUnlockedBadges(new Set(found.unlockedBadges));
+      setVocabProgress(found.vocabProgress || {});
       setScreen("path");
     } else {
       setScreen("onboarding");
@@ -883,6 +1006,7 @@ export default function App() {
       lastActiveDate: null,
       completedLessons: [],
       unlockedBadges: [],
+      vocabProgress: {},
     };
     const nextList = [...profiles, newProfile];
     setProfiles(nextList);
@@ -893,6 +1017,7 @@ export default function App() {
     setStreak(0);
     setCompleted(new Set());
     setUnlockedBadges(new Set());
+    setVocabProgress({});
     syncToCloud(newProfile);
     setAddingProfile(false);
     setScreen("path");
@@ -907,11 +1032,71 @@ export default function App() {
     setStreak(p.streak);
     setCompleted(new Set(p.completedLessons));
     setUnlockedBadges(new Set(p.unlockedBadges));
+    setVocabProgress(p.vocabProgress || {});
     setScreen("path");
   }
 
   function updateActiveAliasAvatar(alias, avatar) {
     persistProfile({ alias, avatar });
+  }
+
+  const availableVocab = getAvailableVocab(completed);
+  const dueVocab = getDueVocab(availableVocab, vocabProgress);
+  const masteredVocabCount = availableVocab.filter((w) => (vocabProgress[w.id]?.box ?? -1) >= 5).length;
+
+  function startVocabTraining() {
+    const pool = availableVocab.length >= 4 ? availableVocab : VOCAB_POOL;
+    const sorted = [...dueVocab].sort((a, b) => {
+      const boxA = vocabProgress[a.id]?.box ?? -1;
+      const boxB = vocabProgress[b.id]?.box ?? -1;
+      return boxA - boxB;
+    });
+    const round = sorted.slice(0, 10).map((w) => buildVocabQuestion(w, pool));
+    setVocabRound(round);
+    setVocabIdx(0);
+    setVocabSelected(null);
+    setVocabChecked(false);
+    setVocabIsCorrect(null);
+    setVocabCorrectCount(0);
+    setVocabXpEarned(0);
+    setVocabMasteredCount(0);
+    setScreen("vocab-quiz");
+  }
+
+  function handleVocabCheck() {
+    const q = vocabRound[vocabIdx];
+    const correct = vocabSelected === q.correctIndex;
+    setVocabIsCorrect(correct);
+    setVocabChecked(true);
+
+    const prevState = vocabProgress[q.wordId];
+    const prevBox = prevState?.box ?? -1;
+    const newState = updateWordBox(prevState, correct);
+    const nextProgress = { ...vocabProgress, [q.wordId]: newState };
+    setVocabProgress(nextProgress);
+
+    if (correct) {
+      setVocabCorrectCount((c) => c + 1);
+      setVocabXpEarned((x) => x + 5);
+      setFloatXp({ id: Date.now(), amount: 5 });
+      if (newState.box >= 5 && prevBox < 5) {
+        setVocabMasteredCount((m) => m + 1);
+      }
+    }
+  }
+
+  function handleVocabContinue() {
+    if (vocabIdx + 1 < vocabRound.length) {
+      setVocabIdx((i) => i + 1);
+      setVocabSelected(null);
+      setVocabChecked(false);
+      setVocabIsCorrect(null);
+    } else {
+      const totalXp = xp + vocabXpEarned;
+      setXp(totalXp);
+      persistProfile({ xp: totalXp, vocabProgress });
+      setScreen("vocab-summary");
+    }
   }
 
   if (screen === "loading") return null;
@@ -1052,6 +1237,202 @@ export default function App() {
           </div>
         </div>
         <BottomNav screen={screen} setScreen={setScreen} />
+      </div>
+    );
+  }
+
+  /* -------------------------------- VOCAB HOME -------------------------------- */
+
+  if (screen === "vocab-home") {
+    return (
+      <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9]">
+        <FontImport />
+        <BackgroundBlobs />
+        <div className="w-full max-w-md min-h-screen pb-28 px-5 pt-6">
+          <h1 className="font-display text-lg text-[#2B241D] mb-1">VOKABELTRAINER</h1>
+          <p className="text-[13px] text-[#8A7F68] mb-5">Karteikasten-System — Wörter, die du oft richtig hast, kommen seltener dran.</p>
+
+          <div className="bg-white border-2 border-[#F0DFC0] rounded-2xl p-5 mb-5 shadow-sm">
+            <div className="grid grid-cols-3 gap-3 mb-5">
+              <SummaryStat label="Fällig heute" value={dueVocab.length} color="#EC4899" />
+              <SummaryStat label="Gelernt" value={availableVocab.length} color="#8B5CF6" />
+              <SummaryStat label="Gemeistert" value={masteredVocabCount} color="#F59E0B" />
+            </div>
+
+            {availableVocab.length === 0 ? (
+              <div className="text-center text-[13px] text-[#8A7F68] py-2">
+                Schließe erst deine erste Lektion ab, um Wörter zu sammeln! 📚
+              </div>
+            ) : dueVocab.length === 0 ? (
+              <div className="text-center text-[13px] text-[#8A7F68] py-2">
+                Super, alles gelernt! Komm morgen wieder für neue Runden 🌙✨
+              </div>
+            ) : (
+              <button
+                onClick={startVocabTraining}
+                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white font-display text-sm tracking-wide shadow-md flex items-center justify-center gap-2"
+              >
+                <BookOpen size={16} /> TRAINING STARTEN ({Math.min(dueVocab.length, 10)})
+              </button>
+            )}
+          </div>
+
+          {availableVocab.length > 0 && (
+            <>
+              <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">MEINE WÖRTER</div>
+              <div className="grid grid-cols-2 gap-2.5">
+                {availableVocab.map((w) => {
+                  const box = vocabProgress[w.id]?.box ?? -1;
+                  const mastered = box >= 5;
+                  const dotColor = box < 0 ? "#DCCFA9" : box <= 1 ? "#F59E0B" : box <= 3 ? "#3B82F6" : "#FFB627";
+                  return (
+                    <div key={w.id} className="bg-white border-2 border-[#F0DFC0] rounded-xl px-3.5 py-3">
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="font-serif-latin text-[14px] text-[#2B241D] italic truncate">{w.latin}</div>
+                        {mastered && <Sparkles size={13} color="#F59E0B" />}
+                      </div>
+                      <div className="text-[11px] text-[#8A7F68] truncate mb-1.5">{w.german}</div>
+                      <div className="flex gap-1">
+                        {[0, 1, 2, 3, 4].map((i) => (
+                          <div
+                            key={i}
+                            className="h-1.5 flex-1 rounded-full"
+                            style={{ background: i <= box ? dotColor : "#F0DFC0" }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </div>
+        <BottomNav screen={screen} setScreen={setScreen} />
+      </div>
+    );
+  }
+
+  /* -------------------------------- VOCAB QUIZ -------------------------------- */
+
+  if (screen === "vocab-quiz" && vocabRound[vocabIdx]) {
+    const q = vocabRound[vocabIdx];
+    return (
+      <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9]">
+        <FontImport />
+        <FloatingXp item={floatXp} />
+        <div className="w-full max-w-md bg-[#FFF6E9] min-h-screen flex flex-col">
+          <div className="px-4 pt-4 pb-2 flex items-center gap-3">
+            <button onClick={() => setScreen("vocab-home")} className="text-[#8A7F68]">
+              <X size={22} />
+            </button>
+            <div className="flex-1 h-2.5 rounded-full bg-[#F0DFC0] overflow-hidden flex gap-0.5 p-0.5">
+              {vocabRound.map((_, i) => (
+                <div key={i} className={`flex-1 rounded-full transition-colors ${i < vocabIdx ? "bg-[#2EC4B6]" : i === vocabIdx ? "bg-[#EC4899]" : "bg-transparent"}`} />
+              ))}
+            </div>
+          </div>
+
+          <div className="flex-1 px-5 pt-8 pb-40">
+            <div className="text-[11px] tracking-widest text-[#C2185B] font-bold mb-2">
+              {q.direction === "latin-de" ? "LATEIN → DEUTSCH" : "DEUTSCH → LATEIN"}
+            </div>
+            <div className={`text-3xl text-[#2B241D] mb-8 ${q.direction === "latin-de" ? "font-serif-latin italic" : "font-display"}`}>
+              {q.prompt}
+            </div>
+            <div className="grid grid-cols-1 gap-3">
+              {q.options.map((opt, i) => {
+                const isSel = vocabSelected === i;
+                let style = "border-[#F0DFC0] bg-white text-[#2B241D]";
+                if (vocabChecked && i === q.correctIndex) style = "border-[#2EC4B6] bg-[#2EC4B6]/15 text-[#2B241D] animate-pop-in";
+                else if (vocabChecked && isSel && i !== q.correctIndex) style = "border-[#E8483A] bg-[#E8483A]/10 text-[#2B241D]";
+                else if (isSel) style = "border-[#EC4899] bg-[#EC4899]/10 text-[#2B241D]";
+                return (
+                  <button
+                    key={i}
+                    disabled={vocabChecked}
+                    onClick={() => setVocabSelected(i)}
+                    className={`text-left px-4 py-3.5 rounded-xl border-2 font-serif-latin text-[15px] transition-colors ${style}`}
+                  >
+                    {opt}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div
+            className={`fixed bottom-0 left-0 right-0 flex justify-center border-t-2 transition-colors ${
+              vocabChecked ? (vocabIsCorrect ? "bg-[#DFF5E9] border-[#2EC4B6]" : "bg-[#FBE2DC] border-[#E8483A]") : "bg-[#FFFBF2] border-[#F0DFC0]"
+            }`}
+          >
+            <div className="w-full max-w-md px-5 py-4">
+              {vocabChecked && (
+                <div className="flex items-center gap-2 mb-3">
+                  <div className={vocabIsCorrect ? "animate-pop-in" : ""}>
+                    {vocabIsCorrect ? <Check size={22} color="#0E7A5F" strokeWidth={3} /> : <X size={20} color="#B4291D" />}
+                  </div>
+                  <div className={`font-display text-sm ${vocabIsCorrect ? "text-[#0E7A5F]" : "text-[#B4291D]"}`}>
+                    {vocabIsCorrect ? "Richtig!" : `Richtig wäre: ${q.options[q.correctIndex]}`}
+                  </div>
+                </div>
+              )}
+              {!vocabChecked ? (
+                <button
+                  onClick={handleVocabCheck}
+                  disabled={vocabSelected === null}
+                  className={`w-full py-3.5 rounded-xl font-display text-sm tracking-wide transition-all ${
+                    vocabSelected !== null ? "bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white shadow-md" : "bg-[#E4D7BA] text-[#A79A7E] cursor-not-allowed"
+                  }`}
+                >
+                  PRÜFEN
+                </button>
+              ) : (
+                <button
+                  onClick={handleVocabContinue}
+                  className={`w-full py-3.5 rounded-xl font-display text-sm tracking-wide flex items-center justify-center gap-2 shadow-md ${
+                    vocabIsCorrect ? "bg-gradient-to-r from-[#2EC4B6] to-[#0E9E85] text-white" : "bg-gradient-to-r from-[#E8483A] to-[#B4291D] text-white"
+                  }`}
+                >
+                  WEITER <ArrowRight size={16} />
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* -------------------------------- VOCAB SUMMARY -------------------------------- */
+
+  if (screen === "vocab-summary") {
+    return (
+      <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9] relative overflow-hidden">
+        <FontImport />
+        {vocabMasteredCount > 0 && <Confetti pieceCount={50} gold />}
+        <div className="w-full max-w-md min-h-screen flex flex-col items-center px-8 pt-16 pb-10 relative z-10">
+          <div className="w-24 h-24 mb-4 rounded-full flex items-center justify-center animate-pop-in" style={{ background: "linear-gradient(135deg, #FF4FA3, #8B5CF6)" }}>
+            <BookOpen size={34} color="white" />
+          </div>
+          <h1 className="font-display text-2xl text-[#2B241D] mb-1">GUT TRAINIERT!</h1>
+          <p className="text-[#6B5F4E] text-[14px] mb-8">
+            {vocabCorrectCount} von {vocabRound.length} Wörtern richtig.
+          </p>
+
+          <div className="w-full grid grid-cols-3 gap-3 mb-8">
+            <SummaryStat label="XP" value={`+${vocabXpEarned}`} color="#F59E0B" />
+            <SummaryStat label="Richtig" value={vocabCorrectCount} color="#0E9E85" />
+            <SummaryStat label="Neu gemeistert" value={vocabMasteredCount} color="#EC4899" />
+          </div>
+
+          <button
+            onClick={() => setScreen("vocab-home")}
+            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white font-display text-sm tracking-wide mt-auto shadow-md"
+          >
+            WEITER
+          </button>
+        </div>
       </div>
     );
   }
