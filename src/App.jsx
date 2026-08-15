@@ -610,11 +610,11 @@ function BottomNav({ screen, setScreen }) {
                 className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
                   active ? "shadow-md" : ""
                 }`}
-                style={active ? { background: "linear-gradient(135deg, #F0533D, #E8483A)" } : {}}
+                style={active ? { background: "linear-gradient(135deg, #FF4FA3, #8B5CF6)" } : {}}
               >
                 <Icon size={19} color={active ? "#FFFBF2" : "#A79A7E"} />
               </div>
-              <span className={`text-[10px] font-semibold ${active ? "text-[#E8483A]" : "text-[#A79A7E]"}`}>{it.label}</span>
+              <span className={`text-[10px] font-semibold ${active ? "text-[#C2185B]" : "text-[#A79A7E]"}`}>{it.label}</span>
             </button>
           );
         })}
@@ -662,6 +662,7 @@ export default function App() {
 
   const [leaderboardRows, setLeaderboardRows] = useState([]);
   const [leaderboardLoading, setLeaderboardLoading] = useState(false);
+  const animatedXp = useCountUp(sessionXp, 900);
 
   const active = profiles.find((p) => p.id === activeId) || null;
   const rank = getRank(xp);
@@ -939,14 +940,14 @@ export default function App() {
               <div className="flex items-center gap-2">
                 <div
                   className="w-10 h-10 rounded-full flex items-center justify-center shadow-sm"
-                  style={{ background: "linear-gradient(135deg, #E8483A, #FFB627)" }}
+                  style={{ background: "linear-gradient(135deg, #FF4FA3, #8B5CF6)" }}
                 >
                   <Landmark size={19} color="#FFFBF2" />
                 </div>
                 <div>
                   <div
                     className="font-display text-[16px] tracking-wide leading-none bg-clip-text text-transparent"
-                    style={{ backgroundImage: "linear-gradient(90deg, #E8483A, #C2410C)" }}
+                    style={{ backgroundImage: "linear-gradient(90deg, #FF4FA3, #8B5CF6)" }}
                   >
                     LINGUA LATINA
                   </div>
@@ -967,7 +968,7 @@ export default function App() {
             </div>
             <div className="mt-2.5">
               <div className="flex items-baseline justify-between mb-1">
-                <span className="text-[11px] font-bold text-[#C2410C] tracking-wide">
+                <span className="text-[11px] font-bold text-[#C2185B] tracking-wide">
                   {rank.current.title.toUpperCase()} · {rank.current.sub}
                 </span>
                 <span className="text-[11px] text-[#8A7F68] font-mono">
@@ -978,7 +979,7 @@ export default function App() {
                 <div
                   className="h-full rounded-full transition-all"
                   style={{
-                    background: "linear-gradient(90deg, #FFB627, #E8483A)",
+                    background: "linear-gradient(90deg, #FFB627, #FF4FA3)",
                     width: rank.next
                       ? `${Math.min(100, ((xp - rank.current.min) / (rank.next.min - rank.current.min)) * 100)}%`
                       : "100%",
@@ -1026,8 +1027,8 @@ export default function App() {
                             onClick={() => unlocked && startLesson(lesson.id)}
                             disabled={!unlocked}
                             className={`relative w-16 h-16 rounded-full flex items-center justify-center shadow-md transition-transform active:scale-95 ${
-                              !unlocked ? "bg-[#DCCFA9] cursor-not-allowed" : isDone ? "bg-gradient-to-br from-[#FFD166] to-[#FFB627]" : "bg-gradient-to-br from-[#F0533D] to-[#E8483A]"
-                            } ${isNext ? "ring-4 ring-[#E8483A]/25 animate-bounce-slow" : ""} ${justPopped ? "animate-pop-in" : ""}`}
+                              !unlocked ? "bg-[#DCCFA9] cursor-not-allowed" : isDone ? "bg-gradient-to-br from-[#FFD166] to-[#FFB627]" : "bg-gradient-to-br from-[#FF4FA3] to-[#8B5CF6]"
+                            } ${isNext ? "ring-4 ring-[#FF4FA3]/30 animate-bounce-slow" : ""} ${justPopped ? "animate-pop-in" : ""}`}
                           >
                             {isDone && <Laurel size={80} />}
                             {!unlocked ? (
@@ -1080,7 +1081,7 @@ export default function App() {
           </div>
 
           <div className="flex-1 px-5 pt-6 pb-40">
-            <div className="text-[11px] tracking-widest text-[#C2410C] font-bold mb-2">{currentLesson.title.toUpperCase()}</div>
+            <div className="text-[11px] tracking-widest text-[#C2185B] font-bold mb-2">{currentLesson.title.toUpperCase()}</div>
 
             {ex.type === "mc" && (
               <div>
@@ -1091,7 +1092,7 @@ export default function App() {
                     let style = "border-[#F0DFC0] bg-white text-[#2B241D]";
                     if (checked && i === ex.correct) style = "border-[#2EC4B6] bg-[#2EC4B6]/15 text-[#2B241D] animate-pop-in";
                     else if (checked && isSel && i !== ex.correct) style = "border-[#E8483A] bg-[#E8483A]/10 text-[#2B241D]";
-                    else if (isSel) style = "border-[#E8483A] bg-[#E8483A]/10 text-[#2B241D]";
+                    else if (isSel) style = "border-[#EC4899] bg-[#EC4899]/10 text-[#2B241D]";
                     return (
                       <button
                         key={i}
@@ -1116,7 +1117,7 @@ export default function App() {
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   placeholder="Deine Antwort auf Deutsch"
-                  className="w-full px-4 py-3.5 rounded-xl border-2 border-[#F0DFC0] bg-white text-[#2B241D] text-[15px] focus:outline-none focus:border-[#E8483A]"
+                  className="w-full px-4 py-3.5 rounded-xl border-2 border-[#F0DFC0] bg-white text-[#2B241D] text-[15px] focus:outline-none focus:border-[#EC4899]"
                 />
               </div>
             )}
@@ -1129,7 +1130,7 @@ export default function App() {
                     <button
                       key={w + i}
                       onClick={() => toggleOrderWord(w, "answer")}
-                      className="px-3.5 py-2 rounded-lg bg-[#E8483A] text-white font-serif-latin text-[15px] animate-pop-in shadow-sm"
+                      className="px-3.5 py-2 rounded-lg bg-gradient-to-br from-[#FF4FA3] to-[#8B5CF6] text-white font-serif-latin text-[15px] animate-pop-in shadow-sm"
                     >
                       {w}
                     </button>
@@ -1183,7 +1184,7 @@ export default function App() {
                   onClick={handleCheck}
                   disabled={!canCheck()}
                   className={`w-full py-3.5 rounded-xl font-display text-sm tracking-wide transition-all ${
-                    canCheck() ? "bg-gradient-to-r from-[#F0533D] to-[#E8483A] text-white shadow-md" : "bg-[#E4D7BA] text-[#A79A7E] cursor-not-allowed"
+                    canCheck() ? "bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white shadow-md" : "bg-[#E4D7BA] text-[#A79A7E] cursor-not-allowed"
                   }`}
                 >
                   PRÜFEN
@@ -1219,7 +1220,7 @@ export default function App() {
           </p>
           <button
             onClick={retryLesson}
-            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#F0533D] to-[#E8483A] text-white font-display text-sm tracking-wide flex items-center justify-center gap-2 mb-3 shadow-md"
+            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white font-display text-sm tracking-wide flex items-center justify-center gap-2 mb-3 shadow-md"
           >
             <RotateCcw size={16} /> NOCHMAL VERSUCHEN
           </button>
@@ -1236,7 +1237,6 @@ export default function App() {
   if (screen === "summary") {
     const accuracy = Math.round((exercises.length / (exercises.length + mistakes)) * 100);
     const perfect = mistakes === 0;
-    const animatedXp = useCountUp(sessionXp, 900);
     const streakMilestone = newStreakValue > 0 && newStreakValue % 5 === 0;
 
     return (
@@ -1250,7 +1250,7 @@ export default function App() {
           </div>
           <h1
             className="font-display text-3xl mb-1 bg-clip-text text-transparent"
-            style={{ backgroundImage: perfect ? "linear-gradient(90deg, #E8483A, #F59E0B, #2EC4B6, #7C3AED)" : "linear-gradient(90deg, #E8483A, #F59E0B)" }}
+            style={{ backgroundImage: perfect ? "linear-gradient(90deg, #FF4FA3, #F59E0B, #2EC4B6, #8B5CF6)" : "linear-gradient(90deg, #FF4FA3, #F59E0B)" }}
           >
             {perfect ? "OPTIME!" : "BENE FACTUM!"}
           </h1>
@@ -1259,7 +1259,7 @@ export default function App() {
           <div className="w-full grid grid-cols-3 gap-3 mb-6">
             <SummaryStat label="XP" value={`+${animatedXp}`} color="#F59E0B" />
             <SummaryStat label="Genauigkeit" value={`${accuracy}%`} color="#0E9E85" />
-            <SummaryStat label="Serie" value={streak} color="#E8483A" />
+            <SummaryStat label="Serie" value={streak} color="#FF7A1A" />
           </div>
 
           {streakMilestone && (
@@ -1299,7 +1299,7 @@ export default function App() {
 
           <button
             onClick={() => setScreen("path")}
-            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#F0533D] to-[#E8483A] text-white font-display text-sm tracking-wide mt-auto shadow-md"
+            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white font-display text-sm tracking-wide mt-auto shadow-md"
           >
             WEITER
           </button>
@@ -1359,7 +1359,7 @@ export default function App() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="font-display text-[13px] text-[#2B241D] truncate">
-                          {row.alias} {isMe && <span className="text-[10px] text-[#C2410C]">(Du)</span>}
+                          {row.alias} {isMe && <span className="text-[10px] text-[#C2185B]">(Du)</span>}
                         </div>
                         <div className="text-[11px] text-[#8A7F68] flex items-center gap-1">
                           <Flame size={11} color="#FF7A1A" fill="#FF7A1A" /> {row.streak}
@@ -1421,7 +1421,7 @@ function OnboardingScreen({ onCreate, onCancel }) {
       <BackgroundBlobs />
       <div className="w-full max-w-md min-h-screen px-6 pt-14 pb-10 flex flex-col">
         <div className="relative w-20 h-20 mx-auto mb-4 flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full" style={{ background: "linear-gradient(135deg, #E8483A, #FFB627)" }} />
+          <div className="absolute inset-0 rounded-full" style={{ background: "linear-gradient(135deg, #FF4FA3, #8B5CF6)" }} />
           <Landmark size={30} color="white" className="relative" />
         </div>
         <h1 className="font-display text-2xl text-center text-[#2B241D] mb-1">
@@ -1436,7 +1436,7 @@ function OnboardingScreen({ onCreate, onCancel }) {
           value={classCodeInput}
           onChange={(e) => setClassCodeInput(e.target.value)}
           placeholder="z. B. 7A-Latein"
-          className="w-full px-4 py-3.5 rounded-xl border-2 border-[#F0DFC0] bg-white text-[#2B241D] text-[15px] mb-1 focus:outline-none focus:border-[#E8483A]"
+          className="w-full px-4 py-3.5 rounded-xl border-2 border-[#F0DFC0] bg-white text-[#2B241D] text-[15px] mb-1 focus:outline-none focus:border-[#EC4899]"
         />
         <p className="text-[11px] text-[#A79A7E] mb-5">Von deiner Lehrkraft — alle mit demselben Code sehen sich in der Rangliste.</p>
 
@@ -1446,7 +1446,7 @@ function OnboardingScreen({ onCreate, onCancel }) {
             value={alias}
             onChange={(e) => setAlias(e.target.value)}
             placeholder="Spitzname"
-            className="flex-1 px-4 py-3.5 rounded-xl border-2 border-[#F0DFC0] bg-white text-[#2B241D] text-[15px] focus:outline-none focus:border-[#E8483A]"
+            className="flex-1 px-4 py-3.5 rounded-xl border-2 border-[#F0DFC0] bg-white text-[#2B241D] text-[15px] focus:outline-none focus:border-[#EC4899]"
           />
           <button
             onClick={() => setAlias(generateAlias())}
@@ -1465,7 +1465,7 @@ function OnboardingScreen({ onCreate, onCancel }) {
               key={a}
               onClick={() => setAvatar(a)}
               className={`aspect-square rounded-xl border-2 flex items-center justify-center text-xl ${
-                avatar === a ? "border-[#E8483A] bg-[#E8483A]/10 scale-105" : "border-[#F0DFC0] bg-white"
+                avatar === a ? "border-[#EC4899] bg-[#EC4899]/10 scale-105" : "border-[#F0DFC0] bg-white"
               }`}
             >
               {a}
@@ -1477,7 +1477,7 @@ function OnboardingScreen({ onCreate, onCancel }) {
           onClick={() => canSubmit && onCreate({ classCodeInput, alias, avatar })}
           disabled={!canSubmit}
           className={`w-full py-3.5 rounded-xl font-display text-sm tracking-wide mt-auto shadow-md ${
-            canSubmit ? "bg-gradient-to-r from-[#F0533D] to-[#E8483A] text-white" : "bg-[#E4D7BA] text-[#A79A7E] cursor-not-allowed"
+            canSubmit ? "bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white" : "bg-[#E4D7BA] text-[#A79A7E] cursor-not-allowed"
           }`}
         >
           LOS GEHT'S!
@@ -1522,7 +1522,7 @@ function ProfileScreen({ active, profiles, xp, streak, unlockedBadges, rank, onS
             <div className="min-w-0">
               <div className="font-display text-lg text-[#2B241D] truncate">{alias}</div>
               <div className="text-[12px] text-[#8A7F68]">Klasse „{active.classCodeDisplay}“</div>
-              <div className="text-[11px] font-bold text-[#C2410C] mt-0.5">
+              <div className="text-[11px] font-bold text-[#C2185B] mt-0.5">
                 {rank.current.title.toUpperCase()} · {rank.current.sub}
               </div>
             </div>
@@ -1544,7 +1544,7 @@ function ProfileScreen({ active, profiles, xp, streak, unlockedBadges, rank, onS
                     key={a}
                     onClick={() => setAvatar(a)}
                     className={`aspect-square rounded-lg border-2 flex items-center justify-center text-lg ${
-                      avatar === a ? "border-[#E8483A] bg-[#E8483A]/10" : "border-[#F0DFC0] bg-white"
+                      avatar === a ? "border-[#EC4899] bg-[#EC4899]/10" : "border-[#F0DFC0] bg-white"
                     }`}
                   >
                     {a}
@@ -1556,7 +1556,7 @@ function ProfileScreen({ active, profiles, xp, streak, unlockedBadges, rank, onS
                   if (changed) onSave(alias, avatar);
                   setEditing(false);
                 }}
-                className="w-full py-2.5 rounded-lg bg-gradient-to-r from-[#F0533D] to-[#E8483A] text-white font-display text-xs tracking-wide"
+                className="w-full py-2.5 rounded-lg bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white font-display text-xs tracking-wide"
               >
                 SPEICHERN
               </button>
@@ -1565,7 +1565,7 @@ function ProfileScreen({ active, profiles, xp, streak, unlockedBadges, rank, onS
 
           <div className="grid grid-cols-3 gap-2.5">
             <SummaryStat label="XP" value={xp} color="#F59E0B" />
-            <SummaryStat label="Serie" value={streak} color="#E8483A" />
+            <SummaryStat label="Serie" value={streak} color="#FF7A1A" />
             <SummaryStat label="Abzeichen" value={unlockedBadges.size} color="#0E9E85" />
           </div>
         </div>
@@ -1614,7 +1614,7 @@ function ProfileScreen({ active, profiles, xp, streak, unlockedBadges, rank, onS
 
         <button
           onClick={onAddProfile}
-          className="w-full py-3.5 rounded-xl border-2 border-dashed border-[#E8483A]/40 text-[#C2410C] font-display text-xs tracking-wide flex items-center justify-center gap-2"
+          className="w-full py-3.5 rounded-xl border-2 border-dashed border-[#EC4899]/40 text-[#C2185B] font-display text-xs tracking-wide flex items-center justify-center gap-2"
         >
           <Plus size={16} /> NEUES PROFIL ANLEGEN
         </button>
