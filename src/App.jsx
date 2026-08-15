@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Heart, X, Lock, Check, Flame, Award, Trophy, Sparkles,
-  Landmark, RotateCcw, ArrowRight, Star, Crown, PartyPopper, Zap,
+  Landmark, RotateCcw, ArrowRight, Star, PartyPopper, Zap,
+  Map, User, Dices, Medal, RefreshCw, Plus, Pencil,
 } from "lucide-react";
+import { supabase, cloudEnabled } from "./supabaseClient";
 
 /* ------------------------------------------------------------------ */
-/* DATA */
+/* DATA: LEKTIONEN */
 /* ------------------------------------------------------------------ */
 
 const UNITS = [
@@ -195,6 +197,117 @@ const UNITS = [
       },
     ],
   },
+  {
+    id: "u6",
+    latin: "ADIECTIVA",
+    german: "Adjektive & KNG-Kongruenz",
+    lessons: [
+      {
+        id: "u6-l1",
+        title: "Wortschatz Adjektive",
+        exercises: [
+          { type: "mc", q: "„Bonus“ bedeutet …", options: ["gut", "groß", "viel", "klein"], correct: 0 },
+          { type: "mc", q: "„Magnus“ bedeutet …", options: ["klein", "groß", "schön", "gut"], correct: 1 },
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "multus", accept: ["viel", "viele"] },
+          { type: "mc", q: "„Parvus“ bedeutet …", options: ["klein", "groß", "viel", "gut"], correct: 0 },
+        ],
+      },
+      {
+        id: "u6-l2",
+        title: "KNG-Kongruenz",
+        exercises: [
+          { type: "mc", q: "Wähle die richtige Form: „Puella ___ rosam amat.“ (Das gute Mädchen liebt die Rose.)", options: ["bonus", "bona", "bonum", "bonae"], correct: 1 },
+          { type: "mc", q: "Wähle die richtige Form: „___ servus laborat.“ (Der gute Sklave arbeitet.)", options: ["Bona", "Bonum", "Bonus", "Bonae"], correct: 2 },
+          { type: "mc", q: "Wähle die richtige Form: „Dominus ___ templum videt.“ (Der Herr sieht den großen Tempel.)", options: ["magna", "magnum", "magnus", "magnae"], correct: 1 },
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Das gute Mädchen liebt die Rose.“", words: ["Puella", "bona", "rosam", "amat"], correct: ["Puella", "bona", "rosam", "amat"] },
+        ],
+      },
+      {
+        id: "u6-l3",
+        title: "Sätze mit Adjektiven",
+        exercises: [
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Der Herr sieht den großen Tempel.“", words: ["Dominus", "magnum", "templum", "videt"], correct: ["Dominus", "magnum", "templum", "videt"] },
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Das Volk liebt den guten Gott.“", words: ["Populus", "bonum", "deum", "amat"], correct: ["Populus", "bonum", "deum", "amat"] },
+          { type: "mc", q: "„Puer parvus est.“ bedeutet …", options: ["Der Junge ist klein.", "Der Junge ist groß.", "Das Mädchen ist klein.", "Der Junge ist gut."], correct: 0 },
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "magna", accept: ["groß", "grosse", "große"] },
+        ],
+      },
+    ],
+  },
+  {
+    id: "u7",
+    latin: "TEMPUS PRAETERITUM",
+    german: "Perfekt",
+    lessons: [
+      {
+        id: "u7-l1",
+        title: "Perfekt erkennen",
+        exercises: [
+          { type: "mc", q: "„Amavit“ bedeutet …", options: ["er/sie liebt", "er/sie hat geliebt", "er/sie liebte gerade", "sie lieben"], correct: 1 },
+          { type: "mc", q: "„Vocavit“ bedeutet …", options: ["er/sie ruft", "er/sie hat gerufen", "sie rufen", "er/sie wird rufen"], correct: 1 },
+          { type: "mc", q: "„Laboravit“ bedeutet …", options: ["er/sie arbeitet", "er/sie hat gearbeitet", "sie arbeiten", "er/sie wird arbeiten"], correct: 1 },
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "narravit", accept: ["er hat erzählt", "sie hat erzählt", "hat erzählt"] },
+        ],
+      },
+      {
+        id: "u7-l2",
+        title: "Perfekt bilden",
+        exercises: [
+          { type: "mc", q: "Wähle die richtige Form: „Heri dominus servum ___.“ (Gestern rief der Herr den Sklaven.)", options: ["vocat", "vocavit", "vocant", "vocamus"], correct: 1 },
+          { type: "mc", q: "Wähle die richtige Form: „Puella rosam ___.“ (Das Mädchen hat die Rose geliebt.)", options: ["amat", "amavit", "amant", "amamus"], correct: 1 },
+          { type: "mc", q: "Wähle die richtige Form: „Servus fabulam ___.“ (Der Sklave hat eine Geschichte erzählt.)", options: ["narrat", "narravit", "narrant", "narramus"], correct: 1 },
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Das Mädchen hat die Rose geliebt.“", words: ["Puella", "rosam", "amavit"], correct: ["Puella", "rosam", "amavit"] },
+        ],
+      },
+      {
+        id: "u7-l3",
+        title: "Sätze im Perfekt",
+        exercises: [
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Der Sklave hat den Herrn gerufen.“", words: ["Servus", "dominum", "vocavit"], correct: ["Servus", "dominum", "vocavit"] },
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Iuppiter hat die Götter gerufen.“", words: ["Iuppiter", "deos", "vocavit"], correct: ["Iuppiter", "deos", "vocavit"] },
+          { type: "mc", q: "„Familia viam vidit.“ bedeutet …", options: ["Die Familie sieht den Weg.", "Die Familie hat den Weg gesehen.", "Die Familie wird den Weg sehen.", "Der Weg sieht die Familie."], correct: 1 },
+          { type: "mc", q: "„Puer in foro laboravit.“ bedeutet …", options: ["Der Junge arbeitet auf dem Forum.", "Der Junge hat auf dem Forum gearbeitet.", "Der Junge wird auf dem Forum arbeiten.", "Der Junge liebt das Forum."], correct: 1 },
+        ],
+      },
+    ],
+  },
+  {
+    id: "u8",
+    latin: "NUMERI ET PRONOMINA",
+    german: "Zahlen & Pronomen",
+    lessons: [
+      {
+        id: "u8-l1",
+        title: "Personalpronomen",
+        exercises: [
+          { type: "mc", q: "„Ego“ bedeutet …", options: ["ich", "du", "wir", "ihr"], correct: 0 },
+          { type: "mc", q: "„Tu“ bedeutet …", options: ["ich", "du", "wir", "ihr"], correct: 1 },
+          { type: "mc", q: "„Nos“ bedeutet …", options: ["ich", "du", "wir", "ihr"], correct: 2 },
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "vos", accept: ["ihr"] },
+        ],
+      },
+      {
+        id: "u8-l2",
+        title: "Zahlen 1–5",
+        exercises: [
+          { type: "mc", q: "„Unus“ bedeutet …", options: ["eins", "zwei", "drei", "vier"], correct: 0 },
+          { type: "mc", q: "„Tres“ bedeutet …", options: ["zwei", "drei", "vier", "fünf"], correct: 1 },
+          { type: "mc", q: "„Quattuor“ bedeutet …", options: ["drei", "vier", "fünf", "eins"], correct: 1 },
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "quinque", accept: ["fünf", "funf"] },
+        ],
+      },
+      {
+        id: "u8-l3",
+        title: "Abschluss",
+        exercises: [
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Ich liebe die Rose.“", words: ["Ego", "rosam", "amo"], correct: ["Ego", "rosam", "amo"] },
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Wir sehen den Tempel.“", words: ["Nos", "templum", "videmus"], correct: ["Nos", "templum", "videmus"] },
+          { type: "mc", q: "„Tu amicus es.“ bedeutet …", options: ["Ich bin ein Freund.", "Du bist ein Freund.", "Wir sind Freunde.", "Ihr seid Freunde."], correct: 1 },
+          { type: "mc", q: "„Duo servi laborant.“ bedeutet …", options: ["Ein Sklave arbeitet.", "Zwei Sklaven arbeiten.", "Drei Sklaven arbeiten.", "Der Sklave hat gearbeitet."], correct: 1 },
+        ],
+      },
+    ],
+  },
 ];
 
 const FLAT_LESSONS = UNITS.flatMap((u) => u.lessons.map((l) => ({ ...l, unitId: u.id })));
@@ -240,6 +353,9 @@ const UNIT_GRADIENTS = [
 const CONFETTI_COLORS = ["#E8483A", "#FFB627", "#2EC4B6", "#7C3AED", "#EC4899", "#3B82F6"];
 const GOLD_COLORS = ["#FFB627", "#FFD166", "#F59E0B", "#FFE08C"];
 
+const AVATARS = ["🦅", "🛡️", "⚔️", "🔥", "🌿", "🦁", "🐺", "🏛️", "⚡", "🐍", "🌊", "☀️"];
+const ALIAS_NOUNS = ["Aquila", "Lupus", "Leo", "Draco", "Falco", "Ursus", "Corvus", "Vulpes", "Taurus", "Phoenix", "Cato", "Nova"];
+
 /* ------------------------------------------------------------------ */
 /* HELPERS */
 /* ------------------------------------------------------------------ */
@@ -274,6 +390,101 @@ function useCountUp(target, duration = 900) {
   return val;
 }
 
+function uuid() {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
+function todayStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+function yesterdayStr() {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return d.toISOString().slice(0, 10);
+}
+
+function generateAlias() {
+  const noun = ALIAS_NOUNS[Math.floor(Math.random() * ALIAS_NOUNS.length)];
+  const num = Math.floor(Math.random() * 90) + 10;
+  return `${noun}${num}`;
+}
+
+const LS_PROFILES = "ll_profiles_v1";
+const LS_ACTIVE = "ll_active_id_v1";
+
+function loadProfiles() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(LS_PROFILES));
+    return Array.isArray(raw) ? raw : [];
+  } catch {
+    return [];
+  }
+}
+function saveProfilesLS(list) {
+  try {
+    localStorage.setItem(LS_PROFILES, JSON.stringify(list));
+  } catch {}
+}
+function loadActiveIdLS() {
+  try {
+    return localStorage.getItem(LS_ACTIVE);
+  } catch {
+    return null;
+  }
+}
+function saveActiveIdLS(id) {
+  try {
+    localStorage.setItem(LS_ACTIVE, id);
+  } catch {}
+}
+
+function computeNewStreak(profile) {
+  const today = todayStr();
+  if (profile.lastActiveDate === today) return profile.streak;
+  if (profile.lastActiveDate === yesterdayStr()) return profile.streak + 1;
+  return 1;
+}
+
+async function syncToCloud(profile) {
+  if (!supabase) return;
+  try {
+    await supabase.from("players").upsert({
+      id: profile.id,
+      device_secret: profile.deviceSecret,
+      class_code: profile.classCode,
+      alias: profile.alias,
+      avatar: profile.avatar,
+      xp: profile.xp,
+      streak: profile.streak,
+      completed_count: profile.completedLessons.length,
+      updated_at: new Date().toISOString(),
+    });
+  } catch (e) {
+    console.warn("Cloud-Sync fehlgeschlagen", e);
+  }
+}
+
+async function fetchLeaderboard(classCode) {
+  if (!supabase) return [];
+  try {
+    const { data, error } = await supabase
+      .from("players")
+      .select("*")
+      .eq("class_code", classCode)
+      .order("xp", { ascending: false })
+      .limit(50);
+    if (error) throw error;
+    return data || [];
+  } catch (e) {
+    console.warn("Rangliste laden fehlgeschlagen", e);
+    return [];
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /* SMALL VISUAL COMPONENTS */
 /* ------------------------------------------------------------------ */
@@ -304,11 +515,20 @@ function StoneRoad() {
     <div
       className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 w-2 rounded-full"
       style={{
-        background:
-          "repeating-linear-gradient(180deg, #FFB627 0px, #FFB627 10px, transparent 10px, transparent 20px)",
+        background: "repeating-linear-gradient(180deg, #FFB627 0px, #FFB627 10px, transparent 10px, transparent 20px)",
         opacity: 0.5,
       }}
     />
+  );
+}
+
+function BackgroundBlobs() {
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+      <div className="absolute -top-24 -left-16 w-64 h-64 rounded-full opacity-20 blur-3xl" style={{ background: "#7C3AED" }} />
+      <div className="absolute top-40 -right-20 w-72 h-72 rounded-full opacity-20 blur-3xl" style={{ background: "#FFB627" }} />
+      <div className="absolute bottom-10 -left-10 w-56 h-56 rounded-full opacity-20 blur-3xl" style={{ background: "#2EC4B6" }} />
+    </div>
   );
 }
 
@@ -372,14 +592,49 @@ function ComboToast({ text }) {
   );
 }
 
+function BottomNav({ screen, setScreen }) {
+  const items = [
+    { id: "path", label: "Pfad", icon: Map },
+    { id: "leaderboard", label: "Rangliste", icon: Trophy },
+    { id: "profile", label: "Profil", icon: User },
+  ];
+  return (
+    <div className="fixed bottom-0 left-0 right-0 flex justify-center z-30">
+      <div className="w-full max-w-md bg-white/95 backdrop-blur border-t border-[#F0DFC0] px-6 py-2.5 flex items-center justify-around shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
+        {items.map((it) => {
+          const Icon = it.icon;
+          const active = screen === it.id;
+          return (
+            <button key={it.id} onClick={() => setScreen(it.id)} className="flex flex-col items-center gap-1 px-3 py-1">
+              <div
+                className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                  active ? "shadow-md" : ""
+                }`}
+                style={active ? { background: "linear-gradient(135deg, #F0533D, #E8483A)" } : {}}
+              >
+                <Icon size={19} color={active ? "#FFFBF2" : "#A79A7E"} />
+              </div>
+              <span className={`text-[10px] font-semibold ${active ? "text-[#E8483A]" : "text-[#A79A7E]"}`}>{it.label}</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 /* ------------------------------------------------------------------ */
 /* MAIN APP */
 /* ------------------------------------------------------------------ */
 
 export default function App() {
-  const [screen, setScreen] = useState("path");
-  const [xp, setXp] = useState(30);
-  const [streak, setStreak] = useState(3);
+  const [screen, setScreen] = useState("loading");
+  const [profiles, setProfiles] = useState([]);
+  const [activeId, setActiveId] = useState(null);
+  const [addingProfile, setAddingProfile] = useState(false);
+
+  const [xp, setXp] = useState(0);
+  const [streak, setStreak] = useState(0);
   const [hearts, setHearts] = useState(5);
   const [completed, setCompleted] = useState(new Set());
   const [unlockedBadges, setUnlockedBadges] = useState(new Set());
@@ -405,14 +660,33 @@ export default function App() {
   const [newBadges, setNewBadges] = useState([]);
   const [newStreakValue, setNewStreakValue] = useState(0);
 
+  const [leaderboardRows, setLeaderboardRows] = useState([]);
+  const [leaderboardLoading, setLeaderboardLoading] = useState(false);
+
+  const active = profiles.find((p) => p.id === activeId) || null;
   const rank = getRank(xp);
 
-  const currentLesson = useMemo(
-    () => FLAT_LESSONS.find((l) => l.id === currentLessonId) || null,
-    [currentLessonId]
-  );
+  const currentLesson = useMemo(() => FLAT_LESSONS.find((l) => l.id === currentLessonId) || null, [currentLessonId]);
   const exercises = currentLesson ? currentLesson.exercises : [];
   const ex = exercises[idx];
+
+  // Initial load
+  useEffect(() => {
+    const list = loadProfiles();
+    const aid = loadActiveIdLS();
+    setProfiles(list);
+    const found = list.find((p) => p.id === aid) || list[0] || null;
+    if (found) {
+      setActiveId(found.id);
+      setXp(found.xp);
+      setStreak(found.streak);
+      setCompleted(new Set(found.completedLessons));
+      setUnlockedBadges(new Set(found.unlockedBadges));
+      setScreen("path");
+    } else {
+      setScreen("onboarding");
+    }
+  }, []);
 
   useEffect(() => {
     if (!ex) return;
@@ -437,6 +711,29 @@ export default function App() {
     const t = setTimeout(() => setComboToast(null), 1300);
     return () => clearTimeout(t);
   }, [comboToast]);
+
+  useEffect(() => {
+    if (screen === "leaderboard" && active) {
+      loadLeaderboard();
+    }
+  }, [screen, active?.classCode]);
+
+  async function loadLeaderboard() {
+    if (!active) return;
+    setLeaderboardLoading(true);
+    const rows = await fetchLeaderboard(active.classCode);
+    setLeaderboardRows(rows);
+    setLeaderboardLoading(false);
+  }
+
+  function persistProfile(updatedFields) {
+    if (!active) return;
+    const updated = { ...active, ...updatedFields };
+    const nextList = profiles.map((p) => (p.id === active.id ? updated : p));
+    setProfiles(nextList);
+    saveProfilesLS(nextList);
+    syncToCloud(updated);
+  }
 
   function isUnlocked(lessonId) {
     const i = FLAT_LESSONS.findIndex((l) => l.id === lessonId);
@@ -540,7 +837,7 @@ export default function App() {
 
     const totalXp = xp + sessionXp;
     setXp(totalXp);
-    const newStreak = streak + 1;
+    const newStreak = computeNewStreak(active);
     setStreak(newStreak);
     setNewStreakValue(newStreak);
 
@@ -555,15 +852,78 @@ export default function App() {
     if (newStreak >= 5) earned.push("streak5");
 
     const freshlyNew = earned.filter((id) => !unlockedBadges.has(id));
-    if (freshlyNew.length) {
-      setUnlockedBadges((prev) => {
-        const s = new Set(prev);
-        freshlyNew.forEach((id) => s.add(id));
-        return s;
-      });
-    }
+    const nextBadges = new Set(unlockedBadges);
+    freshlyNew.forEach((id) => nextBadges.add(id));
+    setUnlockedBadges(nextBadges);
     setNewBadges(freshlyNew);
+
+    persistProfile({
+      xp: totalXp,
+      streak: newStreak,
+      lastActiveDate: todayStr(),
+      completedLessons: [...nextCompleted],
+      unlockedBadges: [...nextBadges],
+    });
+
     setScreen("summary");
+  }
+
+  function createProfile({ classCodeInput, alias, avatar }) {
+    const classCode = classCodeInput.trim().toLowerCase();
+    const newProfile = {
+      id: uuid(),
+      deviceSecret: uuid(),
+      classCode,
+      classCodeDisplay: classCodeInput.trim(),
+      alias: alias.trim(),
+      avatar,
+      xp: 0,
+      streak: 0,
+      lastActiveDate: null,
+      completedLessons: [],
+      unlockedBadges: [],
+    };
+    const nextList = [...profiles, newProfile];
+    setProfiles(nextList);
+    saveProfilesLS(nextList);
+    setActiveId(newProfile.id);
+    saveActiveIdLS(newProfile.id);
+    setXp(0);
+    setStreak(0);
+    setCompleted(new Set());
+    setUnlockedBadges(new Set());
+    syncToCloud(newProfile);
+    setAddingProfile(false);
+    setScreen("path");
+  }
+
+  function switchProfile(id) {
+    const p = profiles.find((x) => x.id === id);
+    if (!p) return;
+    setActiveId(id);
+    saveActiveIdLS(id);
+    setXp(p.xp);
+    setStreak(p.streak);
+    setCompleted(new Set(p.completedLessons));
+    setUnlockedBadges(new Set(p.unlockedBadges));
+    setScreen("path");
+  }
+
+  function updateActiveAliasAvatar(alias, avatar) {
+    persistProfile({ alias, avatar });
+  }
+
+  if (screen === "loading") return null;
+
+  /* -------------------------------- ONBOARDING -------------------------------- */
+
+  if (screen === "onboarding") {
+    return (
+      <OnboardingScreen
+        onCreate={createProfile}
+        onCancel={addingProfile ? () => { setAddingProfile(false); setScreen("profile"); } : null}
+      />
+    );
   }
 
   /* -------------------------------- PATH SCREEN -------------------------------- */
@@ -572,7 +932,8 @@ export default function App() {
     return (
       <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9]">
         <FontImport />
-        <div className="w-full max-w-md bg-[#FFF6E9] min-h-screen pb-24">
+        <BackgroundBlobs />
+        <div className="w-full max-w-md bg-transparent min-h-screen pb-28">
           <div className="sticky top-0 z-20 bg-[#FFFBF2]/95 backdrop-blur border-b border-[#F0DFC0] px-4 py-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -589,14 +950,19 @@ export default function App() {
                   >
                     LINGUA LATINA
                   </div>
-                  <div className="text-[10px] text-[#8B5CF6] mt-0.5 italic font-semibold">
-                    Roma te vocat! 🏛️
-                  </div>
+                  <div className="text-[10px] text-[#8B5CF6] mt-0.5 italic font-semibold">Roma te vocat! 🏛️</div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <StatPill icon={<Flame size={15} color="#FF7A1A" fill="#FF7A1A" />} value={streak} />
                 <StatPill icon={<Heart size={15} color="#E8483A" fill="#E8483A" />} value={hearts} />
+                <button
+                  onClick={() => setScreen("profile")}
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-lg shadow-sm border-2 border-white"
+                  style={{ background: "linear-gradient(135deg, #FFD166, #FFB627)" }}
+                >
+                  {active?.avatar || "🙂"}
+                </button>
               </div>
             </div>
             <div className="mt-2.5">
@@ -652,15 +1018,10 @@ export default function App() {
                       const offset = Math.round(Math.sin(gIdx * 0.9) * 70);
                       const isDone = completed.has(lesson.id);
                       const unlocked = isUnlocked(lesson.id);
-                      const isNext =
-                        unlocked && !isDone && FLAT_LESSONS.findIndex((l) => !completed.has(l.id)) === gIdx;
+                      const isNext = unlocked && !isDone && FLAT_LESSONS.findIndex((l) => !completed.has(l.id)) === gIdx;
                       const justPopped = lesson.id === lastCompletedId;
                       return (
-                        <div
-                          key={lesson.id}
-                          className="relative flex justify-center"
-                          style={{ transform: `translateX(${offset}px)` }}
-                        >
+                        <div key={lesson.id} className="relative flex justify-center" style={{ transform: `translateX(${offset}px)` }}>
                           <button
                             onClick={() => unlocked && startLesson(lesson.id)}
                             disabled={!unlocked}
@@ -689,6 +1050,7 @@ export default function App() {
             ))}
           </div>
         </div>
+        <BottomNav screen={screen} setScreen={setScreen} />
       </div>
     );
   }
@@ -708,12 +1070,7 @@ export default function App() {
             </button>
             <div className="flex-1 h-2.5 rounded-full bg-[#F0DFC0] overflow-hidden flex gap-0.5 p-0.5">
               {exercises.map((_, i) => (
-                <div
-                  key={i}
-                  className={`flex-1 rounded-full transition-colors ${
-                    i < idx ? "bg-[#2EC4B6]" : i === idx ? "bg-[#FFB627]" : "bg-transparent"
-                  }`}
-                />
+                <div key={i} className={`flex-1 rounded-full transition-colors ${i < idx ? "bg-[#2EC4B6]" : i === idx ? "bg-[#FFB627]" : "bg-transparent"}`} />
               ))}
             </div>
             <div className={`flex items-center gap-1 text-[#E8483A] font-bold text-sm ${heartShake ? "animate-shake" : ""}`}>
@@ -723,9 +1080,7 @@ export default function App() {
           </div>
 
           <div className="flex-1 px-5 pt-6 pb-40">
-            <div className="text-[11px] tracking-widest text-[#C2410C] font-bold mb-2">
-              {currentLesson.title.toUpperCase()}
-            </div>
+            <div className="text-[11px] tracking-widest text-[#C2410C] font-bold mb-2">{currentLesson.title.toUpperCase()}</div>
 
             {ex.type === "mc" && (
               <div>
@@ -899,9 +1254,7 @@ export default function App() {
           >
             {perfect ? "OPTIME!" : "BENE FACTUM!"}
           </h1>
-          <p className="text-[#6B5F4E] text-[14px] mb-8">
-            {perfect ? "Perfekt, ganz ohne Fehler! 🎉" : "Gut gemacht — Lektion abgeschlossen."}
-          </p>
+          <p className="text-[#6B5F4E] text-[14px] mb-8">{perfect ? "Perfekt, ganz ohne Fehler! 🎉" : "Gut gemacht — Lektion abgeschlossen."}</p>
 
           <div className="w-full grid grid-cols-3 gap-3 mb-6">
             <SummaryStat label="XP" value={`+${animatedXp}`} color="#F59E0B" />
@@ -955,7 +1308,320 @@ export default function App() {
     );
   }
 
+  /* -------------------------------- LEADERBOARD SCREEN -------------------------------- */
+
+  if (screen === "leaderboard") {
+    return (
+      <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9]">
+        <FontImport />
+        <BackgroundBlobs />
+        <div className="w-full max-w-md min-h-screen pb-28">
+          <div className="sticky top-0 z-20 bg-[#FFFBF2]/95 backdrop-blur border-b border-[#F0DFC0] px-5 py-4 flex items-center justify-between">
+            <div>
+              <h1 className="font-display text-lg text-[#2B241D]">RANGLISTE</h1>
+              <div className="text-[11px] text-[#8A7F68]">Klasse „{active?.classCodeDisplay}“</div>
+            </div>
+            <button onClick={loadLeaderboard} className="w-9 h-9 rounded-full bg-white border-2 border-[#F0DFC0] flex items-center justify-center">
+              <RefreshCw size={16} color="#8A7F68" className={leaderboardLoading ? "animate-spin" : ""} />
+            </button>
+          </div>
+
+          <div className="px-5 pt-5">
+            {!cloudEnabled && (
+              <div className="bg-white border-2 border-[#F0DFC0] rounded-2xl p-5 text-center">
+                <Trophy size={28} color="#DCCFA9" className="mx-auto mb-2" />
+                <div className="font-display text-sm text-[#2B241D] mb-1">Rangliste noch nicht eingerichtet</div>
+                <div className="text-[13px] text-[#8A7F68]">Frag deine Lehrkraft, ob die Cloud-Anbindung schon aktiv ist.</div>
+              </div>
+            )}
+
+            {cloudEnabled && !leaderboardLoading && leaderboardRows.length === 0 && (
+              <div className="bg-white border-2 border-[#F0DFC0] rounded-2xl p-5 text-center text-[13px] text-[#8A7F68]">
+                Noch keine Mitspieler in dieser Klasse gefunden.
+              </div>
+            )}
+
+            {cloudEnabled && (
+              <div className="flex flex-col gap-2.5">
+                {leaderboardRows.map((row, i) => {
+                  const isMe = row.id === active?.id;
+                  const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : null;
+                  return (
+                    <div
+                      key={row.id}
+                      className={`flex items-center gap-3 rounded-2xl px-4 py-3 border-2 shadow-sm ${
+                        isMe ? "bg-gradient-to-r from-[#FFE08C]/40 to-[#FFB627]/20 border-[#FFB627]" : "bg-white border-[#F0DFC0]"
+                      }`}
+                    >
+                      <div className="w-7 text-center font-display text-sm text-[#8A7F68]">{medal || `#${i + 1}`}</div>
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center text-lg bg-[#FFF6E9] border-2 border-[#F0DFC0] shrink-0">
+                        {row.avatar}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-display text-[13px] text-[#2B241D] truncate">
+                          {row.alias} {isMe && <span className="text-[10px] text-[#C2410C]">(Du)</span>}
+                        </div>
+                        <div className="text-[11px] text-[#8A7F68] flex items-center gap-1">
+                          <Flame size={11} color="#FF7A1A" fill="#FF7A1A" /> {row.streak}
+                        </div>
+                      </div>
+                      <div className="font-display text-sm text-[#F59E0B]">{row.xp} XP</div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+        <BottomNav screen={screen} setScreen={setScreen} />
+      </div>
+    );
+  }
+
+  /* -------------------------------- PROFILE SCREEN -------------------------------- */
+
+  if (screen === "profile" && active) {
+    return (
+      <ProfileScreen
+        active={active}
+        profiles={profiles}
+        xp={xp}
+        streak={streak}
+        unlockedBadges={unlockedBadges}
+        rank={rank}
+        onSwitch={switchProfile}
+        onAddProfile={() => {
+          setAddingProfile(true);
+          setScreen("onboarding");
+        }}
+        onSave={updateActiveAliasAvatar}
+        setScreen={setScreen}
+        screen={screen}
+      />
+    );
+  }
+
   return null;
+}
+
+/* ------------------------------------------------------------------ */
+/* ONBOARDING */
+/* ------------------------------------------------------------------ */
+
+function OnboardingScreen({ onCreate, onCancel }) {
+  const [classCodeInput, setClassCodeInput] = useState("");
+  const [alias, setAlias] = useState(() => generateAlias());
+  const [avatar, setAvatar] = useState(() => AVATARS[Math.floor(Math.random() * AVATARS.length)]);
+
+  const canSubmit = classCodeInput.trim().length > 0 && alias.trim().length > 0;
+
+  return (
+    <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9]">
+      <FontImport />
+      <BackgroundBlobs />
+      <div className="w-full max-w-md min-h-screen px-6 pt-14 pb-10 flex flex-col">
+        <div className="relative w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+          <div className="absolute inset-0 rounded-full" style={{ background: "linear-gradient(135deg, #E8483A, #FFB627)" }} />
+          <Landmark size={30} color="white" className="relative" />
+        </div>
+        <h1 className="font-display text-2xl text-center text-[#2B241D] mb-1">
+          {onCancel ? "Neues Profil" : "Willkommen, Legionär!"}
+        </h1>
+        <p className="text-center text-[13px] text-[#8A7F68] mb-8">
+          Tritt deiner Klasse bei und leg direkt los — ganz ohne echten Namen.
+        </p>
+
+        <label className="text-[12px] font-bold text-[#6B5F4E] mb-1.5">KLASSENCODE</label>
+        <input
+          value={classCodeInput}
+          onChange={(e) => setClassCodeInput(e.target.value)}
+          placeholder="z. B. 7A-Latein"
+          className="w-full px-4 py-3.5 rounded-xl border-2 border-[#F0DFC0] bg-white text-[#2B241D] text-[15px] mb-1 focus:outline-none focus:border-[#E8483A]"
+        />
+        <p className="text-[11px] text-[#A79A7E] mb-5">Von deiner Lehrkraft — alle mit demselben Code sehen sich in der Rangliste.</p>
+
+        <label className="text-[12px] font-bold text-[#6B5F4E] mb-1.5">DEIN SPITZNAME</label>
+        <div className="flex gap-2 mb-1">
+          <input
+            value={alias}
+            onChange={(e) => setAlias(e.target.value)}
+            placeholder="Spitzname"
+            className="flex-1 px-4 py-3.5 rounded-xl border-2 border-[#F0DFC0] bg-white text-[#2B241D] text-[15px] focus:outline-none focus:border-[#E8483A]"
+          />
+          <button
+            onClick={() => setAlias(generateAlias())}
+            className="w-14 rounded-xl border-2 border-[#F0DFC0] bg-white flex items-center justify-center"
+            title="Zufallsname"
+          >
+            <Dices size={20} color="#8A7F68" />
+          </button>
+        </div>
+        <p className="text-[11px] text-[#A79A7E] mb-5">⚠️ Bitte keinen echten Namen verwenden — nur deine Klasse sieht diesen Spitznamen.</p>
+
+        <label className="text-[12px] font-bold text-[#6B5F4E] mb-2">AVATAR</label>
+        <div className="grid grid-cols-6 gap-2 mb-8">
+          {AVATARS.map((a) => (
+            <button
+              key={a}
+              onClick={() => setAvatar(a)}
+              className={`aspect-square rounded-xl border-2 flex items-center justify-center text-xl ${
+                avatar === a ? "border-[#E8483A] bg-[#E8483A]/10 scale-105" : "border-[#F0DFC0] bg-white"
+              }`}
+            >
+              {a}
+            </button>
+          ))}
+        </div>
+
+        <button
+          onClick={() => canSubmit && onCreate({ classCodeInput, alias, avatar })}
+          disabled={!canSubmit}
+          className={`w-full py-3.5 rounded-xl font-display text-sm tracking-wide mt-auto shadow-md ${
+            canSubmit ? "bg-gradient-to-r from-[#F0533D] to-[#E8483A] text-white" : "bg-[#E4D7BA] text-[#A79A7E] cursor-not-allowed"
+          }`}
+        >
+          LOS GEHT'S!
+        </button>
+        {onCancel && (
+          <button onClick={onCancel} className="text-[#8A7F68] text-[13px] underline mt-4">
+            Abbrechen
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* PROFILE SCREEN */
+/* ------------------------------------------------------------------ */
+
+function ProfileScreen({ active, profiles, xp, streak, unlockedBadges, rank, onSwitch, onAddProfile, onSave, setScreen, screen }) {
+  const [editing, setEditing] = useState(false);
+  const [alias, setAlias] = useState(active.alias);
+  const [avatar, setAvatar] = useState(active.avatar);
+
+  const others = profiles.filter((p) => p.id !== active.id);
+  const changed = alias !== active.alias || avatar !== active.avatar;
+
+  return (
+    <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9]">
+      <FontImport />
+      <BackgroundBlobs />
+      <div className="w-full max-w-md min-h-screen pb-28 px-5 pt-6">
+        <h1 className="font-display text-lg text-[#2B241D] mb-5">PROFIL</h1>
+
+        <div className="bg-white border-2 border-[#F0DFC0] rounded-2xl p-5 mb-5 shadow-sm">
+          <div className="flex items-center gap-4 mb-4">
+            <div
+              className="w-16 h-16 rounded-full flex items-center justify-center text-3xl shrink-0 border-2 border-[#FFB627]"
+              style={{ background: "linear-gradient(135deg, #FFE08C, #FFB627)" }}
+            >
+              {avatar}
+            </div>
+            <div className="min-w-0">
+              <div className="font-display text-lg text-[#2B241D] truncate">{alias}</div>
+              <div className="text-[12px] text-[#8A7F68]">Klasse „{active.classCodeDisplay}“</div>
+              <div className="text-[11px] font-bold text-[#C2410C] mt-0.5">
+                {rank.current.title.toUpperCase()} · {rank.current.sub}
+              </div>
+            </div>
+            <button onClick={() => setEditing((e) => !e)} className="ml-auto w-9 h-9 rounded-full bg-[#FFF6E9] border-2 border-[#F0DFC0] flex items-center justify-center shrink-0">
+              <Pencil size={15} color="#8A7F68" />
+            </button>
+          </div>
+
+          {editing && (
+            <div className="border-t border-[#F0DFC0] pt-4 mt-1">
+              <input
+                value={alias}
+                onChange={(e) => setAlias(e.target.value)}
+                className="w-full px-3.5 py-2.5 rounded-lg border-2 border-[#F0DFC0] bg-[#FFF6E9] text-[14px] mb-3"
+              />
+              <div className="grid grid-cols-6 gap-1.5 mb-3">
+                {AVATARS.map((a) => (
+                  <button
+                    key={a}
+                    onClick={() => setAvatar(a)}
+                    className={`aspect-square rounded-lg border-2 flex items-center justify-center text-lg ${
+                      avatar === a ? "border-[#E8483A] bg-[#E8483A]/10" : "border-[#F0DFC0] bg-white"
+                    }`}
+                  >
+                    {a}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => {
+                  if (changed) onSave(alias, avatar);
+                  setEditing(false);
+                }}
+                className="w-full py-2.5 rounded-lg bg-gradient-to-r from-[#F0533D] to-[#E8483A] text-white font-display text-xs tracking-wide"
+              >
+                SPEICHERN
+              </button>
+            </div>
+          )}
+
+          <div className="grid grid-cols-3 gap-2.5">
+            <SummaryStat label="XP" value={xp} color="#F59E0B" />
+            <SummaryStat label="Serie" value={streak} color="#E8483A" />
+            <SummaryStat label="Abzeichen" value={unlockedBadges.size} color="#0E9E85" />
+          </div>
+        </div>
+
+        <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">AUSZEICHNUNGEN</div>
+        <div className="flex gap-2 overflow-x-auto pb-2 mb-6 no-scrollbar">
+          {BADGES.map((b) => {
+            const on = unlockedBadges.has(b.id);
+            const Icon = b.icon;
+            return (
+              <div
+                key={b.id}
+                title={b.desc}
+                className={`shrink-0 w-14 h-14 rounded-full border-2 flex items-center justify-center ${
+                  on ? "bg-gradient-to-br from-[#FFE08C] to-[#FFB627] border-[#F59E0B]" : "bg-[#EFE6D4] border-[#E4D7BA] grayscale opacity-60"
+                }`}
+              >
+                <Icon size={20} color={on ? "#7A2E00" : "#8A7F68"} />
+              </div>
+            );
+          })}
+        </div>
+
+        {others.length > 0 && (
+          <>
+            <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">ANDERE PROFILE AUF DIESEM GERÄT</div>
+            <div className="flex flex-col gap-2 mb-4">
+              {others.map((p) => (
+                <button
+                  key={p.id}
+                  onClick={() => onSwitch(p.id)}
+                  className="flex items-center gap-3 bg-white border-2 border-[#F0DFC0] rounded-xl px-4 py-3 text-left"
+                >
+                  <div className="w-10 h-10 rounded-full bg-[#FFF6E9] border-2 border-[#F0DFC0] flex items-center justify-center text-lg shrink-0">
+                    {p.avatar}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-display text-[13px] text-[#2B241D] truncate">{p.alias}</div>
+                    <div className="text-[11px] text-[#8A7F68]">Klasse „{p.classCodeDisplay}“ · {p.xp} XP</div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+
+        <button
+          onClick={onAddProfile}
+          className="w-full py-3.5 rounded-xl border-2 border-dashed border-[#E8483A]/40 text-[#C2410C] font-display text-xs tracking-wide flex items-center justify-center gap-2"
+        >
+          <Plus size={16} /> NEUES PROFIL ANLEGEN
+        </button>
+      </div>
+      <BottomNav screen={screen} setScreen={setScreen} />
+    </div>
+  );
 }
 
 /* ------------------------------------------------------------------ */
