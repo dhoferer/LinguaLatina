@@ -889,7 +889,7 @@ function BottomNav({ screen, setScreen }) {
   ];
   return (
     <div className="fixed bottom-0 left-0 right-0 flex justify-center z-30">
-      <div className="w-full max-w-md bg-white/95 backdrop-blur border-t border-[#F0DFC0] px-6 py-2.5 flex items-center justify-around shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
+      <div className="w-full max-w-md glass-strong border-t-0 px-6 py-2.5 flex items-center justify-around">
         {items.map((it) => {
           const Icon = it.icon;
           const active = screen === it.id;
@@ -1305,11 +1305,11 @@ export default function App() {
         <FontImport />
         <BackgroundBlobs />
         <div className="w-full max-w-md bg-transparent min-h-screen pb-28">
-          <div className="sticky top-0 z-20 bg-[#FFFBF2]/95 backdrop-blur border-b border-[#F0DFC0] px-4 py-3">
+          <div className="sticky top-0 z-20 glass-strong border-b-0 px-4 py-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center shadow-sm"
+                  className="glossy w-10 h-10 rounded-full flex items-center justify-center shadow-sm"
                   style={{ background: "linear-gradient(135deg, #FF4FA3, #8B5CF6)" }}
                 >
                   <Landmark size={19} color="#FFFBF2" />
@@ -1329,7 +1329,7 @@ export default function App() {
                 <StatPill icon={<Heart size={15} color="#E8483A" fill="#E8483A" />} value={hearts} />
                 <button
                   onClick={() => setScreen("profile")}
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-lg shadow-sm border-2 border-white"
+                  className="glossy w-9 h-9 rounded-full flex items-center justify-center text-lg shadow-sm border-2 border-white"
                   style={{ background: "linear-gradient(135deg, #FFD166, #FFB627)" }}
                 >
                   {active?.avatar || "🙂"}
@@ -1396,7 +1396,7 @@ export default function App() {
                           <button
                             onClick={() => unlocked && startLesson(lesson.id)}
                             disabled={!unlocked}
-                            className={`relative w-16 h-16 rounded-full flex items-center justify-center shadow-md transition-transform active:scale-95 ${
+                            className={`glossy relative w-16 h-16 rounded-full flex items-center justify-center shadow-md transition-transform active:scale-95 ${
                               !unlocked ? "bg-[#DCCFA9] cursor-not-allowed" : isDone ? "bg-gradient-to-br from-[#FFD166] to-[#FFB627]" : "bg-gradient-to-br from-[#FF4FA3] to-[#8B5CF6]"
                             } ${isNext ? "ring-4 ring-[#FF4FA3]/30 animate-bounce-slow" : ""} ${justPopped ? "animate-pop-in" : ""}`}
                           >
@@ -1437,7 +1437,7 @@ export default function App() {
           <h1 className="font-display text-lg text-[#2B241D] mb-1">VOKABELTRAINER</h1>
           <p className="text-[13px] text-[#8A7F68] mb-5">Karteikasten-System — Wörter, die du oft richtig hast, kommen seltener dran.</p>
 
-          <div className="bg-white border-2 border-[#F0DFC0] rounded-2xl p-5 mb-5 shadow-sm">
+          <div className="glass rounded-2xl p-5 mb-5 shadow-sm">
             <div className="grid grid-cols-3 gap-3 mb-5">
               <SummaryStat label="Fällig heute" value={dueVocab.length} color="#EC4899" />
               <SummaryStat label="Gelernt" value={availableVocab.length} color="#8B5CF6" />
@@ -1471,7 +1471,7 @@ export default function App() {
                   const mastered = box >= 5;
                   const dotColor = box < 0 ? "#DCCFA9" : box <= 1 ? "#F59E0B" : box <= 3 ? "#3B82F6" : "#FFB627";
                   return (
-                    <div key={w.id} className="bg-white border-2 border-[#F0DFC0] rounded-xl px-3.5 py-3">
+                    <div key={w.id} className="glass rounded-xl px-3.5 py-3">
                       <div className="flex items-center justify-between mb-1">
                         <div className="font-serif-latin text-[14px] text-[#2B241D] italic truncate">{w.latin}</div>
                         {mastered && <Sparkles size={13} color="#F59E0B" />}
@@ -1505,6 +1505,7 @@ export default function App() {
     return (
       <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9]">
         <FontImport />
+        <BackgroundBlobs />
         <FloatingXp item={floatXp} />
         <div className="w-full max-w-md bg-[#FFF6E9] min-h-screen flex flex-col">
           <div className="px-4 pt-4 pb-2 flex items-center gap-3">
@@ -1528,7 +1529,7 @@ export default function App() {
             <div className="grid grid-cols-1 gap-3">
               {q.options.map((opt, i) => {
                 const isSel = vocabSelected === i;
-                let style = "border-[#F0DFC0] bg-white text-[#2B241D]";
+                let style = "glass text-[#2B241D]";
                 if (vocabChecked && i === q.correctIndex) style = "border-[#2EC4B6] bg-[#2EC4B6]/15 text-[#2B241D] animate-pop-in";
                 else if (vocabChecked && isSel && i !== q.correctIndex) style = "border-[#E8483A] bg-[#E8483A]/10 text-[#2B241D]";
                 else if (isSel) style = "border-[#EC4899] bg-[#EC4899]/10 text-[#2B241D]";
@@ -1595,9 +1596,10 @@ export default function App() {
     return (
       <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9] relative overflow-hidden">
         <FontImport />
+        <BackgroundBlobs />
         {vocabMasteredCount > 0 && <Confetti pieceCount={50} gold />}
         <div className="w-full max-w-md min-h-screen flex flex-col items-center px-8 pt-16 pb-10 relative z-10">
-          <div className="w-24 h-24 mb-4 rounded-full flex items-center justify-center animate-pop-in" style={{ background: "linear-gradient(135deg, #FF4FA3, #8B5CF6)" }}>
+          <div className="glossy w-24 h-24 mb-4 rounded-full flex items-center justify-center animate-pop-in" style={{ background: "linear-gradient(135deg, #FF4FA3, #8B5CF6)" }}>
             <BookOpen size={34} color="white" />
           </div>
           <h1 className="font-display text-2xl text-[#2B241D] mb-1">GUT TRAINIERT!</h1>
@@ -1628,6 +1630,7 @@ export default function App() {
     return (
       <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9]">
         <FontImport />
+        <BackgroundBlobs />
         <FloatingXp item={floatXp} />
         <ComboToast text={comboToast} />
         <div className="w-full max-w-md bg-[#FFF6E9] min-h-screen flex flex-col">
@@ -1655,7 +1658,7 @@ export default function App() {
                 <div className="grid grid-cols-1 gap-3">
                   {ex.options.map((opt, i) => {
                     const isSel = selected === i;
-                    let style = "border-[#F0DFC0] bg-white text-[#2B241D]";
+                    let style = "glass text-[#2B241D]";
                     if (checked && i === ex.correct) style = "border-[#2EC4B6] bg-[#2EC4B6]/15 text-[#2B241D] animate-pop-in";
                     else if (checked && isSel && i !== ex.correct) style = "border-[#E8483A] bg-[#E8483A]/10 text-[#2B241D]";
                     else if (isSel) style = "border-[#EC4899] bg-[#EC4899]/10 text-[#2B241D]";
@@ -1683,7 +1686,7 @@ export default function App() {
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   placeholder="Deine Antwort auf Deutsch"
-                  className="w-full px-4 py-3.5 rounded-xl border-2 border-[#F0DFC0] bg-white text-[#2B241D] text-[15px] focus:outline-none focus:border-[#EC4899]"
+                  className="w-full px-4 py-3.5 rounded-xl glass text-[#2B241D] text-[15px] focus:outline-none focus:border-[#EC4899]"
                 />
               </div>
             )}
@@ -1707,7 +1710,7 @@ export default function App() {
                     <button
                       key={w + i}
                       onClick={() => toggleOrderWord(w, "bank")}
-                      className="px-3.5 py-2 rounded-lg bg-white border-2 border-[#F0DFC0] text-[#2B241D] font-serif-latin text-[15px]"
+                      className="px-3.5 py-2 rounded-lg glass text-[#2B241D] font-serif-latin text-[15px]"
                     >
                       {w}
                     </button>
@@ -1722,7 +1725,7 @@ export default function App() {
                   <BookOpen size={18} color="#8B5CF6" />
                   <h2 className="font-display text-base text-[#2B241D]">{ex.title}</h2>
                 </div>
-                <div className="bg-white border-2 border-[#F0DFC0] rounded-2xl p-5 shadow-sm">
+                <div className="glass rounded-2xl p-5 shadow-sm">
                   <p className="font-serif-latin text-[17px] text-[#2B241D] leading-relaxed italic">{ex.latin}</p>
                 </div>
                 <p className="text-[12px] text-[#8A7F68] mt-4">📖 Lies den Text genau — die nächsten Fragen drehen sich darum!</p>
@@ -1798,6 +1801,7 @@ export default function App() {
     return (
       <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9]">
         <FontImport />
+        <BackgroundBlobs />
         <div className="w-full max-w-md min-h-screen flex flex-col items-center justify-center px-8 text-center">
           <Heart size={56} color="#E8483A" className="mb-5 animate-shake" />
           <h1 className="font-display text-2xl text-[#2B241D] mb-2">KEINE LEBEN MEHR</h1>
@@ -1828,6 +1832,7 @@ export default function App() {
     return (
       <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9] relative overflow-hidden">
         <FontImport />
+        <BackgroundBlobs />
         <Confetti pieceCount={perfect ? 90 : 55} gold={perfect} />
         <div className="w-full max-w-md min-h-screen flex flex-col items-center px-8 pt-16 pb-10 relative z-10">
           <div className="relative w-24 h-24 mb-4 flex items-center justify-center animate-pop-in">
@@ -1867,10 +1872,10 @@ export default function App() {
                 return (
                   <div
                     key={id}
-                    className="flex items-center gap-3 bg-white border-2 border-[#FFD166] rounded-xl px-4 py-3 mb-2 shadow-sm animate-pop-in"
+                    className="flex items-center gap-3 glass border-[#FFD166]/50 rounded-xl px-4 py-3 mb-2 shadow-sm animate-pop-in"
                     style={{ animationDelay: `${i * 0.12}s` }}
                   >
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#FFE08C] to-[#FFB627] flex items-center justify-center shrink-0">
+                    <div className="glossy w-10 h-10 rounded-full bg-gradient-to-br from-[#FFE08C] to-[#FFB627] flex items-center justify-center shrink-0">
                       <Icon size={18} color="#7A2E00" />
                     </div>
                     <div>
@@ -1902,19 +1907,19 @@ export default function App() {
         <FontImport />
         <BackgroundBlobs />
         <div className="w-full max-w-md min-h-screen pb-28">
-          <div className="sticky top-0 z-20 bg-[#FFFBF2]/95 backdrop-blur border-b border-[#F0DFC0] px-5 py-4 flex items-center justify-between">
+          <div className="sticky top-0 z-20 glass-strong border-b-0 px-5 py-4 flex items-center justify-between">
             <div>
               <h1 className="font-display text-lg text-[#2B241D]">RANGLISTE</h1>
               <div className="text-[11px] text-[#8A7F68]">Klasse „{active?.classCodeDisplay}“</div>
             </div>
-            <button onClick={loadLeaderboard} className="w-9 h-9 rounded-full bg-white border-2 border-[#F0DFC0] flex items-center justify-center">
+            <button onClick={loadLeaderboard} className="w-9 h-9 rounded-full glass flex items-center justify-center">
               <RefreshCw size={16} color="#8A7F68" className={leaderboardLoading ? "animate-spin" : ""} />
             </button>
           </div>
 
           <div className="px-5 pt-5">
             {!cloudEnabled && (
-              <div className="bg-white border-2 border-[#F0DFC0] rounded-2xl p-5 text-center">
+              <div className="glass rounded-2xl p-5 text-center">
                 <Trophy size={28} color="#DCCFA9" className="mx-auto mb-2" />
                 <div className="font-display text-sm text-[#2B241D] mb-1">Rangliste noch nicht eingerichtet</div>
                 <div className="text-[13px] text-[#8A7F68]">Frag deine Lehrkraft, ob die Cloud-Anbindung schon aktiv ist.</div>
@@ -1922,7 +1927,7 @@ export default function App() {
             )}
 
             {cloudEnabled && !leaderboardLoading && leaderboardRows.length === 0 && (
-              <div className="bg-white border-2 border-[#F0DFC0] rounded-2xl p-5 text-center text-[13px] text-[#8A7F68]">
+              <div className="glass rounded-2xl p-5 text-center text-[13px] text-[#8A7F68]">
                 Noch keine Mitspieler in dieser Klasse gefunden.
               </div>
             )}
@@ -1936,7 +1941,7 @@ export default function App() {
                     <div
                       key={row.id}
                       className={`flex items-center gap-3 rounded-2xl px-4 py-3 border-2 shadow-sm ${
-                        isMe ? "bg-gradient-to-r from-[#FFE08C]/40 to-[#FFB627]/20 border-[#FFB627]" : "bg-white border-[#F0DFC0]"
+                        isMe ? "bg-gradient-to-r from-[#FFE08C]/40 to-[#FFB627]/20 border-[#FFB627]" : "glass"
                       }`}
                     >
                       <div className="w-7 text-center font-display text-sm text-[#8A7F68]">{medal || `#${i + 1}`}</div>
@@ -2007,7 +2012,7 @@ function OnboardingScreen({ onCreate, onCancel }) {
       <BackgroundBlobs />
       <div className="w-full max-w-md min-h-screen px-6 pt-14 pb-10 flex flex-col">
         <div className="relative w-20 h-20 mx-auto mb-4 flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full" style={{ background: "linear-gradient(135deg, #FF4FA3, #8B5CF6)" }} />
+          <div className="glossy absolute inset-0 rounded-full" style={{ background: "linear-gradient(135deg, #FF4FA3, #8B5CF6)" }} />
           <Landmark size={30} color="white" className="relative" />
         </div>
         <h1 className="font-display text-2xl text-center text-[#2B241D] mb-1">
@@ -2022,7 +2027,7 @@ function OnboardingScreen({ onCreate, onCancel }) {
           value={classCodeInput}
           onChange={(e) => setClassCodeInput(e.target.value)}
           placeholder="z. B. 7A-Latein"
-          className="w-full px-4 py-3.5 rounded-xl border-2 border-[#F0DFC0] bg-white text-[#2B241D] text-[15px] mb-1 focus:outline-none focus:border-[#EC4899]"
+          className="w-full px-4 py-3.5 rounded-xl glass text-[#2B241D] text-[15px] mb-1 focus:outline-none focus:border-[#EC4899]"
         />
         <p className="text-[11px] text-[#A79A7E] mb-5">Von deiner Lehrkraft — alle mit demselben Code sehen sich in der Rangliste.</p>
 
@@ -2032,11 +2037,11 @@ function OnboardingScreen({ onCreate, onCancel }) {
             value={alias}
             onChange={(e) => setAlias(e.target.value)}
             placeholder="Spitzname"
-            className="flex-1 px-4 py-3.5 rounded-xl border-2 border-[#F0DFC0] bg-white text-[#2B241D] text-[15px] focus:outline-none focus:border-[#EC4899]"
+            className="flex-1 px-4 py-3.5 rounded-xl glass text-[#2B241D] text-[15px] focus:outline-none focus:border-[#EC4899]"
           />
           <button
             onClick={() => setAlias(generateAlias())}
-            className="w-14 rounded-xl border-2 border-[#F0DFC0] bg-white flex items-center justify-center"
+            className="w-14 rounded-xl glass flex items-center justify-center"
             title="Zufallsname"
           >
             <Dices size={20} color="#8A7F68" />
@@ -2051,7 +2056,7 @@ function OnboardingScreen({ onCreate, onCancel }) {
               key={a}
               onClick={() => setAvatar(a)}
               className={`aspect-square rounded-xl border-2 flex items-center justify-center text-xl ${
-                avatar === a ? "border-[#EC4899] bg-[#EC4899]/10 scale-105" : "border-[#F0DFC0] bg-white"
+                avatar === a ? "border-[#EC4899] bg-[#EC4899]/10 scale-105" : "border-white/60 glass"
               }`}
             >
               {a}
@@ -2097,10 +2102,10 @@ function ProfileScreen({ active, profiles, xp, streak, unlockedBadges, rank, onS
       <div className="w-full max-w-md min-h-screen pb-28 px-5 pt-6">
         <h1 className="font-display text-lg text-[#2B241D] mb-5">PROFIL</h1>
 
-        <div className="bg-white border-2 border-[#F0DFC0] rounded-2xl p-5 mb-5 shadow-sm">
+        <div className="glass rounded-2xl p-5 mb-5 shadow-sm">
           <div className="flex items-center gap-4 mb-4">
             <div
-              className="w-16 h-16 rounded-full flex items-center justify-center text-3xl shrink-0 border-2 border-[#FFB627]"
+              className="glossy w-16 h-16 rounded-full flex items-center justify-center text-3xl shrink-0 border-2 border-[#FFB627]"
               style={{ background: "linear-gradient(135deg, #FFE08C, #FFB627)" }}
             >
               {avatar}
@@ -2130,7 +2135,7 @@ function ProfileScreen({ active, profiles, xp, streak, unlockedBadges, rank, onS
                     key={a}
                     onClick={() => setAvatar(a)}
                     className={`aspect-square rounded-lg border-2 flex items-center justify-center text-lg ${
-                      avatar === a ? "border-[#EC4899] bg-[#EC4899]/10" : "border-[#F0DFC0] bg-white"
+                      avatar === a ? "border-[#EC4899] bg-[#EC4899]/10" : "border-white/60 glass"
                     }`}
                   >
                     {a}
@@ -2183,7 +2188,7 @@ function ProfileScreen({ active, profiles, xp, streak, unlockedBadges, rank, onS
                 <button
                   key={p.id}
                   onClick={() => onSwitch(p.id)}
-                  className="flex items-center gap-3 bg-white border-2 border-[#F0DFC0] rounded-xl px-4 py-3 text-left"
+                  className="flex items-center gap-3 glass rounded-xl px-4 py-3 text-left"
                 >
                   <div className="w-10 h-10 rounded-full bg-[#FFF6E9] border-2 border-[#F0DFC0] flex items-center justify-center text-lg shrink-0">
                     {p.avatar}
@@ -2216,7 +2221,7 @@ function ProfileScreen({ active, profiles, xp, streak, unlockedBadges, rank, onS
 
 function StatPill({ icon, value }) {
   return (
-    <div className="flex items-center gap-1 bg-white border border-[#F0DFC0] rounded-full px-2.5 py-1 shadow-sm">
+    <div className="flex items-center gap-1 glass rounded-full px-2.5 py-1">
       {icon}
       <span className="text-[13px] font-bold text-[#2B241D] font-mono">{value}</span>
     </div>
@@ -2225,7 +2230,7 @@ function StatPill({ icon, value }) {
 
 function SummaryStat({ label, value, color }) {
   return (
-    <div className="bg-white border-2 border-[#F0DFC0] rounded-xl py-3 text-center shadow-sm">
+    <div className="glass rounded-xl py-3 text-center shadow-sm">
       <div className="font-display text-lg" style={{ color }}>
         {value}
       </div>
@@ -2305,6 +2310,67 @@ function FontImport() {
         animation-name: confettiFall;
         animation-timing-function: ease-in;
         animation-fill-mode: forwards;
+      }
+
+      /* ---- Liquid Glass (iOS-Stil) ---- */
+      html, body {
+        overscroll-behavior: none;
+        touch-action: pan-y;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+      input, textarea {
+        -webkit-user-select: text;
+        user-select: text;
+      }
+
+      .glass {
+        position: relative;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.5) !important;
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.65);
+        box-shadow: 0 8px 28px rgba(80, 40, 90, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.75) !important;
+      }
+      .glass::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 45%);
+        pointer-events: none;
+      }
+
+      .glass-strong {
+        position: relative;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.7) !important;
+        backdrop-filter: blur(26px) saturate(180%);
+        -webkit-backdrop-filter: blur(26px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.75);
+        box-shadow: 0 8px 28px rgba(80, 40, 90, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+      }
+      .glass-strong::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 45%);
+        pointer-events: none;
+      }
+
+      .glossy {
+        position: relative;
+        overflow: hidden;
+      }
+      .glossy::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: radial-gradient(circle at 30% 22%, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0) 55%);
+        pointer-events: none;
       }
     `}</style>
   );
