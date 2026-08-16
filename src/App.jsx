@@ -656,6 +656,13 @@ function generateAlias() {
   return `${noun}${num}`;
 }
 
+function generateSyncCode() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let s = "";
+  for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  return s;
+}
+
 const LS_PROFILES = "ll_profiles_v1";
 const LS_ACTIVE = "ll_active_id_v1";
 
@@ -749,6 +756,10 @@ async function syncToCloud(profile) {
       xp: profile.xp,
       streak: profile.streak,
       completed_count: profile.completedLessons.length,
+      completed_lessons: profile.completedLessons,
+      vocab_progress: profile.vocabProgress,
+      unlocked_badges: profile.unlockedBadges,
+      sync_code: profile.syncCode,
       updated_at: new Date().toISOString(),
     });
   } catch (e) {
@@ -963,6 +974,33 @@ export default function App() {
   const [vocabXpEarned, setVocabXpEarned] = useState(0);
   const [vocabMasteredCount, setVocabMasteredCount] = useState(0);
 
+  const [exploreIdx, setExploreIdx] = useState(0);
+  const [exploreFlipped, setExploreFlipped] = useState(false);
+
+  const [memoryCards, setMemoryCards] = useState([]);
+  const [memoryFlipped, setMemoryFlipped] = useState([]);
+  const [memoryMatched, setMemoryMatched] = useState(new Set());
+  const [memoryMoves, setMemoryMoves] = useState(0);
+  const [memoryLocked, setMemoryLocked] = useState(false);
+  const [memoryDone, setMemoryDone] = useState(false);
+  const [memoryXpEarned, setMemoryXpEarned] = useState(0);
+
+  const [blitzActive, setBlitzActive] = useState(false);
+  const [blitzTimeLeft, setBlitzTimeLeft] = useState(30);
+  const [blitzQuestion, setBlitzQuestion] = useState(null);
+  const [blitzSelected, setBlitzSelected] = useState(null);
+  const [blitzChecked, setBlitzChecked] = useState(false);
+  const [blitzScore, setBlitzScore] = useState(0);
+  const [blitzDone, setBlitzDone] = useState(false);
+  const [blitzXpEarned, setBlitzXpEarned] = useState(0);
+
+  const [syncCodeInput, setSyncCodeInput] = useState("");
+  const [syncStatus, setSyncStatus] = useState(null);
+  const [syncCopyLabel, setSyncCopyLabel] = useState("KOPIEREN");
+
+  const [feedbackText, setFeedbackText] = useState("");
+  const [feedbackCategory, setFeedbackCategory] = useState("Idee");
+
   const active = profiles.find((p) => p.id === activeId) || null;
   const rank = getRank(xp);
 
@@ -1018,6 +1056,12 @@ export default function App() {
       loadLeaderboard();
     }
   }, [screen, active?.classCode]);
+
+  useEffect(() => {
+    if (active && !active.syncCode) {
+      persistProfile({ syncCode: generateSyncCode() });
+    }
+  }, [active?.id]);
 
   async function loadLeaderboard() {
     if (!active) return;
@@ -1192,6 +1236,7 @@ export default function App() {
       completedLessons: [],
       unlockedBadges: [],
       vocabProgress: {},
+      syncCode: generateSyncCode(),
     };
     const nextList = [...profiles, newProfile];
     setProfiles(nextList);
@@ -1223,6 +1268,185 @@ export default function App() {
 
   function updateActiveAliasAvatar(alias, avatar) {
     persistProfile({ alias, avatar });
+  }
+
+  /* ---- Mini-Spiel: Memory ---- */
+
+  function startMemoryGame() {
+    const pairCount = Math.min(6, availableVocab.length);
+    const words = shuffle(availableVocab).slice(0, pairCount);
+    const cards = shuffle(
+      words.flatMap((w) => [
+        { key: `${w.id}-la`, wordId: w.id, text: w.latin, kind: "latin" },
+        { key: `${w.id}-de`, wordId: w.id, text: w.german, kind: "german" },
+      ])
+    );
+    setMemoryCards(cards);
+    setMemoryFlipped([]);
+    setMemoryMatched(new Set());
+    setMemoryMoves(0);
+    setMemoryLocked(false);
+    setMemoryDone(false);
+    setMemoryXpEarned(0);
+    setScreen("game-memory");
+  }
+
+  function handleMemoryCardTap(index) {
+    if (memoryLocked) return;
+    if (memoryFlipped.includes(index)) return;
+    if (memoryMatched.has(memoryCards[index].wordId)) return;
+
+    const nextFlipped = [...memoryFlipped, index];
+    setMemoryFlipped(nextFlipped);
+
+    if (nextFlipped.length === 2) {
+      setMemoryMoves((m) => m + 1);
+      const [a, b] = nextFlipped;
+      const cardA = memoryCards[a];
+      const cardB = memoryCards[b];
+      if (cardA.wordId === cardB.wordId && cardA.kind !== cardB.kind) {
+        const nextMatched = new Set(memoryMatched);
+        nextMatched.add(cardA.wordId);
+        setTimeout(() => {
+          setMemoryMatched(nextMatched);
+          setMemoryFlipped([]);
+          if (nextMatched.size === memoryCards.length / 2) {
+            const earned = Math.max(10, 30 - Math.max(0, memoryMoves + 1 - memoryCards.length / 2) * 3);
+            setMemoryXpEarned(earned);
+            setMemoryDone(true);
+            const totalXp = xp + earned;
+            setXp(totalXp);
+            persistProfile({ xp: totalXp });
+          }
+        }, 500);
+      } else {
+        setMemoryLocked(true);
+        setTimeout(() => {
+          setMemoryFlipped([]);
+          setMemoryLocked(false);
+        }, 900);
+      }
+    }
+  }
+
+  /* ---- Mini-Spiel: Wortblitz ---- */
+
+  function nextBlitzQuestion() {
+    const pool = availableVocab.length >= 4 ? availableVocab : VOCAB_POOL;
+    const word = pool[Math.floor(Math.random() * pool.length)];
+    setBlitzQuestion(buildVocabQuestion(word, pool));
+    setBlitzSelected(null);
+    setBlitzChecked(false);
+  }
+
+  function startBlitzGame() {
+    setBlitzScore(0);
+    setBlitzTimeLeft(30);
+    setBlitzDone(false);
+    setBlitzXpEarned(0);
+    nextBlitzQuestion();
+    setBlitzActive(true);
+    setScreen("game-blitz");
+  }
+
+  function handleBlitzAnswer(i) {
+    if (blitzChecked || !blitzActive) return;
+    setBlitzSelected(i);
+    setBlitzChecked(true);
+    if (i === blitzQuestion.correctIndex) {
+      setBlitzScore((s) => s + 1);
+    }
+    setTimeout(() => {
+      if (blitzActive) nextBlitzQuestion();
+    }, 500);
+  }
+
+  useEffect(() => {
+    if (!blitzActive) return;
+    if (blitzTimeLeft <= 0) {
+      setBlitzActive(false);
+      setBlitzDone(true);
+      const earned = Math.min(60, blitzScore * 3);
+      setBlitzXpEarned(earned);
+      const totalXp = xp + earned;
+      setXp(totalXp);
+      persistProfile({ xp: totalXp });
+      return;
+    }
+    const t = setTimeout(() => setBlitzTimeLeft((s) => s - 1), 1000);
+    return () => clearTimeout(t);
+  }, [blitzActive, blitzTimeLeft]);
+
+  /* ---- Geräte-Sync ---- */
+
+  async function copySyncCode() {
+    if (!active?.syncCode) return;
+    try {
+      await navigator.clipboard.writeText(active.syncCode);
+      setSyncCopyLabel("KOPIERT! ✓");
+      setTimeout(() => setSyncCopyLabel("KOPIEREN"), 1800);
+    } catch {
+      setSyncCopyLabel("Fehler");
+    }
+  }
+
+  async function loadProfileFromSyncCode() {
+    const code = syncCodeInput.trim().toUpperCase();
+    if (!code) return;
+    if (!supabase) {
+      setSyncStatus({ ok: false, msg: "Cloud-Sync ist nicht eingerichtet." });
+      return;
+    }
+    setSyncStatus({ ok: null, msg: "Suche Profil …" });
+    try {
+      const { data, error } = await supabase.from("players").select("*").eq("sync_code", code).maybeSingle();
+      if (error) throw error;
+      if (!data) {
+        setSyncStatus({ ok: false, msg: "Kein Profil mit diesem Code gefunden." });
+        return;
+      }
+      const restored = {
+        id: data.id,
+        deviceSecret: uuid(),
+        classCode: data.class_code,
+        classCodeDisplay: data.class_code,
+        alias: data.alias,
+        avatar: data.avatar,
+        xp: data.xp || 0,
+        streak: data.streak || 0,
+        lastActiveDate: todayStr(),
+        completedLessons: data.completed_lessons || [],
+        unlockedBadges: data.unlocked_badges || [],
+        vocabProgress: data.vocab_progress || {},
+        syncCode: data.sync_code,
+      };
+      const withoutDup = profiles.filter((p) => p.id !== restored.id);
+      const nextList = [...withoutDup, restored];
+      setProfiles(nextList);
+      saveProfilesLS(nextList);
+      setActiveId(restored.id);
+      saveActiveIdLS(restored.id);
+      setXp(restored.xp);
+      setStreak(restored.streak);
+      setCompleted(new Set(restored.completedLessons));
+      setUnlockedBadges(new Set(restored.unlockedBadges));
+      setVocabProgress(restored.vocabProgress);
+      setSyncStatus({ ok: true, msg: `Profil „${restored.alias}“ geladen!` });
+      setSyncCodeInput("");
+      setTimeout(() => setScreen("path"), 1200);
+    } catch (e) {
+      setSyncStatus({ ok: false, msg: "Fehler beim Laden." });
+    }
+  }
+
+  /* ---- Feedback ---- */
+
+  function sendFeedback() {
+    const subject = encodeURIComponent(`Lingua Latina Feedback (${feedbackCategory})`);
+    const body = encodeURIComponent(
+      `${feedbackText}\n\n---\nVon: ${active?.alias || "unbekannt"} (Klasse ${active?.classCodeDisplay || "-"})\nKategorie: ${feedbackCategory}`
+    );
+    window.location.href = `mailto:Dominik@hoferer.me?subject=${subject}&body=${body}`;
   }
 
   const availableVocab = getAvailableVocab(completed);
@@ -1429,36 +1653,79 @@ export default function App() {
   /* -------------------------------- VOCAB HOME -------------------------------- */
 
   if (screen === "vocab-home") {
+    const gamesUnlocked = xp >= 20;
     return (
       <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9]">
         <FontImport />
         <BackgroundBlobs />
         <div className="w-full max-w-md min-h-screen pb-28 px-5 pt-6">
-          <h1 className="font-display text-lg text-[#2B241D] mb-1">VOKABELTRAINER</h1>
-          <p className="text-[13px] text-[#8A7F68] mb-5">Karteikasten-System — Wörter, die du oft richtig hast, kommen seltener dran.</p>
+          <h1 className="font-display text-lg text-[#2B241D] mb-1">VOKABELN</h1>
+          <p className="text-[13px] text-[#8A7F68] mb-5">Trainieren, frei entdecken oder in kleinen Spielen üben.</p>
 
-          <div className="glass rounded-2xl p-5 mb-5 shadow-sm">
-            <div className="grid grid-cols-3 gap-3 mb-5">
-              <SummaryStat label="Fällig heute" value={dueVocab.length} color="#EC4899" />
-              <SummaryStat label="Gelernt" value={availableVocab.length} color="#8B5CF6" />
-              <SummaryStat label="Gemeistert" value={masteredVocabCount} color="#F59E0B" />
+          <div className="grid grid-cols-3 gap-2.5 mb-5">
+            <SummaryStat label="Fällig" value={dueVocab.length} color="#EC4899" />
+            <SummaryStat label="Gelernt" value={availableVocab.length} color="#8B5CF6" />
+            <SummaryStat label="Gemeistert" value={masteredVocabCount} color="#F59E0B" />
+          </div>
+
+          {/* Karteikasten-Training */}
+          <div className="glass rounded-2xl p-5 mb-4">
+            <div className="flex items-center gap-2 mb-2">
+              <BookOpen size={17} color="#8B5CF6" />
+              <div className="font-display text-[13px] text-[#2B241D]">KARTEIKASTEN-TRAINING</div>
             </div>
-
+            <p className="text-[12px] text-[#8A7F68] mb-3">Spaced Repetition — was du oft richtig hast, kommt seltener dran.</p>
             {availableVocab.length === 0 ? (
-              <div className="text-center text-[13px] text-[#8A7F68] py-2">
-                Schließe erst deine erste Lektion ab, um Wörter zu sammeln! 📚
-              </div>
+              <div className="text-[12px] text-[#8A7F68] py-1">Schließe erst deine erste Lektion ab! 📚</div>
             ) : dueVocab.length === 0 ? (
-              <div className="text-center text-[13px] text-[#8A7F68] py-2">
-                Super, alles gelernt! Komm morgen wieder für neue Runden 🌙✨
-              </div>
+              <div className="text-[12px] text-[#8A7F68] py-1">Alles gelernt — komm morgen wieder 🌙✨</div>
             ) : (
               <button
                 onClick={startVocabTraining}
-                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white font-display text-sm tracking-wide shadow-md flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white font-display text-xs tracking-wide shadow-md"
               >
-                <BookOpen size={16} /> TRAINING STARTEN ({Math.min(dueVocab.length, 10)})
+                TRAINING STARTEN ({Math.min(dueVocab.length, 10)})
               </button>
+            )}
+          </div>
+
+          {/* Frei entdecken */}
+          <div className="glass rounded-2xl p-5 mb-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles size={17} color="#3B82F6" />
+              <div className="font-display text-[13px] text-[#2B241D]">FREI ENTDECKEN</div>
+            </div>
+            <p className="text-[12px] text-[#8A7F68] mb-3">Alle {VOCAB_POOL.length} Wörter als Karteikarten durchblättern — auch schon vor dem Lernpfad.</p>
+            <button
+              onClick={() => {
+                setExploreIdx(0);
+                setExploreFlipped(false);
+                setScreen("vocab-explore");
+              }}
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-[#3B82F6] to-[#2EC4B6] text-white font-display text-xs tracking-wide shadow-md"
+            >
+              ENTDECKEN STARTEN
+            </button>
+          </div>
+
+          {/* Spiele */}
+          <div className="glass rounded-2xl p-5 mb-6">
+            <div className="flex items-center gap-2 mb-2">
+              <Zap size={17} color="#F59E0B" />
+              <div className="font-display text-[13px] text-[#2B241D]">MINI-SPIELE</div>
+            </div>
+            {gamesUnlocked ? (
+              <>
+                <p className="text-[12px] text-[#8A7F68] mb-3">Memory & Wortblitz — mit deinen gelernten Wörtern.</p>
+                <button
+                  onClick={() => setScreen("games-home")}
+                  className="w-full py-3 rounded-xl bg-gradient-to-r from-[#F59E0B] to-[#EC4899] text-white font-display text-xs tracking-wide shadow-md"
+                >
+                  ZU DEN SPIELEN
+                </button>
+              </>
+            ) : (
+              <div className="text-[12px] text-[#8A7F68] py-1">🔒 Ab 20 XP freigeschaltet (aktuell: {xp} XP)</div>
             )}
           </div>
 
@@ -1494,6 +1761,71 @@ export default function App() {
           )}
         </div>
         <BottomNav screen={screen} setScreen={setScreen} />
+      </div>
+    );
+  }
+
+  /* -------------------------------- VOCAB EXPLORE (frei entdecken) -------------------------------- */
+
+  if (screen === "vocab-explore") {
+    const word = VOCAB_POOL[exploreIdx];
+    return (
+      <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9]">
+        <FontImport />
+        <BackgroundBlobs />
+        <div className="w-full max-w-md min-h-screen flex flex-col px-5 pt-4 pb-10">
+          <div className="flex items-center gap-3 mb-6">
+            <button onClick={() => setScreen("vocab-home")} className="text-[#8A7F68]">
+              <X size={22} />
+            </button>
+            <div className="flex-1 text-center text-[12px] font-bold text-[#8A7F68]">
+              {exploreIdx + 1} / {VOCAB_POOL.length}
+            </div>
+            <div className="w-[22px]" />
+          </div>
+
+          <div className="flex-1 flex flex-col items-center justify-center">
+            <button
+              onClick={() => setExploreFlipped((f) => !f)}
+              className="glass-strong w-full aspect-[4/3] rounded-3xl flex flex-col items-center justify-center px-6 animate-pop-in"
+              key={word.id}
+            >
+              {!exploreFlipped ? (
+                <>
+                  <div className="text-[11px] tracking-widest text-[#8A7F68] font-bold mb-3">LATEIN</div>
+                  <div className="font-serif-latin italic text-4xl text-[#2B241D] text-center">{word.latin}</div>
+                </>
+              ) : (
+                <>
+                  <div className="text-[11px] tracking-widest text-[#8A7F68] font-bold mb-3">DEUTSCH</div>
+                  <div className="font-display text-3xl text-[#2B241D] text-center">{word.german}</div>
+                </>
+              )}
+              <div className="text-[11px] text-[#A79A7E] mt-5">🔄 Zum Umdrehen tippen</div>
+            </button>
+          </div>
+
+          <div className="flex items-center gap-3 mt-6">
+            <button
+              onClick={() => {
+                setExploreIdx((i) => (i === 0 ? VOCAB_POOL.length - 1 : i - 1));
+                setExploreFlipped(false);
+              }}
+              className="flex-1 py-3.5 rounded-xl glass text-[#2B241D] font-display text-xs tracking-wide"
+            >
+              ◀ ZURÜCK
+            </button>
+            <button
+              onClick={() => {
+                setExploreIdx((i) => (i === VOCAB_POOL.length - 1 ? 0 : i + 1));
+                setExploreFlipped(false);
+              }}
+              className="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-[#3B82F6] to-[#2EC4B6] text-white font-display text-xs tracking-wide shadow-md"
+            >
+              WEITER ▶
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -1619,6 +1951,264 @@ export default function App() {
           >
             WEITER
           </button>
+        </div>
+      </div>
+    );
+  }
+
+  /* -------------------------------- GAMES HOME -------------------------------- */
+
+  if (screen === "games-home") {
+    return (
+      <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9]">
+        <FontImport />
+        <BackgroundBlobs />
+        <div className="w-full max-w-md min-h-screen pb-28 px-5 pt-6">
+          <div className="flex items-center gap-3 mb-5">
+            <button onClick={() => setScreen("vocab-home")} className="text-[#8A7F68]">
+              <X size={22} />
+            </button>
+            <h1 className="font-display text-lg text-[#2B241D]">MINI-SPIELE</h1>
+          </div>
+
+          <button
+            onClick={startMemoryGame}
+            disabled={availableVocab.length < 3}
+            className="w-full glass rounded-2xl p-5 mb-4 text-left flex items-center gap-4 disabled:opacity-50"
+          >
+            <div className="glossy w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shrink-0" style={{ background: "linear-gradient(135deg, #7C3AED, #EC4899)" }}>
+              🧠
+            </div>
+            <div>
+              <div className="font-display text-[14px] text-[#2B241D] mb-0.5">Memory</div>
+              <div className="text-[12px] text-[#8A7F68]">
+                {availableVocab.length < 3 ? "Lerne mehr Wörter, um zu spielen" : "Finde die passenden Latein-Deutsch-Paare"}
+              </div>
+            </div>
+          </button>
+
+          <button
+            onClick={startBlitzGame}
+            disabled={availableVocab.length < 4}
+            className="w-full glass rounded-2xl p-5 text-left flex items-center gap-4 disabled:opacity-50"
+          >
+            <div className="glossy w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shrink-0" style={{ background: "linear-gradient(135deg, #F59E0B, #EC4899)" }}>
+              ⚡
+            </div>
+            <div>
+              <div className="font-display text-[14px] text-[#2B241D] mb-0.5">Wortblitz</div>
+              <div className="text-[12px] text-[#8A7F68]">
+                {availableVocab.length < 4 ? "Lerne mehr Wörter, um zu spielen" : "30 Sekunden — so viele Wörter wie möglich!"}
+              </div>
+            </div>
+          </button>
+        </div>
+        <BottomNav screen="vocab-home" setScreen={setScreen} />
+      </div>
+    );
+  }
+
+  /* -------------------------------- GAME: MEMORY -------------------------------- */
+
+  if (screen === "game-memory") {
+    return (
+      <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9] relative overflow-hidden">
+        <FontImport />
+        <BackgroundBlobs />
+        {memoryDone && <Confetti pieceCount={60} gold />}
+        <div className="w-full max-w-md min-h-screen px-5 pt-4 pb-10 flex flex-col">
+          <div className="flex items-center gap-3 mb-5">
+            <button onClick={() => setScreen("games-home")} className="text-[#8A7F68]">
+              <X size={22} />
+            </button>
+            <div className="flex-1 text-center font-display text-sm text-[#2B241D]">🧠 MEMORY</div>
+            <div className="text-[12px] font-bold text-[#8A7F68] w-[40px] text-right">{memoryMoves}x</div>
+          </div>
+
+          {!memoryDone ? (
+            <div className="grid grid-cols-3 gap-2.5">
+              {memoryCards.map((card, i) => {
+                const isFlipped = memoryFlipped.includes(i) || memoryMatched.has(card.wordId);
+                const isMatched = memoryMatched.has(card.wordId);
+                return (
+                  <button
+                    key={card.key}
+                    onClick={() => handleMemoryCardTap(i)}
+                    disabled={isMatched}
+                    className={`aspect-square rounded-2xl flex items-center justify-center p-2 text-center transition-all ${
+                      isMatched
+                        ? "bg-gradient-to-br from-[#2EC4B6]/30 to-[#0E9E85]/20 border-2 border-[#2EC4B6]"
+                        : isFlipped
+                        ? "glass-strong"
+                        : "bg-gradient-to-br from-[#8B5CF6] to-[#FF4FA3] glossy"
+                    }`}
+                  >
+                    {isFlipped ? (
+                      <span className={`text-[13px] leading-tight ${card.kind === "latin" ? "font-serif-latin italic" : "font-display"} text-[#2B241D]`}>
+                        {card.text}
+                      </span>
+                    ) : (
+                      <Sparkles size={20} color="white" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center">
+              <div className="glossy w-20 h-20 rounded-full flex items-center justify-center text-4xl mb-4 animate-pop-in" style={{ background: "linear-gradient(135deg, #7C3AED, #EC4899)" }}>
+                🎉
+              </div>
+              <h1 className="font-display text-xl text-[#2B241D] mb-1">Geschafft!</h1>
+              <p className="text-[13px] text-[#8A7F68] mb-6">{memoryMoves} Züge gebraucht</p>
+              <div className="w-full grid grid-cols-1 gap-3 mb-8">
+                <SummaryStat label="XP verdient" value={`+${memoryXpEarned}`} color="#F59E0B" />
+              </div>
+              <button
+                onClick={startMemoryGame}
+                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#7C3AED] to-[#EC4899] text-white font-display text-sm tracking-wide shadow-md mb-3"
+              >
+                NOCHMAL SPIELEN
+              </button>
+              <button onClick={() => setScreen("games-home")} className="text-[#8A7F68] text-[13px] underline">
+                Zurück zu den Spielen
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  /* -------------------------------- GAME: WORTBLITZ -------------------------------- */
+
+  if (screen === "game-blitz") {
+    return (
+      <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9] relative overflow-hidden">
+        <FontImport />
+        <BackgroundBlobs />
+        {blitzDone && <Confetti pieceCount={60} gold />}
+        <div className="w-full max-w-md min-h-screen px-5 pt-4 pb-10 flex flex-col">
+          <div className="flex items-center gap-3 mb-6">
+            <button onClick={() => { setBlitzActive(false); setScreen("games-home"); }} className="text-[#8A7F68]">
+              <X size={22} />
+            </button>
+            <div className="flex-1 text-center font-display text-sm text-[#2B241D]">⚡ WORTBLITZ</div>
+            <div className="text-[13px] font-bold text-[#EC4899] w-[40px] text-right">{blitzTimeLeft}s</div>
+          </div>
+
+          {!blitzDone ? (
+            <>
+              <div className="h-2 rounded-full bg-[#F0DFC0] overflow-hidden mb-6">
+                <div className="h-full rounded-full bg-gradient-to-r from-[#F59E0B] to-[#EC4899] transition-all" style={{ width: `${(blitzTimeLeft / 30) * 100}%` }} />
+              </div>
+              <div className="text-center mb-6">
+                <span className="font-display text-2xl text-[#2B241D]">{blitzScore}</span>
+                <span className="text-[12px] text-[#8A7F68]"> Punkte</span>
+              </div>
+              {blitzQuestion && (
+                <>
+                  <div className="text-[11px] tracking-widest text-[#C2185B] font-bold mb-2 text-center">
+                    {blitzQuestion.direction === "latin-de" ? "LATEIN → DEUTSCH" : "DEUTSCH → LATEIN"}
+                  </div>
+                  <div className={`text-2xl text-[#2B241D] mb-6 text-center ${blitzQuestion.direction === "latin-de" ? "font-serif-latin italic" : "font-display"}`}>
+                    {blitzQuestion.prompt}
+                  </div>
+                  <div className="grid grid-cols-1 gap-2.5">
+                    {blitzQuestion.options.map((opt, i) => {
+                      let style = "glass text-[#2B241D]";
+                      if (blitzChecked && i === blitzQuestion.correctIndex) style = "border-2 border-[#2EC4B6] bg-[#2EC4B6]/15 text-[#2B241D]";
+                      else if (blitzChecked && i === blitzSelected) style = "border-2 border-[#E8483A] bg-[#E8483A]/10 text-[#2B241D]";
+                      return (
+                        <button
+                          key={i}
+                          onClick={() => handleBlitzAnswer(i)}
+                          disabled={blitzChecked}
+                          className={`text-left px-4 py-3.5 rounded-xl font-serif-latin text-[15px] transition-colors ${style}`}
+                        >
+                          {opt}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+            </>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center">
+              <div className="glossy w-20 h-20 rounded-full flex items-center justify-center text-4xl mb-4 animate-pop-in" style={{ background: "linear-gradient(135deg, #F59E0B, #EC4899)" }}>
+                ⚡
+              </div>
+              <h1 className="font-display text-xl text-[#2B241D] mb-1">Zeit um!</h1>
+              <p className="text-[13px] text-[#8A7F68] mb-6">{blitzScore} Wörter richtig</p>
+              <div className="w-full grid grid-cols-1 gap-3 mb-8">
+                <SummaryStat label="XP verdient" value={`+${blitzXpEarned}`} color="#F59E0B" />
+              </div>
+              <button
+                onClick={startBlitzGame}
+                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#F59E0B] to-[#EC4899] text-white font-display text-sm tracking-wide shadow-md mb-3"
+              >
+                NOCHMAL SPIELEN
+              </button>
+              <button onClick={() => setScreen("games-home")} className="text-[#8A7F68] text-[13px] underline">
+                Zurück zu den Spielen
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  /* -------------------------------- FEEDBACK -------------------------------- */
+
+  if (screen === "feedback") {
+    return (
+      <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9]">
+        <FontImport />
+        <BackgroundBlobs />
+        <div className="w-full max-w-md min-h-screen px-5 pt-6 pb-10 flex flex-col">
+          <div className="flex items-center gap-3 mb-6">
+            <button onClick={() => setScreen("profile")} className="text-[#8A7F68]">
+              <X size={22} />
+            </button>
+            <h1 className="font-display text-lg text-[#2B241D]">FEEDBACK</h1>
+          </div>
+
+          <p className="text-[13px] text-[#8A7F68] mb-5">Fehler gefunden? Idee für eine neue Lektion? Sag Bescheid!</p>
+
+          <div className="flex gap-2 mb-4">
+            {["Fehler", "Idee", "Sonstiges"].map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setFeedbackCategory(cat)}
+                className={`flex-1 py-2.5 rounded-xl text-[12px] font-display tracking-wide ${
+                  feedbackCategory === cat ? "bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white shadow-md" : "glass text-[#2B241D]"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          <textarea
+            value={feedbackText}
+            onChange={(e) => setFeedbackText(e.target.value)}
+            placeholder="Was möchtest du uns mitteilen?"
+            rows={6}
+            className="w-full px-4 py-3.5 rounded-xl glass text-[#2B241D] text-[15px] mb-5 resize-none focus:outline-none"
+          />
+
+          <button
+            onClick={sendFeedback}
+            disabled={feedbackText.trim().length === 0}
+            className={`w-full py-3.5 rounded-xl font-display text-sm tracking-wide shadow-md ${
+              feedbackText.trim().length > 0 ? "bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white" : "bg-[#E4D7BA] text-[#A79A7E] cursor-not-allowed"
+            }`}
+          >
+            PER MAIL SENDEN
+          </button>
+          <p className="text-[11px] text-[#A79A7E] text-center mt-3">Öffnet deine Mail-App, Empfänger ist bereits eingetragen.</p>
         </div>
       </div>
     );
@@ -1988,6 +2578,12 @@ export default function App() {
         onSave={updateActiveAliasAvatar}
         setScreen={setScreen}
         screen={screen}
+        syncCodeInput={syncCodeInput}
+        setSyncCodeInput={setSyncCodeInput}
+        syncStatus={syncStatus}
+        syncCopyLabel={syncCopyLabel}
+        onCopySyncCode={copySyncCode}
+        onLoadSyncCode={loadProfileFromSyncCode}
       />
     );
   }
@@ -2087,7 +2683,25 @@ function OnboardingScreen({ onCreate, onCancel }) {
 /* PROFILE SCREEN */
 /* ------------------------------------------------------------------ */
 
-function ProfileScreen({ active, profiles, xp, streak, unlockedBadges, rank, onSwitch, onAddProfile, onSave, setScreen, screen }) {
+function ProfileScreen({
+  active,
+  profiles,
+  xp,
+  streak,
+  unlockedBadges,
+  rank,
+  onSwitch,
+  onAddProfile,
+  onSave,
+  setScreen,
+  screen,
+  syncCodeInput,
+  setSyncCodeInput,
+  syncStatus,
+  syncCopyLabel,
+  onCopySyncCode,
+  onLoadSyncCode,
+}) {
   const [editing, setEditing] = useState(false);
   const [alias, setAlias] = useState(active.alias);
   const [avatar, setAvatar] = useState(active.avatar);
@@ -2205,9 +2819,61 @@ function ProfileScreen({ active, profiles, xp, streak, unlockedBadges, rank, onS
 
         <button
           onClick={onAddProfile}
-          className="w-full py-3.5 rounded-xl border-2 border-dashed border-[#EC4899]/40 text-[#C2185B] font-display text-xs tracking-wide flex items-center justify-center gap-2"
+          className="w-full py-3.5 rounded-xl border-2 border-dashed border-[#EC4899]/40 text-[#C2185B] font-display text-xs tracking-wide flex items-center justify-center gap-2 mb-6"
         >
           <Plus size={16} /> NEUES PROFIL ANLEGEN
+        </button>
+
+        <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">GERÄTE-SYNC</div>
+        <div className="glass rounded-2xl p-5 mb-4">
+          <p className="text-[12px] text-[#8A7F68] mb-3">
+            Dein Code — gib ihn auf einem anderen Gerät ein, um dieses Profil dort zu laden:
+          </p>
+          <div className="flex items-center gap-2 mb-1">
+            <div className="flex-1 glass-strong rounded-xl py-3 text-center font-display text-lg tracking-[0.2em] text-[#2B241D]">
+              {active.syncCode || "…"}
+            </div>
+            <button
+              onClick={onCopySyncCode}
+              className="px-4 py-3 rounded-xl bg-gradient-to-r from-[#3B82F6] to-[#2EC4B6] text-white font-display text-[11px] tracking-wide shrink-0"
+            >
+              {syncCopyLabel}
+            </button>
+          </div>
+        </div>
+
+        <div className="glass rounded-2xl p-5 mb-6">
+          <p className="text-[12px] text-[#8A7F68] mb-3">Code von einem anderen Gerät eingeben:</p>
+          <div className="flex items-center gap-2">
+            <input
+              value={syncCodeInput}
+              onChange={(e) => setSyncCodeInput(e.target.value.toUpperCase())}
+              placeholder="Z. B. K7XQ2P"
+              maxLength={6}
+              className="flex-1 px-3.5 py-3 rounded-xl glass text-[#2B241D] text-[15px] tracking-[0.15em] text-center focus:outline-none"
+            />
+            <button
+              onClick={onLoadSyncCode}
+              disabled={syncCodeInput.trim().length === 0}
+              className={`px-4 py-3 rounded-xl font-display text-[11px] tracking-wide shrink-0 ${
+                syncCodeInput.trim().length > 0 ? "bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white" : "bg-[#E4D7BA] text-[#A79A7E]"
+              }`}
+            >
+              LADEN
+            </button>
+          </div>
+          {syncStatus && (
+            <p className={`text-[12px] mt-2.5 ${syncStatus.ok === true ? "text-[#0E9E85]" : syncStatus.ok === false ? "text-[#B4291D]" : "text-[#8A7F68]"}`}>
+              {syncStatus.msg}
+            </p>
+          )}
+        </div>
+
+        <button
+          onClick={() => setScreen("feedback")}
+          className="w-full py-3.5 rounded-xl glass text-[#2B241D] font-display text-xs tracking-wide flex items-center justify-center gap-2"
+        >
+          ✉️ FEEDBACK SENDEN
         </button>
       </div>
       <BottomNav screen={screen} setScreen={setScreen} />
