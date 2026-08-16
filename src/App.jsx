@@ -308,6 +308,164 @@ const UNITS = [
       },
     ],
   },
+  {
+    id: "u9",
+    latin: "AD PRAEPOSITIONES",
+    german: "Ablativ & Präpositionen",
+    lessons: [
+      {
+        id: "u9-l1",
+        title: "Präpositionen",
+        exercises: [
+          { type: "mc", q: "„In“ bedeutet …", options: ["in/auf", "mit", "ohne", "aus"], correct: 0 },
+          { type: "mc", q: "„Cum“ bedeutet …", options: ["in/auf", "mit", "ohne", "aus"], correct: 1 },
+          { type: "mc", q: "„Sine“ bedeutet …", options: ["in/auf", "mit", "ohne", "aus"], correct: 2 },
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "ex", accept: ["aus"] },
+        ],
+      },
+      {
+        id: "u9-l2",
+        title: "Ablativ der o-Deklination",
+        exercises: [
+          { type: "mc", q: "Welche Endung hat der Ablativ Singular der o-Deklination?", options: ["-o", "-um", "-us", "-i"], correct: 0 },
+          { type: "mc", q: "Wähle die richtige Form: „Servus cum ___ laborat.“ (Der Sklave arbeitet mit dem Herrn.)", options: ["domino", "dominum", "domini", "dominus"], correct: 0 },
+          { type: "mc", q: "Wähle die richtige Form: „Puer in ___ est.“ (Der Junge ist im Tempel.)", options: ["templum", "templo", "templi", "templus"], correct: 1 },
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Der Junge ist im Tempel.“", words: ["Puer", "in", "templo", "est"], correct: ["Puer", "in", "templo", "est"] },
+        ],
+      },
+      {
+        id: "u9-l3",
+        title: "Sätze mit Präpositionen",
+        exercises: [
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Der Herr schaut aus dem Tempel.“", words: ["Dominus", "ex", "templo", "spectat"], correct: ["Dominus", "ex", "templo", "spectat"] },
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Das Mädchen ist ohne Freundin.“", words: ["Puella", "sine", "amica", "est"], correct: ["Puella", "sine", "amica", "est"] },
+          { type: "mc", q: "„Servus sine domino laborat.“ bedeutet …", options: ["Der Sklave arbeitet ohne den Herrn.", "Der Herr arbeitet ohne den Sklaven.", "Der Sklave arbeitet mit dem Herrn.", "Der Sklave ruft den Herrn."], correct: 0 },
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "cum", accept: ["mit"] },
+        ],
+      },
+    ],
+  },
+  {
+    id: "u10",
+    latin: "REX ET TEMPUS",
+    german: "3. Deklination",
+    lessons: [
+      {
+        id: "u10-l1",
+        title: "Wortschatz 3. Deklination",
+        exercises: [
+          { type: "mc", q: "„Rex“ bedeutet …", options: ["König", "Mensch", "Stadt", "Zeit"], correct: 0 },
+          { type: "mc", q: "„Homo“ bedeutet …", options: ["König", "Mensch", "Stadt", "Zeit"], correct: 1 },
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "urbs", accept: ["stadt"] },
+          { type: "mc", q: "„Tempus“ bedeutet …", options: ["König", "Mensch", "Stadt", "Zeit"], correct: 3 },
+        ],
+      },
+      {
+        id: "u10-l2",
+        title: "Akkusativ auf -em",
+        exercises: [
+          { type: "mc", q: "Welche Akkusativ-Endung haben viele Wörter der 3. Deklination (z. B. rex, homo)?", options: ["-em", "-um", "-am", "-is"], correct: 0 },
+          { type: "mc", q: "Wähle die richtige Form: „Populus ___ amat.“ (Das Volk liebt den König.)", options: ["rex", "regem", "regis", "rege"], correct: 1 },
+          { type: "mc", q: "Wähle die richtige Form: „Servus ___ videt.“ (Der Sklave sieht den Menschen.)", options: ["homo", "hominem", "hominis", "homine"], correct: 1 },
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Der Sklave sieht den Menschen.“", words: ["Servus", "hominem", "videt"], correct: ["Servus", "hominem", "videt"] },
+        ],
+      },
+      {
+        id: "u10-l3",
+        title: "Lesetext: Rex Romanus",
+        exercises: [
+          {
+            type: "reading",
+            title: "Rex Romanus",
+            latin: "Rex magnus est. Rex urbem amat. In urbe templum magnum est. Servus regem vocat: „Salve, rex!“ Rex servum spectat. Populus regem amat.",
+          },
+          { type: "mc", q: "Wie ist der König?", options: ["groß", "klein", "traurig", "böse"], correct: 0 },
+          { type: "mc", q: "Wo steht der Tempel?", options: ["In der Stadt", "Im Wald", "Am Meer", "Auf der Insel"], correct: 0 },
+          { type: "mc", q: "Wer ruft den König?", options: ["Der Sklave", "Das Volk", "Der Lehrer", "Die Göttin"], correct: 0 },
+          { type: "mc", q: "Wer liebt den König am Ende des Textes?", options: ["Das Volk", "Der Sklave", "Die Familie", "Der Gott"], correct: 0 },
+        ],
+      },
+    ],
+  },
+  {
+    id: "u11",
+    latin: "ESSE ET IRE",
+    german: "Unregelmäßige Verben",
+    lessons: [
+      {
+        id: "u11-l1",
+        title: "Sein – esse",
+        exercises: [
+          { type: "mc", q: "„Sunt“ bedeutet …", options: ["sie sind", "er ist", "wir sind", "du bist"], correct: 0 },
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "sumus", accept: ["wir sind"] },
+          { type: "mc", q: "„Es“ bedeutet …", options: ["ich bin", "du bist", "sie sind", "wir sind"], correct: 1 },
+          { type: "mc", q: "„Ad“ bedeutet …", options: ["zu/nach", "mit", "ohne", "aus"], correct: 0 },
+        ],
+      },
+      {
+        id: "u11-l2",
+        title: "Gehen – ire",
+        exercises: [
+          { type: "mc", q: "„It“ bedeutet …", options: ["er/sie geht", "er/sie ist", "sie gehen", "er/sie kam"], correct: 0 },
+          { type: "mc", q: "„Eunt“ bedeutet …", options: ["er/sie geht", "sie gehen", "wir gehen", "sie sind"], correct: 1 },
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Der Junge geht zum Markt.“", words: ["Puer", "ad", "forum", "it"], correct: ["Puer", "ad", "forum", "it"] },
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Die Sklaven gehen zum Tempel.“", words: ["Servi", "ad", "templum", "eunt"], correct: ["Servi", "ad", "templum", "eunt"] },
+        ],
+      },
+      {
+        id: "u11-l3",
+        title: "Götter im Himmel",
+        exercises: [
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "caelum", accept: ["himmel"] },
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Die Götter sind im Himmel.“", words: ["Dei", "in", "caelo", "sunt"], correct: ["Dei", "in", "caelo", "sunt"] },
+          { type: "mc", q: "„Servus ad dominum it.“ bedeutet …", options: ["Der Sklave geht zum Herrn.", "Der Herr geht zum Sklaven.", "Der Sklave ruft den Herrn.", "Der Sklave ist beim Herrn."], correct: 0 },
+          { type: "mc", q: "„Servi ad templum eunt.“ bedeutet …", options: ["Die Sklaven gehen zum Tempel.", "Der Sklave geht zum Tempel.", "Die Sklaven sind im Tempel.", "Die Sklaven lieben den Tempel."], correct: 0 },
+        ],
+      },
+    ],
+  },
+  {
+    id: "u12",
+    latin: "IMPERFECTUM ET FUTURUM",
+    german: "Imperfekt & Futur I",
+    lessons: [
+      {
+        id: "u12-l1",
+        title: "Zeitangaben & Imperfekt",
+        exercises: [
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "heri", accept: ["gestern"] },
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "hodie", accept: ["heute"] },
+          { type: "mc", q: "„Amabat“ bedeutet …", options: ["er/sie liebt", "er/sie hat geliebt", "er/sie liebte", "er/sie wird lieben"], correct: 2 },
+          { type: "mc", q: "„Vocabat“ bedeutet …", options: ["er/sie ruft", "er/sie rief (immer wieder)", "er/sie hat gerufen", "er/sie wird rufen"], correct: 1 },
+        ],
+      },
+      {
+        id: "u12-l2",
+        title: "Futur I",
+        exercises: [
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "cras", accept: ["morgen"] },
+          { type: "mc", q: "„Amabit“ bedeutet …", options: ["er/sie liebt", "er/sie liebte", "er/sie wird lieben", "er/sie hat geliebt"], correct: 2 },
+          { type: "mc", q: "„Vocabit“ bedeutet …", options: ["er/sie ruft", "er/sie rief", "er/sie hat gerufen", "er/sie wird rufen"], correct: 3 },
+          { type: "mc", q: "Wähle die richtige Form: „Cras dominus servum ___.“ (Morgen wird der Herr den Sklaven rufen.)", options: ["vocat", "vocavit", "vocabit", "vocabat"], correct: 2 },
+        ],
+      },
+      {
+        id: "u12-l3",
+        title: "Lesetext: Ein Tag im Leben",
+        exercises: [
+          {
+            type: "reading",
+            title: "Ein Tag im Leben",
+            latin: "Heri servus laborabat. Heri dominus servum vocavit. Hodie servus in foro est. Cras servus templum spectabit.",
+          },
+          { type: "mc", q: "Was tat der Sklave gestern die ganze Zeit?", options: ["Er arbeitete.", "Er schlief.", "Er las.", "Er ging."], correct: 0 },
+          { type: "mc", q: "Was geschah gestern einmalig?", options: ["Der Herr rief den Sklaven.", "Der Sklave rief den Herrn.", "Der König kam.", "Der Sklave ging fort."], correct: 0 },
+          { type: "mc", q: "Wo ist der Sklave heute?", options: ["Auf dem Forum.", "Im Tempel.", "Im Wald.", "Auf der Insel."], correct: 0 },
+          { type: "mc", q: "Was wird der Sklave morgen tun?", options: ["Er wird den Tempel betrachten.", "Er wird den Herrn rufen.", "Er wird zum Forum gehen.", "Er wird arbeiten."], correct: 0 },
+        ],
+      },
+    ],
+  },
 ];
 
 const FLAT_LESSONS = UNITS.flatMap((u) => u.lessons.map((l) => ({ ...l, unitId: u.id })));
@@ -418,6 +576,25 @@ const VOCAB_POOL = [
   { id: "v55", latin: "tres", german: "drei", lessonId: "u8-l2" },
   { id: "v56", latin: "quattuor", german: "vier", lessonId: "u8-l2" },
   { id: "v57", latin: "quinque", german: "fünf", lessonId: "u8-l2" },
+  { id: "v58", latin: "in", german: "in/auf", lessonId: "u9-l1" },
+  { id: "v59", latin: "cum", german: "mit", lessonId: "u9-l1" },
+  { id: "v60", latin: "sine", german: "ohne", lessonId: "u9-l1" },
+  { id: "v61", latin: "ex", german: "aus", lessonId: "u9-l1" },
+  { id: "v62", latin: "rex", german: "König", lessonId: "u10-l1" },
+  { id: "v63", latin: "homo", german: "Mensch", lessonId: "u10-l1" },
+  { id: "v64", latin: "urbs", german: "Stadt", lessonId: "u10-l1" },
+  { id: "v65", latin: "tempus", german: "Zeit", lessonId: "u10-l1" },
+  { id: "v66", latin: "ad", german: "zu/nach", lessonId: "u11-l1" },
+  { id: "v67", latin: "sunt", german: "sie sind", lessonId: "u11-l1" },
+  { id: "v68", latin: "sumus", german: "wir sind", lessonId: "u11-l1" },
+  { id: "v69", latin: "it", german: "er/sie geht", lessonId: "u11-l2" },
+  { id: "v70", latin: "eunt", german: "sie gehen", lessonId: "u11-l2" },
+  { id: "v71", latin: "caelum", german: "Himmel", lessonId: "u11-l3" },
+  { id: "v72", latin: "heri", german: "gestern", lessonId: "u12-l1" },
+  { id: "v73", latin: "hodie", german: "heute", lessonId: "u12-l1" },
+  { id: "v74", latin: "amabat", german: "er/sie liebte", lessonId: "u12-l1" },
+  { id: "v75", latin: "cras", german: "morgen", lessonId: "u12-l2" },
+  { id: "v76", latin: "amabit", german: "er/sie wird lieben", lessonId: "u12-l2" },
 ];
 
 const BOX_INTERVAL_DAYS = [0, 1, 3, 7, 14, 30];
@@ -944,6 +1121,14 @@ export default function App() {
       setScreen("failed");
       return;
     }
+    if (idx + 1 < exercises.length) {
+      setIdx((i) => i + 1);
+    } else {
+      finishLesson();
+    }
+  }
+
+  function continueReading() {
     if (idx + 1 < exercises.length) {
       setIdx((i) => i + 1);
     } else {
@@ -1530,15 +1715,28 @@ export default function App() {
                 </div>
               </div>
             )}
+
+            {ex.type === "reading" && (
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <BookOpen size={18} color="#8B5CF6" />
+                  <h2 className="font-display text-base text-[#2B241D]">{ex.title}</h2>
+                </div>
+                <div className="bg-white border-2 border-[#F0DFC0] rounded-2xl p-5 shadow-sm">
+                  <p className="font-serif-latin text-[17px] text-[#2B241D] leading-relaxed italic">{ex.latin}</p>
+                </div>
+                <p className="text-[12px] text-[#8A7F68] mt-4">📖 Lies den Text genau — die nächsten Fragen drehen sich darum!</p>
+              </div>
+            )}
           </div>
 
           <div
             className={`fixed bottom-0 left-0 right-0 flex justify-center border-t-2 transition-colors ${
-              checked ? (isCorrect ? "bg-[#DFF5E9] border-[#2EC4B6]" : "bg-[#FBE2DC] border-[#E8483A]") : "bg-[#FFFBF2] border-[#F0DFC0]"
+              checked && ex.type !== "reading" ? (isCorrect ? "bg-[#DFF5E9] border-[#2EC4B6]" : "bg-[#FBE2DC] border-[#E8483A]") : "bg-[#FFFBF2] border-[#F0DFC0]"
             }`}
           >
             <div className="w-full max-w-md px-5 py-4">
-              {checked && (
+              {checked && ex.type !== "reading" && (
                 <div className="flex items-center gap-2 mb-3">
                   <div className={isCorrect ? "animate-pop-in" : ""}>
                     {isCorrect ? <Check size={22} color="#0E7A5F" strokeWidth={3} /> : <X size={20} color="#B4291D" />}
@@ -1560,7 +1758,14 @@ export default function App() {
                   </div>
                 </div>
               )}
-              {!checked ? (
+              {ex.type === "reading" ? (
+                <button
+                  onClick={continueReading}
+                  className="w-full py-3.5 rounded-xl font-display text-sm tracking-wide flex items-center justify-center gap-2 shadow-md bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white"
+                >
+                  WEITER <ArrowRight size={16} />
+                </button>
+              ) : !checked ? (
                 <button
                   onClick={handleCheck}
                   disabled={!canCheck()}
