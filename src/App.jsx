@@ -3,6 +3,7 @@ import {
   Heart, X, Lock, Check, Flame, Award, Trophy, Sparkles,
   Landmark, RotateCcw, ArrowRight, Star, PartyPopper, Zap,
   Map, User, Dices, Medal, RefreshCw, Plus, Pencil, BookOpen,
+  LayoutGrid, ChevronDown,
 } from "lucide-react";
 import { supabase, cloudEnabled } from "./supabaseClient";
 
@@ -600,6 +601,172 @@ const VOCAB_POOL = [
 const BOX_INTERVAL_DAYS = [0, 1, 3, 7, 14, 30];
 
 /* ------------------------------------------------------------------ */
+/* GRAMMATIK-TRAINER: Deklinations- & Konjugationstabellen */
+/* ------------------------------------------------------------------ */
+
+const CASES = ["Nominativ", "Genitiv", "Dativ", "Akkusativ", "Ablativ"];
+const CASE_UNLOCK_LESSON = {
+  Nominativ: "u1-l3",
+  Akkusativ: "u2-l2",
+  Genitiv: "u4-l1",
+  Dativ: "u4-l2",
+  Ablativ: "u9-l2",
+};
+
+const NOUN_PARADIGMS = [
+  {
+    id: "puella",
+    latin: "puella",
+    german: "Mädchen",
+    declension: "a-Deklination (fem.)",
+    unlockLessonId: "u2-l1",
+    forms: { Nominativ: "puella", Genitiv: "puellae", Dativ: "puellae", Akkusativ: "puellam", Ablativ: "puella" },
+  },
+  {
+    id: "servus",
+    latin: "servus",
+    german: "Sklave",
+    declension: "o-Deklination (mask.)",
+    unlockLessonId: "u3-l1",
+    forms: { Nominativ: "servus", Genitiv: "servi", Dativ: "servo", Akkusativ: "servum", Ablativ: "servo" },
+  },
+  {
+    id: "templum",
+    latin: "templum",
+    german: "Tempel",
+    declension: "o-Deklination (neutr.)",
+    unlockLessonId: "u3-l1",
+    forms: { Nominativ: "templum", Genitiv: "templi", Dativ: "templo", Akkusativ: "templum", Ablativ: "templo" },
+  },
+  {
+    id: "rex",
+    latin: "rex",
+    german: "König",
+    declension: "3. Deklination (mask.)",
+    unlockLessonId: "u10-l1",
+    forms: { Nominativ: "rex", Genitiv: "regis", Dativ: "regi", Akkusativ: "regem", Ablativ: "rege" },
+  },
+];
+
+const PERSONS = ["ich", "du", "er/sie/es", "wir", "ihr", "sie"];
+const TENSE_UNLOCK_LESSON = {
+  Präsens: "u3-l2",
+  Perfekt: "u7-l1",
+  Imperfekt: "u12-l1",
+  Futur: "u12-l2",
+};
+
+const VERB_PARADIGMS = [
+  {
+    id: "amare",
+    latin: "amare",
+    german: "lieben",
+    conjugation: "a-Konjugation",
+    unlockLessonId: "u3-l2",
+    tenses: {
+      Präsens: { ich: "amo", du: "amas", "er/sie/es": "amat", wir: "amamus", ihr: "amatis", sie: "amant" },
+      Perfekt: { ich: "amavi", du: "amavisti", "er/sie/es": "amavit", wir: "amavimus", ihr: "amavistis", sie: "amaverunt" },
+      Imperfekt: { ich: "amabam", du: "amabas", "er/sie/es": "amabat", wir: "amabamus", ihr: "amabatis", sie: "amabant" },
+      Futur: { ich: "amabo", du: "amabis", "er/sie/es": "amabit", wir: "amabimus", ihr: "amabitis", sie: "amabunt" },
+    },
+  },
+  {
+    id: "vocare",
+    latin: "vocare",
+    german: "rufen",
+    conjugation: "a-Konjugation",
+    unlockLessonId: "u3-l2",
+    tenses: {
+      Präsens: { ich: "voco", du: "vocas", "er/sie/es": "vocat", wir: "vocamus", ihr: "vocatis", sie: "vocant" },
+      Perfekt: { ich: "vocavi", du: "vocavisti", "er/sie/es": "vocavit", wir: "vocavimus", ihr: "vocavistis", sie: "vocaverunt" },
+      Imperfekt: { ich: "vocabam", du: "vocabas", "er/sie/es": "vocabat", wir: "vocabamus", ihr: "vocabatis", sie: "vocabant" },
+      Futur: { ich: "vocabo", du: "vocabis", "er/sie/es": "vocabit", wir: "vocabimus", ihr: "vocabitis", sie: "vocabunt" },
+    },
+  },
+  {
+    id: "laborare",
+    latin: "laborare",
+    german: "arbeiten",
+    conjugation: "a-Konjugation",
+    unlockLessonId: "u3-l2",
+    tenses: {
+      Präsens: { ich: "laboro", du: "laboras", "er/sie/es": "laborat", wir: "laboramus", ihr: "laboratis", sie: "laborant" },
+      Perfekt: { ich: "laboravi", du: "laboravisti", "er/sie/es": "laboravit", wir: "laboravimus", ihr: "laboravistis", sie: "laboraverunt" },
+      Imperfekt: { ich: "laborabam", du: "laborabas", "er/sie/es": "laborabat", wir: "laborabamus", ihr: "laborabatis", sie: "laborabant" },
+      Futur: { ich: "laborabo", du: "laborabis", "er/sie/es": "laborabit", wir: "laborabimus", ihr: "laborabitis", sie: "laborabunt" },
+    },
+  },
+  {
+    id: "esse",
+    latin: "esse",
+    german: "sein",
+    conjugation: "unregelmäßig",
+    unlockLessonId: "u11-l1",
+    tenses: {
+      Präsens: { ich: "sum", du: "es", "er/sie/es": "est", wir: "sumus", ihr: "estis", sie: "sunt" },
+    },
+  },
+  {
+    id: "ire",
+    latin: "ire",
+    german: "gehen",
+    conjugation: "unregelmäßig",
+    unlockLessonId: "u11-l2",
+    tenses: {
+      Präsens: { ich: "eo", du: "is", "er/sie/es": "it", wir: "imus", ihr: "itis", sie: "eunt" },
+    },
+  },
+];
+
+/* ------------------------------------------------------------------ */
+/* SATZ DES TAGES */
+/* ------------------------------------------------------------------ */
+
+const DAILY_SENTENCES = [
+  { latin: "Puer amicus est.", german: "Der Junge ist ein Freund." },
+  { latin: "Puella laeta est.", german: "Das Mädchen ist fröhlich." },
+  { latin: "Puella rosam amat.", german: "Das Mädchen liebt die Rose." },
+  { latin: "Filia aquam portat.", german: "Die Tochter trägt das Wasser." },
+  { latin: "Familia viam videt.", german: "Die Familie sieht den Weg." },
+  { latin: "Servus dominum vocat.", german: "Der Sklave ruft den Herrn." },
+  { latin: "Populus deum spectat.", german: "Das Volk betrachtet den Gott." },
+  { latin: "Dominus templum amat.", german: "Der Herr liebt den Tempel." },
+  { latin: "Pater filiae librum dat.", german: "Der Vater gibt der Tochter das Buch." },
+  { latin: "Ancilla domino aquam dat.", german: "Die Sklavin gibt dem Herrn Wasser." },
+  { latin: "Frater sorori rosam dat.", german: "Der Bruder gibt der Schwester eine Rose." },
+  { latin: "Iuppiter deos vocat.", german: "Iuppiter ruft die Götter." },
+  { latin: "Venus rosam amat.", german: "Venus liebt die Rose." },
+  { latin: "Puella bona rosam amat.", german: "Das gute Mädchen liebt die Rose." },
+  { latin: "Dominus magnum templum videt.", german: "Der Herr sieht den großen Tempel." },
+  { latin: "Populus bonum deum amat.", german: "Das Volk liebt den guten Gott." },
+  { latin: "Puella rosam amavit.", german: "Das Mädchen hat die Rose geliebt." },
+  { latin: "Servus dominum vocavit.", german: "Der Sklave hat den Herrn gerufen." },
+  { latin: "Ego rosam amo.", german: "Ich liebe die Rose." },
+  { latin: "Nos templum videmus.", german: "Wir sehen den Tempel." },
+  { latin: "Dominus ex templo spectat.", german: "Der Herr schaut aus dem Tempel." },
+  { latin: "Puella sine amica est.", german: "Das Mädchen ist ohne Freundin." },
+  { latin: "Servus sine domino laborat.", german: "Der Sklave arbeitet ohne den Herrn." },
+  { latin: "Puer in templo est.", german: "Der Junge ist im Tempel." },
+  { latin: "Servus hominem videt.", german: "Der Sklave sieht den Menschen." },
+  { latin: "Puer ad forum it.", german: "Der Junge geht zum Markt." },
+  { latin: "Servi ad templum eunt.", german: "Die Sklaven gehen zum Tempel." },
+  { latin: "Dei in caelo sunt.", german: "Die Götter sind im Himmel." },
+  { latin: "Servus ad dominum it.", german: "Der Sklave geht zum Herrn." },
+  { latin: "Heri servus laborabat.", german: "Gestern arbeitete der Sklave." },
+  { latin: "Cras servus templum spectabit.", german: "Morgen wird der Sklave den Tempel betrachten." },
+  { latin: "Rex magnus est.", german: "Der König ist groß." },
+  { latin: "Rex urbem amat.", german: "Der König liebt die Stadt." },
+  { latin: "Populus regem amat.", german: "Das Volk liebt den König." },
+];
+
+function getDailySentence() {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  const dayOfYear = Math.floor((now - start) / 86400000);
+  return DAILY_SENTENCES[dayOfYear % DAILY_SENTENCES.length];
+}
+
+/* ------------------------------------------------------------------ */
 /* HELPERS */
 /* ------------------------------------------------------------------ */
 
@@ -735,6 +902,62 @@ function buildVocabQuestion(word, pool) {
   const options = shuffle([correctText, ...distractors]);
   const correctIndex = options.indexOf(correctText);
   return { wordId: word.id, direction, prompt: promptText, options, correctIndex, latin: word.latin, german: word.german };
+}
+
+/* ---- Grammatik-Trainer: Deklination & Konjugation ---- */
+
+function getAvailableNouns(completed) {
+  return NOUN_PARADIGMS.filter((n) => completed.has(n.unlockLessonId));
+}
+function getAvailableCases(completed) {
+  return CASES.filter((c) => completed.has(CASE_UNLOCK_LESSON[c]));
+}
+function getAvailableVerbs(completed) {
+  return VERB_PARADIGMS.filter((v) => completed.has(v.unlockLessonId));
+}
+function getAvailableTenses(verb, completed) {
+  return Object.keys(verb.tenses).filter((t) => completed.has(TENSE_UNLOCK_LESSON[t]));
+}
+
+function buildDeclensionQuestion(noun, availableCases) {
+  const casesForNoun = availableCases.filter((c) => noun.forms[c] !== undefined);
+  const targetCase = casesForNoun[Math.floor(Math.random() * casesForNoun.length)];
+  const correctForm = noun.forms[targetCase];
+  const allForms = NOUN_PARADIGMS.flatMap((n) => Object.values(n.forms));
+  const distractorPool = [...new Set(allForms)].filter((f) => f !== correctForm);
+  const distractors = shuffle(distractorPool).slice(0, 3);
+  const options = shuffle([correctForm, ...distractors]);
+  return {
+    kind: "declension",
+    nounId: noun.id,
+    latin: noun.latin,
+    german: noun.german,
+    targetCase,
+    correctIndex: options.indexOf(correctForm),
+    options,
+  };
+}
+
+function buildConjugationQuestion(verb, availableTenses) {
+  const tensesForVerb = availableTenses.filter((t) => verb.tenses[t]);
+  const targetTense = tensesForVerb[Math.floor(Math.random() * tensesForVerb.length)];
+  const personKeys = Object.keys(verb.tenses[targetTense]);
+  const targetPerson = personKeys[Math.floor(Math.random() * personKeys.length)];
+  const correctForm = verb.tenses[targetTense][targetPerson];
+  const allForms = VERB_PARADIGMS.flatMap((v) => Object.values(v.tenses).flatMap((t) => Object.values(t)));
+  const distractorPool = [...new Set(allForms)].filter((f) => f !== correctForm);
+  const distractors = shuffle(distractorPool).slice(0, 3);
+  const options = shuffle([correctForm, ...distractors]);
+  return {
+    kind: "conjugation",
+    verbId: verb.id,
+    latin: verb.latin,
+    german: verb.german,
+    targetTense,
+    targetPerson,
+    correctIndex: options.indexOf(correctForm),
+    options,
+  };
 }
 
 function computeNewStreak(profile) {
@@ -894,18 +1117,19 @@ function ComboToast({ text }) {
 function BottomNav({ screen, setScreen }) {
   const items = [
     { id: "path", label: "Pfad", icon: Map },
+    { id: "grammar-home", label: "Grammatik", icon: LayoutGrid },
     { id: "vocab-home", label: "Vokabeln", icon: BookOpen },
     { id: "leaderboard", label: "Rangliste", icon: Trophy },
     { id: "profile", label: "Profil", icon: User },
   ];
   return (
     <div className="fixed bottom-0 left-0 right-0 flex justify-center z-30">
-      <div className="w-full max-w-md glass-strong border-t-0 px-6 py-2.5 flex items-center justify-around">
+      <div className="w-full max-w-md glass-strong border-t-0 px-2 py-2.5 flex items-center justify-around">
         {items.map((it) => {
           const Icon = it.icon;
           const active = screen === it.id;
           return (
-            <button key={it.id} onClick={() => setScreen(it.id)} className="flex flex-col items-center gap-1 px-3 py-1">
+            <button key={it.id} onClick={() => setScreen(it.id)} className="flex flex-col items-center gap-1 px-1.5 py-1">
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
                   active ? "shadow-md" : ""
@@ -914,7 +1138,7 @@ function BottomNav({ screen, setScreen }) {
               >
                 <Icon size={19} color={active ? "#FFFBF2" : "#A79A7E"} />
               </div>
-              <span className={`text-[10px] font-semibold ${active ? "text-[#C2185B]" : "text-[#A79A7E]"}`}>{it.label}</span>
+              <span className={`text-[9px] font-semibold whitespace-nowrap ${active ? "text-[#C2185B]" : "text-[#A79A7E]"}`}>{it.label}</span>
             </button>
           );
         })}
@@ -1000,6 +1224,17 @@ export default function App() {
 
   const [feedbackText, setFeedbackText] = useState("");
   const [feedbackCategory, setFeedbackCategory] = useState("Idee");
+
+  const [grammarMode, setGrammarMode] = useState("declension");
+  const [grammarRound, setGrammarRound] = useState([]);
+  const [grammarIdx, setGrammarIdx] = useState(0);
+  const [grammarSelected, setGrammarSelected] = useState(null);
+  const [grammarChecked, setGrammarChecked] = useState(false);
+  const [grammarIsCorrect, setGrammarIsCorrect] = useState(null);
+  const [grammarCorrectCount, setGrammarCorrectCount] = useState(0);
+  const [grammarXpEarned, setGrammarXpEarned] = useState(0);
+  const [expandedParadigm, setExpandedParadigm] = useState(null);
+  const [dailyRevealed, setDailyRevealed] = useState(false);
 
   const active = profiles.find((p) => p.id === activeId) || null;
   const rank = getRank(xp);
@@ -1449,6 +1684,74 @@ export default function App() {
     window.location.href = `mailto:Dominik@hoferer.me?subject=${subject}&body=${body}`;
   }
 
+  /* ---- Grammatik-Trainer ---- */
+
+  const availableNouns = getAvailableNouns(completed);
+  const availableCases = getAvailableCases(completed);
+  const availableVerbs = getAvailableVerbs(completed);
+
+  function startDeclensionTraining() {
+    const round = [];
+    for (let i = 0; i < 8; i++) {
+      const noun = availableNouns[Math.floor(Math.random() * availableNouns.length)];
+      round.push(buildDeclensionQuestion(noun, availableCases));
+    }
+    setGrammarMode("declension");
+    setGrammarRound(round);
+    setGrammarIdx(0);
+    setGrammarSelected(null);
+    setGrammarChecked(false);
+    setGrammarIsCorrect(null);
+    setGrammarCorrectCount(0);
+    setGrammarXpEarned(0);
+    setScreen("grammar-quiz");
+  }
+
+  function startConjugationTraining() {
+    const round = [];
+    for (let i = 0; i < 8; i++) {
+      const verb = availableVerbs[Math.floor(Math.random() * availableVerbs.length)];
+      const tensesForVerb = getAvailableTenses(verb, completed);
+      if (tensesForVerb.length === 0) continue;
+      round.push(buildConjugationQuestion(verb, tensesForVerb));
+    }
+    setGrammarMode("conjugation");
+    setGrammarRound(round);
+    setGrammarIdx(0);
+    setGrammarSelected(null);
+    setGrammarChecked(false);
+    setGrammarIsCorrect(null);
+    setGrammarCorrectCount(0);
+    setGrammarXpEarned(0);
+    setScreen("grammar-quiz");
+  }
+
+  function handleGrammarCheck() {
+    const q = grammarRound[grammarIdx];
+    const correct = grammarSelected === q.correctIndex;
+    setGrammarIsCorrect(correct);
+    setGrammarChecked(true);
+    if (correct) {
+      setGrammarCorrectCount((c) => c + 1);
+      setGrammarXpEarned((x) => x + 5);
+      setFloatXp({ id: Date.now(), amount: 5 });
+    }
+  }
+
+  function handleGrammarContinue() {
+    if (grammarIdx + 1 < grammarRound.length) {
+      setGrammarIdx((i) => i + 1);
+      setGrammarSelected(null);
+      setGrammarChecked(false);
+      setGrammarIsCorrect(null);
+    } else {
+      const totalXp = xp + grammarXpEarned;
+      setXp(totalXp);
+      persistProfile({ xp: totalXp });
+      setScreen("grammar-summary");
+    }
+  }
+
   const availableVocab = getAvailableVocab(completed);
   const dueVocab = getDueVocab(availableVocab, vocabProgress);
   const masteredVocabCount = availableVocab.filter((w) => (vocabProgress[w.id]?.box ?? -1) >= 5).length;
@@ -1599,6 +1902,10 @@ export default function App() {
                 </div>
               );
             })}
+          </div>
+
+          <div className="px-4">
+            <DailySentenceCard revealed={dailyRevealed} onToggle={() => setDailyRevealed((r) => !r)} />
           </div>
 
           <div className="relative px-4 pt-2">
@@ -1948,6 +2255,256 @@ export default function App() {
           <button
             onClick={() => setScreen("vocab-home")}
             className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white font-display text-sm tracking-wide mt-auto shadow-md"
+          >
+            WEITER
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  /* -------------------------------- GRAMMAR HOME -------------------------------- */
+
+  if (screen === "grammar-home") {
+    return (
+      <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9]">
+        <FontImport />
+        <BackgroundBlobs />
+        <div className="w-full max-w-md min-h-screen pb-28 px-5 pt-6">
+          <h1 className="font-display text-lg text-[#2B241D] mb-1">GRAMMATIK</h1>
+          <p className="text-[13px] text-[#8A7F68] mb-5">Das Herzstück von Latein — Formen erkennen und bilden.</p>
+
+          <button
+            onClick={startDeclensionTraining}
+            disabled={availableNouns.length === 0 || availableCases.length === 0}
+            className="w-full glass rounded-2xl p-5 mb-4 text-left flex items-center gap-4 disabled:opacity-50"
+          >
+            <div className="glossy w-14 h-14 rounded-2xl flex items-center justify-center shrink-0" style={{ background: "linear-gradient(135deg, #3B82F6, #8B5CF6)" }}>
+              <LayoutGrid size={24} color="white" />
+            </div>
+            <div>
+              <div className="font-display text-[14px] text-[#2B241D] mb-0.5">Deklinieren</div>
+              <div className="text-[12px] text-[#8A7F68]">
+                {availableNouns.length === 0 ? "Schließe erst eine Lektion mit Nomen ab" : "Nomen durch die Fälle üben"}
+              </div>
+            </div>
+          </button>
+
+          <button
+            onClick={startConjugationTraining}
+            disabled={availableVerbs.length === 0}
+            className="w-full glass rounded-2xl p-5 mb-6 text-left flex items-center gap-4 disabled:opacity-50"
+          >
+            <div className="glossy w-14 h-14 rounded-2xl flex items-center justify-center shrink-0" style={{ background: "linear-gradient(135deg, #F59E0B, #EF4444)" }}>
+              <Zap size={24} color="white" />
+            </div>
+            <div>
+              <div className="font-display text-[14px] text-[#2B241D] mb-0.5">Konjugieren</div>
+              <div className="text-[12px] text-[#8A7F68]">
+                {availableVerbs.length === 0 ? "Schließe erst eine Lektion mit Verben ab" : "Verben durch die Formen üben"}
+              </div>
+            </div>
+          </button>
+
+          {availableNouns.length > 0 && (
+            <>
+              <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">NOMEN NACHSCHLAGEN</div>
+              <div className="flex flex-col gap-2 mb-6">
+                {availableNouns.map((n) => {
+                  const open = expandedParadigm === `n-${n.id}`;
+                  return (
+                    <div key={n.id} className="glass rounded-xl overflow-hidden">
+                      <button
+                        onClick={() => setExpandedParadigm(open ? null : `n-${n.id}`)}
+                        className="w-full px-4 py-3 flex items-center justify-between text-left"
+                      >
+                        <div>
+                          <span className="font-serif-latin italic text-[15px] text-[#2B241D]">{n.latin}</span>
+                          <span className="text-[11px] text-[#8A7F68]"> — {n.german} · {n.declension}</span>
+                        </div>
+                        <ChevronDown size={16} color="#8A7F68" className={`transition-transform ${open ? "rotate-180" : ""}`} />
+                      </button>
+                      {open && (
+                        <div className="px-4 pb-3 grid grid-cols-2 gap-1.5">
+                          {availableCases.map((c) => (
+                            <div key={c} className="flex justify-between text-[12px] bg-white/40 rounded-lg px-2.5 py-1.5">
+                              <span className="text-[#8A7F68]">{c}</span>
+                              <span className="font-serif-latin italic text-[#2B241D]">{n.forms[c]}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
+
+          {availableVerbs.length > 0 && (
+            <>
+              <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">VERBEN NACHSCHLAGEN</div>
+              <div className="flex flex-col gap-2">
+                {availableVerbs.map((v) => {
+                  const open = expandedParadigm === `v-${v.id}`;
+                  const tensesForVerb = getAvailableTenses(v, completed);
+                  return (
+                    <div key={v.id} className="glass rounded-xl overflow-hidden">
+                      <button
+                        onClick={() => setExpandedParadigm(open ? null : `v-${v.id}`)}
+                        className="w-full px-4 py-3 flex items-center justify-between text-left"
+                      >
+                        <div>
+                          <span className="font-serif-latin italic text-[15px] text-[#2B241D]">{v.latin}</span>
+                          <span className="text-[11px] text-[#8A7F68]"> — {v.german} · {v.conjugation}</span>
+                        </div>
+                        <ChevronDown size={16} color="#8A7F68" className={`transition-transform ${open ? "rotate-180" : ""}`} />
+                      </button>
+                      {open && (
+                        <div className="px-4 pb-3">
+                          {tensesForVerb.map((t) => (
+                            <div key={t} className="mb-2 last:mb-0">
+                              <div className="text-[10px] tracking-widest text-[#C2185B] font-bold mb-1">{t.toUpperCase()}</div>
+                              <div className="grid grid-cols-2 gap-1.5">
+                                {PERSONS.filter((p) => v.tenses[t][p]).map((p) => (
+                                  <div key={p} className="flex justify-between text-[12px] bg-white/40 rounded-lg px-2.5 py-1.5">
+                                    <span className="text-[#8A7F68]">{p}</span>
+                                    <span className="font-serif-latin italic text-[#2B241D]">{v.tenses[t][p]}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </div>
+        <BottomNav screen={screen} setScreen={setScreen} />
+      </div>
+    );
+  }
+
+  /* -------------------------------- GRAMMAR QUIZ -------------------------------- */
+
+  if (screen === "grammar-quiz" && grammarRound[grammarIdx]) {
+    const q = grammarRound[grammarIdx];
+    const promptTitle =
+      grammarMode === "declension" ? `Dekliniere: ${q.targetCase}` : `Konjugiere: ${q.targetTense} — ${q.targetPerson}`;
+    return (
+      <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9]">
+        <FontImport />
+        <FloatingXp item={floatXp} />
+        <div className="w-full max-w-md bg-[#FFF6E9] min-h-screen flex flex-col">
+          <div className="px-4 pt-4 pb-2 flex items-center gap-3">
+            <button onClick={() => setScreen("grammar-home")} className="text-[#8A7F68]">
+              <X size={22} />
+            </button>
+            <div className="flex-1 h-2.5 rounded-full bg-[#F0DFC0] overflow-hidden flex gap-0.5 p-0.5">
+              {grammarRound.map((_, i) => (
+                <div key={i} className={`flex-1 rounded-full transition-colors ${i < grammarIdx ? "bg-[#2EC4B6]" : i === grammarIdx ? "bg-[#3B82F6]" : "bg-transparent"}`} />
+              ))}
+            </div>
+          </div>
+
+          <div className="flex-1 px-5 pt-8 pb-40">
+            <div className="text-[11px] tracking-widest text-[#C2185B] font-bold mb-2">{promptTitle.toUpperCase()}</div>
+            <div className="font-serif-latin italic text-3xl text-[#2B241D] mb-1">{q.latin}</div>
+            <div className="text-[13px] text-[#8A7F68] mb-8">{q.german}</div>
+            <div className="grid grid-cols-1 gap-3">
+              {q.options.map((opt, i) => {
+                const isSel = grammarSelected === i;
+                let style = "glass text-[#2B241D]";
+                if (grammarChecked && i === q.correctIndex) style = "border-2 border-[#2EC4B6] bg-[#2EC4B6]/15 text-[#2B241D] animate-pop-in";
+                else if (grammarChecked && isSel && i !== q.correctIndex) style = "border-2 border-[#E8483A] bg-[#E8483A]/10 text-[#2B241D]";
+                else if (isSel) style = "border-2 border-[#EC4899] bg-[#EC4899]/10 text-[#2B241D]";
+                return (
+                  <button
+                    key={i}
+                    disabled={grammarChecked}
+                    onClick={() => setGrammarSelected(i)}
+                    className={`text-left px-4 py-3.5 rounded-xl font-serif-latin text-[15px] transition-colors ${style}`}
+                  >
+                    {opt}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div
+            className={`fixed bottom-0 left-0 right-0 flex justify-center border-t-2 transition-colors ${
+              grammarChecked ? (grammarIsCorrect ? "bg-[#DFF5E9] border-[#2EC4B6]" : "bg-[#FBE2DC] border-[#E8483A]") : "bg-[#FFFBF2] border-[#F0DFC0]"
+            }`}
+          >
+            <div className="w-full max-w-md px-5 py-4">
+              {grammarChecked && (
+                <div className="flex items-center gap-2 mb-3">
+                  <div className={grammarIsCorrect ? "animate-pop-in" : ""}>
+                    {grammarIsCorrect ? <Check size={22} color="#0E7A5F" strokeWidth={3} /> : <X size={20} color="#B4291D" />}
+                  </div>
+                  <div className={`font-display text-sm ${grammarIsCorrect ? "text-[#0E7A5F]" : "text-[#B4291D]"}`}>
+                    {grammarIsCorrect ? "Richtig!" : `Richtig wäre: ${q.options[q.correctIndex]}`}
+                  </div>
+                </div>
+              )}
+              {!grammarChecked ? (
+                <button
+                  onClick={handleGrammarCheck}
+                  disabled={grammarSelected === null}
+                  className={`w-full py-3.5 rounded-xl font-display text-sm tracking-wide transition-all ${
+                    grammarSelected !== null ? "bg-gradient-to-r from-[#3B82F6] to-[#8B5CF6] text-white shadow-md" : "bg-[#E4D7BA] text-[#A79A7E] cursor-not-allowed"
+                  }`}
+                >
+                  PRÜFEN
+                </button>
+              ) : (
+                <button
+                  onClick={handleGrammarContinue}
+                  className={`w-full py-3.5 rounded-xl font-display text-sm tracking-wide flex items-center justify-center gap-2 shadow-md ${
+                    grammarIsCorrect ? "bg-gradient-to-r from-[#2EC4B6] to-[#0E9E85] text-white" : "bg-gradient-to-r from-[#E8483A] to-[#B4291D] text-white"
+                  }`}
+                >
+                  WEITER <ArrowRight size={16} />
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* -------------------------------- GRAMMAR SUMMARY -------------------------------- */
+
+  if (screen === "grammar-summary") {
+    return (
+      <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9] relative overflow-hidden">
+        <FontImport />
+        {grammarCorrectCount >= 6 && <Confetti pieceCount={60} gold />}
+        <div className="w-full max-w-md min-h-screen flex flex-col items-center px-8 pt-16 pb-10 relative z-10">
+          <div className="glossy w-24 h-24 mb-4 rounded-full flex items-center justify-center animate-pop-in" style={{ background: "linear-gradient(135deg, #3B82F6, #8B5CF6)" }}>
+            <LayoutGrid size={34} color="white" />
+          </div>
+          <h1 className="font-display text-2xl text-[#2B241D] mb-1">
+            {grammarMode === "declension" ? "GUT DEKLINIERT!" : "GUT KONJUGIERT!"}
+          </h1>
+          <p className="text-[#6B5F4E] text-[14px] mb-8">
+            {grammarCorrectCount} von {grammarRound.length} Formen richtig.
+          </p>
+
+          <div className="w-full grid grid-cols-2 gap-3 mb-8">
+            <SummaryStat label="XP" value={`+${grammarXpEarned}`} color="#F59E0B" />
+            <SummaryStat label="Richtig" value={grammarCorrectCount} color="#0E9E85" />
+          </div>
+
+          <button
+            onClick={() => setScreen("grammar-home")}
+            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#3B82F6] to-[#8B5CF6] text-white font-display text-sm tracking-wide mt-auto shadow-md"
           >
             WEITER
           </button>
@@ -2902,6 +3459,24 @@ function SummaryStat({ label, value, color }) {
       </div>
       <div className="text-[10px] text-[#8A7F68] tracking-wide mt-0.5">{label}</div>
     </div>
+  );
+}
+
+function DailySentenceCard({ revealed, onToggle }) {
+  const sentence = useMemo(() => getDailySentence(), []);
+  return (
+    <button onClick={onToggle} className="w-full glass rounded-2xl px-5 py-4 mb-4 text-left">
+      <div className="flex items-center gap-2 mb-2">
+        <Sparkles size={15} color="#F59E0B" />
+        <div className="text-[11px] tracking-widest text-[#C2185B] font-bold">SATZ DES TAGES</div>
+      </div>
+      <div className="font-serif-latin italic text-[18px] text-[#2B241D] mb-1">{sentence.latin}</div>
+      {revealed ? (
+        <div className="text-[13px] text-[#8A7F68]">{sentence.german}</div>
+      ) : (
+        <div className="text-[12px] text-[#A79A7E]">🔄 Zum Übersetzen tippen</div>
+      )}
+    </button>
   );
 }
 
