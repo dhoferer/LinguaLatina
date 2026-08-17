@@ -467,6 +467,154 @@ const UNITS = [
       },
     ],
   },
+  {
+    id: "u13",
+    latin: "PASSIVUM",
+    german: "Passiv Präsens",
+    lessons: [
+      {
+        id: "u13-l1",
+        title: "Passiv erkennen",
+        exercises: [
+          { type: "mc", q: "„Amatur“ bedeutet …", options: ["wird geliebt", "liebt", "hat geliebt", "wird lieben"], correct: 0 },
+          { type: "mc", q: "„Vocatur“ bedeutet …", options: ["ruft", "wird gerufen", "hat gerufen", "wird rufen"], correct: 1 },
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "servatur", accept: ["wird beschützt"] },
+          { type: "mc", q: "„A“ / „ab“ bedeutet im Passiv-Satz …", options: ["von", "mit", "ohne", "aus"], correct: 0 },
+        ],
+      },
+      {
+        id: "u13-l2",
+        title: "Aktiv vs. Passiv",
+        exercises: [
+          { type: "mc", q: "„Servus dominum vocat.“ (Aktiv) — die passive Form ist:", options: ["Dominus a servo vocatur.", "Servus vocatur.", "Dominus servum vocat.", "Dominus vocat."], correct: 0 },
+          { type: "mc", q: "„Rosa a puella amatur.“ bedeutet …", options: ["Die Rose wird von dem Mädchen geliebt.", "Das Mädchen wird von der Rose geliebt.", "Die Rose liebt das Mädchen.", "Das Mädchen liebt die Rose."], correct: 0 },
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Der Tempel wird vom Volk geliebt.“", words: ["Templum", "a", "populo", "amatur"], correct: ["Templum", "a", "populo", "amatur"] },
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "portatur", accept: ["wird getragen"] },
+        ],
+      },
+      {
+        id: "u13-l3",
+        title: "Sätze im Passiv",
+        exercises: [
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Der Herr wird vom Sklaven gerufen.“", words: ["Dominus", "a", "servo", "vocatur"], correct: ["Dominus", "a", "servo", "vocatur"] },
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Das Buch wird vom Jungen getragen.“", words: ["Liber", "a", "puero", "portatur"], correct: ["Liber", "a", "puero", "portatur"] },
+          { type: "mc", q: "„Fabula a servo narratur.“ bedeutet …", options: ["Die Geschichte wird vom Sklaven erzählt.", "Der Sklave erzählt eine Geschichte.", "Die Geschichte erzählt vom Sklaven.", "Der Sklave wird von der Geschichte erzählt."], correct: 0 },
+          { type: "mc", q: "„Aqua a filia portatur.“ bedeutet …", options: ["Das Wasser wird von der Tochter getragen.", "Die Tochter trägt Wasser.", "Das Wasser trägt die Tochter.", "Die Tochter wird getragen."], correct: 0 },
+        ],
+      },
+    ],
+  },
+  {
+    id: "u14",
+    latin: "PARTICIPIA",
+    german: "Partizip Perfekt Passiv",
+    lessons: [
+      {
+        id: "u14-l1",
+        title: "PPP erkennen",
+        exercises: [
+          { type: "mc", q: "„Amatus“ bedeutet …", options: ["geliebt", "liebend", "liebt", "wird lieben"], correct: 0 },
+          { type: "mc", q: "„Vocata“ bedeutet …", options: ["rufend", "gerufen (fem.)", "ruft", "wird gerufen"], correct: 1 },
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "servatum", accept: ["beschützt"] },
+          { type: "mc", q: "Welches Partizip passt zu „puella“ (fem.)?", options: ["amatus", "amata", "amatum", "amati"], correct: 1 },
+        ],
+      },
+      {
+        id: "u14-l2",
+        title: "PPP in Sätzen",
+        exercises: [
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "laetus", accept: ["fröhlich"] },
+          { type: "mc", q: "„Puella amata laeta est.“ bedeutet …", options: ["Das geliebte Mädchen ist fröhlich.", "Das Mädchen liebt fröhlich.", "Das fröhliche Mädchen wird geliebt.", "Die Liebe macht fröhlich."], correct: 0 },
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Der gerufene Junge ist fröhlich.“", words: ["Puer", "vocatus", "laetus", "est"], correct: ["Puer", "vocatus", "laetus", "est"] },
+          { type: "mc", q: "„Templum servatum magnum est.“ bedeutet …", options: ["Der bewahrte Tempel ist groß.", "Der Tempel bewahrt Größe.", "Der große Tempel wird bewahrt.", "Der Tempel ist bewahrt worden."], correct: 0 },
+        ],
+      },
+      {
+        id: "u14-l3",
+        title: "Abschluss PPP",
+        exercises: [
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "pulchra", accept: ["schön"] },
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Die geliebte Rose ist schön.“", words: ["Rosa", "amata", "pulchra", "est"], correct: ["Rosa", "amata", "pulchra", "est"] },
+          { type: "mc", q: "„Liber portatus magnus est.“ bedeutet …", options: ["Das getragene Buch ist groß.", "Das Buch trägt Größe.", "Das große Buch wird getragen.", "Der Junge trägt ein großes Buch."], correct: 0 },
+          { type: "mc", q: "Was ist der Unterschied zwischen „amavit“ und „amatus“?", options: ["amavit = hat geliebt (Verb), amatus = geliebt (Partizip/Adjektiv)", "kein Unterschied", "amatus ist Zukunft", "amavit ist ein Nomen"], correct: 0 },
+        ],
+      },
+    ],
+  },
+  {
+    id: "u15",
+    latin: "ACI",
+    german: "Accusativus cum Infinitivo",
+    lessons: [
+      {
+        id: "u15-l1",
+        title: "AcI verstehen",
+        exercises: [
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "videre", accept: ["sehen"] },
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "dicere", accept: ["sagen"] },
+          { type: "mc", q: "Im Satz „Video puellam cantare“ steht „puellam“ im …", options: ["Nominativ", "Akkusativ", "Genitiv", "Dativ"], correct: 1 },
+          { type: "mc", q: "Ein AcI besteht aus …", options: ["Nominativ + Verb", "Akkusativ + Infinitiv", "Genitiv + Adjektiv", "Dativ + Partizip"], correct: 1 },
+        ],
+      },
+      {
+        id: "u15-l2",
+        title: "AcI bilden",
+        exercises: [
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "video", accept: ["ich sehe"] },
+          { type: "mc", q: "Wähle die richtige Form: „Video puellam rosam ___.“ (Ich sehe, dass das Mädchen die Rose liebt.)", options: ["amat", "amare", "amavit", "amabit"], correct: 1 },
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Ich sehe, dass der Sklave den Herrn ruft.“", words: ["Video", "servum", "dominum", "vocare"], correct: ["Video", "servum", "dominum", "vocare"] },
+          { type: "mc", q: "„Dico puellam laetam esse.“ bedeutet …", options: ["Ich sage, dass das Mädchen fröhlich ist.", "Ich sage der fröhlichen Tochter.", "Das Mädchen sagt, es sei fröhlich.", "Ich sehe das fröhliche Mädchen."], correct: 0 },
+        ],
+      },
+      {
+        id: "u15-l3",
+        title: "AcI Sätze",
+        exercises: [
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "dico", accept: ["ich sage"] },
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Ich sage, dass der Sklave arbeitet.“", words: ["Dico", "servum", "laborare"], correct: ["Dico", "servum", "laborare"] },
+          { type: "mc", q: "„Video puellam rosam amare.“ bedeutet …", options: ["Ich sehe, dass das Mädchen die Rose liebt.", "Ich sehe das Mädchen und die Rose.", "Das Mädchen sieht die Rose.", "Ich liebe das Mädchen und die Rose."], correct: 0 },
+          { type: "mc", q: "„Video servos templum spectare.“ bedeutet …", options: ["Ich sehe, dass die Sklaven den Tempel betrachten.", "Ich sehe den Tempel und die Sklaven.", "Die Sklaven sehen den Tempel.", "Ich betrachte die Sklaven im Tempel."], correct: 0 },
+        ],
+      },
+    ],
+  },
+  {
+    id: "u16",
+    latin: "QUI QUAE QUOD",
+    german: "Relativsätze",
+    lessons: [
+      {
+        id: "u16-l1",
+        title: "Relativpronomen",
+        exercises: [
+          { type: "mc", q: "„Qui“ bedeutet …", options: ["der/welcher (mask.)", "die/welche (fem.)", "das/welches (neutr.)", "wer?"], correct: 0 },
+          { type: "mc", q: "„Quae“ bedeutet …", options: ["der/welcher (mask.)", "die/welche (fem.)", "das/welches (neutr.)", "was?"], correct: 1 },
+          { type: "mc", q: "„Quod“ bedeutet …", options: ["der/welcher (mask.)", "die/welche (fem.)", "das/welches (neutr.)", "wie?"], correct: 2 },
+          { type: "mc", q: "Das Relativpronomen richtet sich nach …", options: ["Genus und Numerus des Bezugsworts", "der Zeitform des Satzes", "dem Ort der Handlung", "der Person des Sprechers"], correct: 0 },
+        ],
+      },
+      {
+        id: "u16-l2",
+        title: "Relativsätze bilden",
+        exercises: [
+          { type: "mc", q: "Wähle das passende Pronomen: „Puella, ___ rosam amat, laeta est.“ (Das Mädchen, das die Rose liebt, ist fröhlich.)", options: ["qui", "quae", "quod", "quas"], correct: 1 },
+          { type: "mc", q: "Wähle das passende Pronomen: „Templum, ___ magnum est, …“ (Der Tempel, der groß ist, …)", options: ["qui", "quae", "quod", "quos"], correct: 2 },
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Der Sklave, der arbeitet, ist gut.“", words: ["Servus", "qui", "laborat", "bonus", "est"], correct: ["Servus", "qui", "laborat", "bonus", "est"] },
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "quod", accept: ["das", "welches", "das/welches"] },
+        ],
+      },
+      {
+        id: "u16-l3",
+        title: "Abschluss",
+        exercises: [
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Der Herr, der den Sklaven ruft, ist groß.“", words: ["Dominus", "qui", "servum", "vocat", "magnus", "est"], correct: ["Dominus", "qui", "servum", "vocat", "magnus", "est"] },
+          { type: "mc", q: "„Rex, qui urbem amat, bonus est.“ bedeutet …", options: ["Der König, der die Stadt liebt, ist gut.", "Der König liebt die gute Stadt.", "Die Stadt, die der König liebt, ist gut.", "Der gute König liebt die Stadt."], correct: 0 },
+          { type: "mc", q: "Welches Pronomen passt zu „dominus“ (mask.)?", options: ["qui", "quae", "quod", "quam"], correct: 0 },
+          { type: "mc", q: "Welches Pronomen passt zu „familia“ (fem.)?", options: ["qui", "quae", "quod", "quo"], correct: 1 },
+        ],
+      },
+    ],
+  },
 ];
 
 const FLAT_LESSONS = UNITS.flatMap((u) => u.lessons.map((l) => ({ ...l, unitId: u.id })));
@@ -596,6 +744,17 @@ const VOCAB_POOL = [
   { id: "v74", latin: "amabat", german: "er/sie liebte", lessonId: "u12-l1" },
   { id: "v75", latin: "cras", german: "morgen", lessonId: "u12-l2" },
   { id: "v76", latin: "amabit", german: "er/sie wird lieben", lessonId: "u12-l2" },
+  { id: "v77", latin: "a/ab", german: "von", lessonId: "u13-l1" },
+  { id: "v78", latin: "amatur", german: "wird geliebt", lessonId: "u13-l1" },
+  { id: "v79", latin: "portare", german: "tragen", lessonId: "u13-l2" },
+  { id: "v80", latin: "amatus", german: "geliebt", lessonId: "u14-l1" },
+  { id: "v81", latin: "laetus", german: "fröhlich", lessonId: "u14-l2" },
+  { id: "v82", latin: "pulchra", german: "schön", lessonId: "u14-l3" },
+  { id: "v83", latin: "videre", german: "sehen", lessonId: "u15-l1" },
+  { id: "v84", latin: "dicere", german: "sagen", lessonId: "u15-l1" },
+  { id: "v85", latin: "qui", german: "der/welcher", lessonId: "u16-l1" },
+  { id: "v86", latin: "quae", german: "die/welche", lessonId: "u16-l1" },
+  { id: "v87", latin: "quod", german: "das/welches", lessonId: "u16-l1" },
 ];
 
 const BOX_INTERVAL_DAYS = [0, 1, 3, 7, 14, 30];
@@ -757,6 +916,14 @@ const DAILY_SENTENCES = [
   { latin: "Rex magnus est.", german: "Der König ist groß." },
   { latin: "Rex urbem amat.", german: "Der König liebt die Stadt." },
   { latin: "Populus regem amat.", german: "Das Volk liebt den König." },
+  { latin: "Dominus a servo vocatur.", german: "Der Herr wird vom Sklaven gerufen." },
+  { latin: "Rosa a puella amatur.", german: "Die Rose wird von dem Mädchen geliebt." },
+  { latin: "Puella amata laeta est.", german: "Das geliebte Mädchen ist fröhlich." },
+  { latin: "Rosa amata pulchra est.", german: "Die geliebte Rose ist schön." },
+  { latin: "Video servum dominum vocare.", german: "Ich sehe, dass der Sklave den Herrn ruft." },
+  { latin: "Dico servum laborare.", german: "Ich sage, dass der Sklave arbeitet." },
+  { latin: "Servus, qui laborat, bonus est.", german: "Der Sklave, der arbeitet, ist gut." },
+  { latin: "Rex, qui urbem amat, bonus est.", german: "Der König, der die Stadt liebt, ist gut." },
 ];
 
 function getDailySentence() {
@@ -1258,7 +1425,11 @@ export default function App() {
       setVocabProgress(found.vocabProgress || {});
       setScreen("path");
     } else {
-      setScreen("onboarding");
+      let introSeen = false;
+      try {
+        introSeen = localStorage.getItem("ll_intro_seen") === "1";
+      } catch {}
+      setScreen(introSeen ? "onboarding" : "intro");
     }
   }, []);
 
@@ -1812,6 +1983,21 @@ export default function App() {
   }
 
   if (screen === "loading") return null;
+
+  /* -------------------------------- INTRO / WILLKOMMENS-TOUR -------------------------------- */
+
+  if (screen === "intro") {
+    return (
+      <IntroScreen
+        onFinish={() => {
+          try {
+            localStorage.setItem("ll_intro_seen", "1");
+          } catch {}
+          setScreen("onboarding");
+        }}
+      />
+    );
+  }
 
   /* -------------------------------- ONBOARDING -------------------------------- */
 
@@ -2771,6 +2957,54 @@ export default function App() {
     );
   }
 
+  /* -------------------------------- IMPRESSUM -------------------------------- */
+
+  if (screen === "impressum") {
+    return (
+      <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9]">
+        <FontImport />
+        <BackgroundBlobs />
+        <div className="w-full max-w-md min-h-screen px-5 pt-6 pb-10">
+          <div className="flex items-center gap-3 mb-6">
+            <button onClick={() => setScreen("profile")} className="text-[#8A7F68]">
+              <X size={22} />
+            </button>
+            <h1 className="font-display text-lg text-[#2B241D]">IMPRESSUM</h1>
+          </div>
+
+          <div className="glass rounded-2xl p-5 mb-4">
+            <div className="text-[11px] tracking-widest text-[#8A7F68] font-bold mb-2">ANGABEN GEMÄSS § 5 TMG</div>
+            <p className="text-[14px] text-[#2B241D] leading-relaxed">
+              [Vor- und Nachname einfügen]
+              <br />
+              [Straße und Hausnummer einfügen]
+              <br />
+              [PLZ und Ort einfügen]
+            </p>
+          </div>
+
+          <div className="glass rounded-2xl p-5 mb-4">
+            <div className="text-[11px] tracking-widest text-[#8A7F68] font-bold mb-2">KONTAKT</div>
+            <p className="text-[14px] text-[#2B241D]">E-Mail: Dominik@hoferer.me</p>
+          </div>
+
+          <div className="glass rounded-2xl p-5 mb-4">
+            <div className="text-[11px] tracking-widest text-[#8A7F68] font-bold mb-2">VERANTWORTLICH FÜR DEN INHALT (§ 18 ABS. 2 MSTV)</div>
+            <p className="text-[14px] text-[#2B241D]">[Name wie oben einfügen]</p>
+          </div>
+
+          <div className="glass rounded-2xl p-5">
+            <div className="text-[11px] tracking-widest text-[#8A7F68] font-bold mb-2">HINWEIS</div>
+            <p className="text-[13px] text-[#6B5F4E] leading-relaxed">
+              Dies ist ein privates, nicht-kommerzielles Lernprojekt für den Schulgebrauch. Die vorstehenden Angaben sind
+              Platzhalter und müssen vom Betreiber vor Veröffentlichung mit den echten Daten ausgefüllt werden.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   /* -------------------------------- LESSON SCREEN -------------------------------- */
 
   if (screen === "lesson" && ex) {
@@ -3152,6 +3386,77 @@ export default function App() {
 /* ONBOARDING */
 /* ------------------------------------------------------------------ */
 
+/* ------------------------------------------------------------------ */
+/* INTRO / WILLKOMMENS-TOUR */
+/* ------------------------------------------------------------------ */
+
+const INTRO_SLIDES = [
+  {
+    emoji: "🏛️",
+    gradient: "linear-gradient(135deg, #FF4FA3, #8B5CF6)",
+    title: "Willkommen bei Lingua Latina!",
+    text: "Lerne Latein spielerisch — mit einem Lernpfad, kleinen Häppchen und jeder Menge Belohnungen.",
+  },
+  {
+    emoji: "📚",
+    gradient: "linear-gradient(135deg, #3B82F6, #2EC4B6)",
+    title: "Pfad, Grammatik & Vokabeln",
+    text: "Der Lernpfad führt dich Schritt für Schritt. Extra-Trainer für Deklinieren, Konjugieren und Vokabeln vertiefen, was du gelernt hast.",
+  },
+  {
+    emoji: "🔥",
+    gradient: "linear-gradient(135deg, #F59E0B, #EC4899)",
+    title: "XP, Serien & Abzeichen",
+    text: "Sammle XP, halte deine Serie am Leben und tritt mit einem Spitznamen gegen deine Klasse in der Rangliste an — ganz ohne echten Namen.",
+  },
+  {
+    emoji: "🎮",
+    gradient: "linear-gradient(135deg, #7C3AED, #EC4899)",
+    title: "Spiele & tägliche Sätze",
+    text: "Ab ein paar gesammelten Punkten warten Memory & Wortblitz. Und jeden Tag gibt's einen neuen lateinischen Satz zum Knacken.",
+  },
+];
+
+function IntroScreen({ onFinish }) {
+  const [idx, setIdx] = useState(0);
+  const slide = INTRO_SLIDES[idx];
+  const isLast = idx === INTRO_SLIDES.length - 1;
+
+  return (
+    <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9]">
+      <FontImport />
+      <BackgroundBlobs />
+      <div className="w-full max-w-md min-h-screen flex flex-col px-8 pt-16 pb-10">
+        <div className="flex-1 flex flex-col items-center justify-center text-center">
+          <div className="glossy w-24 h-24 rounded-full flex items-center justify-center text-5xl mb-8 animate-pop-in" style={{ background: slide.gradient }} key={idx}>
+            {slide.emoji}
+          </div>
+          <h1 className="font-display text-2xl text-[#2B241D] mb-3">{slide.title}</h1>
+          <p className="text-[14px] text-[#6B5F4E] leading-relaxed">{slide.text}</p>
+        </div>
+
+        <div className="flex items-center justify-center gap-2 mb-6">
+          {INTRO_SLIDES.map((_, i) => (
+            <div key={i} className={`h-2 rounded-full transition-all ${i === idx ? "w-6 bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6]" : "w-2 bg-[#DCCFA9]"}`} />
+          ))}
+        </div>
+
+        <button
+          onClick={() => (isLast ? onFinish() : setIdx((i) => i + 1))}
+          className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white font-display text-sm tracking-wide shadow-md flex items-center justify-center gap-2"
+        >
+          {isLast ? "LOS GEHT'S!" : "WEITER"} <ArrowRight size={16} />
+        </button>
+        {!isLast && (
+          <button onClick={onFinish} className="text-[#8A7F68] text-[12px] underline mt-4">
+            Überspringen
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function OnboardingScreen({ onCreate, onCancel }) {
   const [classCodeInput, setClassCodeInput] = useState("");
   const [alias, setAlias] = useState(() => generateAlias());
@@ -3428,9 +3733,13 @@ function ProfileScreen({
 
         <button
           onClick={() => setScreen("feedback")}
-          className="w-full py-3.5 rounded-xl glass text-[#2B241D] font-display text-xs tracking-wide flex items-center justify-center gap-2"
+          className="w-full py-3.5 rounded-xl glass text-[#2B241D] font-display text-xs tracking-wide flex items-center justify-center gap-2 mb-3"
         >
           ✉️ FEEDBACK SENDEN
+        </button>
+
+        <button onClick={() => setScreen("impressum")} className="w-full text-center text-[#A79A7E] text-[12px] underline py-2">
+          Impressum
         </button>
       </div>
       <BottomNav screen={screen} setScreen={setScreen} />
