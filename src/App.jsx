@@ -990,12 +990,9 @@ function generateAlias() {
   return `${noun}${num}`;
 }
 
-function generateSyncCode() {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let s = "";
-  for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
-  return s;
-}
+// HINWEIS: Es gibt bewusst keine client-seitige Sync-Code-Erzeugung mehr.
+// Sync-Codes werden ausschliesslich serverseitig (RPC, pgcrypto) erzeugt und
+// bei jeder Wiederherstellung rotiert - siehe supabase/migrations/.
 
 const LS_PROFILES = "ll_profiles_v1";
 const LS_ACTIVE = "ll_active_id_v1";
@@ -1134,35 +1131,37 @@ function computeNewStreak(profile) {
   return 1;
 }
 
-async function syncToCloud(profile) {
-  if (!supabase) return;
+// Schreibt Fortschritt (XP/Serie/abgeschlossene Lektionen/Vokabeln/Abzeichen) sicher über
+// die RPC "update_player_progress". Diese prueft serverseitig den device_secret-Besitznachweis
+// und plausibilisiert XP-/Serien-Sprünge, bevor irgendetwas in der Datenbank veraendert wird.
+// Kein direkter Tabellenzugriff (kein .from("players").upsert(...)) mehr moeglich/noetig.
+async function syncProgressToCloud(profile) {
+  if (!supabase || !profile?.deviceSecret) return;
   try {
-    await supabase.from("players").upsert({
-      id: profile.id,
-      device_secret: profile.deviceSecret,
-      class_code: profile.classCode,
-      alias: profile.alias,
-      avatar: profile.avatar,
-      xp: profile.xp,
-      streak: profile.streak,
-      completed_count: profile.completedLessons.length,
-      completed_lessons: profile.completedLessons,
-      vocab_progress: profile.vocabProgress,
-      unlocked_badges: profile.unlockedBadges,
-      sync_code: profile.syncCode,
-      updated_at: new Date().toISOString(),
+    const { error } = await supabase.rpc("update_player_progress", {
+      p_id: profile.id,
+      p_device_secret: profile.deviceSecret,
+      p_xp: profile.xp,
+      p_streak: profile.streak,
+      p_completed_lessons: profile.completedLessons,
+      p_vocab_progress: profile.vocabProgress,
+      p_unlocked_badges: profile.unlockedBadges,
     });
+    if (error) throw error;
   } catch (e) {
-    console.warn("Cloud-Sync fehlgeschlagen", e);
+    console.warn("Cloud-Sync (Fortschritt) fehlgeschlagen", e);
   }
 }
 
+// Liest die Rangliste ausschliesslich ueber "leaderboard_view" (nicht die players-Tabelle).
+// Diese View enthaelt bewusst NUR unkritische Spalten (id, alias, avatar, xp, streak) -
+// device_secret, sync_code und Lernfortschritt sind darueber nie abrufbar.
 async function fetchLeaderboard(classCode) {
-  if (!supabase) return [];
+  if (!supabase || !classCode) return [];
   try {
     const { data, error } = await supabase
-      .from("players")
-      .select("*")
+      .from("leaderboard_view")
+      .select("id, alias, avatar, xp, streak")
       .eq("class_code", classCode)
       .order("xp", { ascending: false })
       .limit(50);
@@ -1323,6 +1322,7 @@ export default function App() {
   const [profiles, setProfiles] = useState([]);
   const [activeId, setActiveId] = useState(null);
   const [addingProfile, setAddingProfile] = useState(false);
+  const [onboardingBusy, setOnboardingBusy] = useState(false);
 
   const [xp, setXp] = useState(0);
   const [streak, setStreak] = useState(0);
@@ -1463,12 +1463,6 @@ export default function App() {
     }
   }, [screen, active?.classCode]);
 
-  useEffect(() => {
-    if (active && !active.syncCode) {
-      persistProfile({ syncCode: generateSyncCode() });
-    }
-  }, [active?.id]);
-
   async function loadLeaderboard() {
     if (!active) return;
     setLeaderboardLoading(true);
@@ -1483,7 +1477,7 @@ export default function App() {
     const nextList = profiles.map((p) => (p.id === active.id ? updated : p));
     setProfiles(nextList);
     saveProfilesLS(nextList);
-    syncToCloud(updated);
+    return updated;
   }
 
   function isUnlocked(lessonId) {
@@ -1616,34 +1610,71 @@ export default function App() {
     setUnlockedBadges(nextBadges);
     setNewBadges(freshlyNew);
 
-    persistProfile({
+    const updatedProfile = persistProfile({
       xp: totalXp,
       streak: newStreak,
       lastActiveDate: todayStr(),
       completedLessons: [...nextCompleted],
       unlockedBadges: [...nextBadges],
     });
+    syncProgressToCloud(updatedProfile);
 
     setScreen("summary");
   }
 
-  function createProfile({ classCodeInput, alias, avatar }) {
-    const classCode = classCodeInput.trim().toLowerCase();
-    const newProfile = {
-      id: uuid(),
-      deviceSecret: uuid(),
-      classCode,
-      classCodeDisplay: classCodeInput.trim(),
-      alias: alias.trim(),
-      avatar,
-      xp: 0,
-      streak: 0,
-      lastActiveDate: null,
-      completedLessons: [],
-      unlockedBadges: [],
-      vocabProgress: {},
-      syncCode: generateSyncCode(),
-    };
+  // Legt ein Profil an. Wenn Cloud-Sync verfuegbar ist, laeuft ALLES ueber die RPC
+  // "create_player_profile" (Server generiert device_secret + sync_code kryptografisch
+  // sicher und validiert Spitzname/Avatar/Klassencode serverseitig). Ohne Cloud-Konfiguration
+  // faellt die App auf ein rein lokales Profil zurueck (keine Rangliste/kein Sync moeglich).
+  async function createProfile({ classCodeInput, alias, avatar }) {
+    setOnboardingBusy(true);
+    let remote = null;
+    if (supabase) {
+      try {
+        const { data, error } = await supabase.rpc("create_player_profile", {
+          p_alias: alias.trim(),
+          p_avatar: avatar,
+          p_class_code: classCodeInput?.trim() || null,
+        });
+        if (error) throw error;
+        remote = Array.isArray(data) ? data[0] : data;
+      } catch (e) {
+        console.warn("Profil konnte nicht in der Cloud angelegt werden, lokal fortfahren.", e);
+      }
+    }
+
+    const newProfile = remote
+      ? {
+          id: remote.id,
+          deviceSecret: remote.device_secret,
+          classCode: remote.class_code || "",
+          classCodeDisplay: classCodeInput?.trim() || "",
+          alias: remote.alias,
+          avatar: remote.avatar,
+          xp: remote.xp || 0,
+          streak: remote.streak || 0,
+          lastActiveDate: null,
+          completedLessons: remote.completed_lessons || [],
+          unlockedBadges: remote.unlocked_badges || [],
+          vocabProgress: remote.vocab_progress || {},
+          syncCode: remote.sync_code,
+        }
+      : {
+          id: uuid(),
+          deviceSecret: uuid(),
+          classCode: classCodeInput?.trim().toLowerCase() || "",
+          classCodeDisplay: classCodeInput?.trim() || "",
+          alias: alias.trim(),
+          avatar,
+          xp: 0,
+          streak: 0,
+          lastActiveDate: null,
+          completedLessons: [],
+          unlockedBadges: [],
+          vocabProgress: {},
+          syncCode: null,
+        };
+
     const nextList = [...profiles, newProfile];
     setProfiles(nextList);
     saveProfilesLS(nextList);
@@ -1654,7 +1685,7 @@ export default function App() {
     setCompleted(new Set());
     setUnlockedBadges(new Set());
     setVocabProgress({});
-    syncToCloud(newProfile);
+    setOnboardingBusy(false);
     setAddingProfile(false);
     setScreen("path");
   }
@@ -1672,8 +1703,60 @@ export default function App() {
     setScreen("path");
   }
 
-  function updateActiveAliasAvatar(alias, avatar) {
+  async function updateActiveAliasAvatar(alias, avatar) {
+    const before = active;
     persistProfile({ alias, avatar });
+    if (supabase && before?.deviceSecret) {
+      try {
+        const { error } = await supabase.rpc("update_player_identity", {
+          p_id: before.id,
+          p_device_secret: before.deviceSecret,
+          p_alias: alias,
+          p_avatar: avatar,
+        });
+        if (error) throw error;
+      } catch (e) {
+        console.warn("Profil-Update in der Cloud fehlgeschlagen", e);
+      }
+    }
+  }
+
+  async function joinClass(codeInput) {
+    if (!active) return { ok: false, msg: "Kein Profil aktiv." };
+    const code = codeInput.trim();
+    if (!code) return { ok: false, msg: "Bitte einen Klassencode eingeben." };
+    if (!supabase) {
+      persistProfile({ classCode: code.toLowerCase(), classCodeDisplay: code });
+      return { ok: true, msg: "Klasse lokal gespeichert (ohne Cloud-Sync)." };
+    }
+    try {
+      const { data, error } = await supabase.rpc("join_class", {
+        p_id: active.id,
+        p_device_secret: active.deviceSecret,
+        p_class_code: code,
+      });
+      if (error) throw error;
+      persistProfile({ classCode: data, classCodeDisplay: code });
+      return { ok: true, msg: `Klasse „${code}“ beigetreten!` };
+    } catch (e) {
+      return { ok: false, msg: "Beitreten fehlgeschlagen. Prüfe den Code." };
+    }
+  }
+
+  async function leaveClass() {
+    if (!active) return;
+    persistProfile({ classCode: "", classCodeDisplay: "" });
+    if (supabase && active.deviceSecret) {
+      try {
+        const { error } = await supabase.rpc("leave_class", {
+          p_id: active.id,
+          p_device_secret: active.deviceSecret,
+        });
+        if (error) throw error;
+      } catch (e) {
+        console.warn("Klasse verlassen (Cloud) fehlgeschlagen", e);
+      }
+    }
   }
 
   /* ---- Mini-Spiel: Memory ---- */
@@ -1722,7 +1805,7 @@ export default function App() {
             setMemoryDone(true);
             const totalXp = xp + earned;
             setXp(totalXp);
-            persistProfile({ xp: totalXp });
+            syncProgressToCloud(persistProfile({ xp: totalXp }));
           }
         }, 500);
       } else {
@@ -1776,7 +1859,7 @@ export default function App() {
       setBlitzXpEarned(earned);
       const totalXp = xp + earned;
       setXp(totalXp);
-      persistProfile({ xp: totalXp });
+      syncProgressToCloud(persistProfile({ xp: totalXp }));
       return;
     }
     const t = setTimeout(() => setBlitzTimeLeft((s) => s - 1), 1000);
@@ -1796,6 +1879,10 @@ export default function App() {
     }
   }
 
+  // Stellt ein Profil per Sync-Code wieder her. Laeuft ausschliesslich ueber die RPC
+  // "restore_profile_by_sync_code": sie liefert device_secret + Lernstand NUR bei
+  // exaktem Code-Treffer zurueck und rotiert den Code danach sofort (Einmal-Verwendung -
+  // ein mitgehoerter/kopierter alter Code funktioniert danach nicht mehr).
   async function loadProfileFromSyncCode() {
     const code = syncCodeInput.trim().toUpperCase();
     if (!code) return;
@@ -1805,26 +1892,27 @@ export default function App() {
     }
     setSyncStatus({ ok: null, msg: "Suche Profil …" });
     try {
-      const { data, error } = await supabase.from("players").select("*").eq("sync_code", code).maybeSingle();
+      const { data, error } = await supabase.rpc("restore_profile_by_sync_code", { p_sync_code: code });
       if (error) throw error;
-      if (!data) {
-        setSyncStatus({ ok: false, msg: "Kein Profil mit diesem Code gefunden." });
+      const row = Array.isArray(data) ? data[0] : data;
+      if (!row) {
+        setSyncStatus({ ok: false, msg: "Code ungültig oder bereits verwendet." });
         return;
       }
       const restored = {
-        id: data.id,
-        deviceSecret: uuid(),
-        classCode: data.class_code,
-        classCodeDisplay: data.class_code,
-        alias: data.alias,
-        avatar: data.avatar,
-        xp: data.xp || 0,
-        streak: data.streak || 0,
+        id: row.id,
+        deviceSecret: row.device_secret,
+        classCode: row.class_code || "",
+        classCodeDisplay: row.class_code || "",
+        alias: row.alias,
+        avatar: row.avatar,
+        xp: row.xp || 0,
+        streak: row.streak || 0,
         lastActiveDate: todayStr(),
-        completedLessons: data.completed_lessons || [],
-        unlockedBadges: data.unlocked_badges || [],
-        vocabProgress: data.vocab_progress || {},
-        syncCode: data.sync_code,
+        completedLessons: row.completed_lessons || [],
+        unlockedBadges: row.unlocked_badges || [],
+        vocabProgress: row.vocab_progress || {},
+        syncCode: row.sync_code,
       };
       const withoutDup = profiles.filter((p) => p.id !== restored.id);
       const nextList = [...withoutDup, restored];
@@ -1837,9 +1925,9 @@ export default function App() {
       setCompleted(new Set(restored.completedLessons));
       setUnlockedBadges(new Set(restored.unlockedBadges));
       setVocabProgress(restored.vocabProgress);
-      setSyncStatus({ ok: true, msg: `Profil „${restored.alias}“ geladen!` });
+      setSyncStatus({ ok: true, msg: `Profil „${restored.alias}“ geladen! Der alte Code ist jetzt ungültig.` });
       setSyncCodeInput("");
-      setTimeout(() => setScreen("path"), 1200);
+      setTimeout(() => setScreen("path"), 1400);
     } catch (e) {
       setSyncStatus({ ok: false, msg: "Fehler beim Laden." });
     }
@@ -1918,7 +2006,7 @@ export default function App() {
     } else {
       const totalXp = xp + grammarXpEarned;
       setXp(totalXp);
-      persistProfile({ xp: totalXp });
+      syncProgressToCloud(persistProfile({ xp: totalXp }));
       setScreen("grammar-summary");
     }
   }
@@ -1977,7 +2065,7 @@ export default function App() {
     } else {
       const totalXp = xp + vocabXpEarned;
       setXp(totalXp);
-      persistProfile({ xp: totalXp, vocabProgress });
+      syncProgressToCloud(persistProfile({ xp: totalXp, vocabProgress }));
       setScreen("vocab-summary");
     }
   }
@@ -2006,6 +2094,7 @@ export default function App() {
       <OnboardingScreen
         onCreate={createProfile}
         onCancel={addingProfile ? () => { setAddingProfile(false); setScreen("profile"); } : null}
+        busy={onboardingBusy}
       />
     );
   }
@@ -3291,7 +3380,9 @@ export default function App() {
           <div className="sticky top-0 z-20 glass-strong border-b-0 px-5 py-4 flex items-center justify-between">
             <div>
               <h1 className="font-display text-lg text-[#2B241D]">RANGLISTE</h1>
-              <div className="text-[11px] text-[#8A7F68]">Klasse „{active?.classCodeDisplay}“</div>
+              <div className="text-[11px] text-[#8A7F68]">
+                {active?.classCodeDisplay ? `Klasse „${active.classCodeDisplay}“` : "Keine Klasse verbunden"}
+              </div>
             </div>
             <button onClick={loadLeaderboard} className="w-9 h-9 rounded-full glass flex items-center justify-center">
               <RefreshCw size={16} color="#8A7F68" className={leaderboardLoading ? "animate-spin" : ""} />
@@ -3307,13 +3398,24 @@ export default function App() {
               </div>
             )}
 
-            {cloudEnabled && !leaderboardLoading && leaderboardRows.length === 0 && (
+            {cloudEnabled && !active?.classCodeDisplay && (
+              <div className="glass rounded-2xl p-6 text-center">
+                <div className="text-3xl mb-3">🏆</div>
+                <div className="font-display text-sm text-[#2B241D] mb-1.5">Noch in keiner Klasse</div>
+                <div className="text-[13px] text-[#8A7F68] leading-relaxed">
+                  Du kannst schon jetzt alles lernen! Wenn du gegen deine Klasse antreten willst, tritt einfach im{" "}
+                  <span className="font-semibold text-[#C2185B]">Profil</span> mit einem Code bei.
+                </div>
+              </div>
+            )}
+
+            {cloudEnabled && active?.classCodeDisplay && !leaderboardLoading && leaderboardRows.length === 0 && (
               <div className="glass rounded-2xl p-5 text-center text-[13px] text-[#8A7F68]">
                 Noch keine Mitspieler in dieser Klasse gefunden.
               </div>
             )}
 
-            {cloudEnabled && (
+            {cloudEnabled && active?.classCodeDisplay && (
               <div className="flex flex-col gap-2.5">
                 {leaderboardRows.map((row, i) => {
                   const isMe = row.id === active?.id;
@@ -3375,6 +3477,8 @@ export default function App() {
         syncCopyLabel={syncCopyLabel}
         onCopySyncCode={copySyncCode}
         onLoadSyncCode={loadProfileFromSyncCode}
+        onJoinClass={joinClass}
+        onLeaveClass={leaveClass}
       />
     );
   }
@@ -3457,12 +3561,13 @@ function IntroScreen({ onFinish }) {
   );
 }
 
-function OnboardingScreen({ onCreate, onCancel }) {
+function OnboardingScreen({ onCreate, onCancel, busy }) {
+  const [classOpen, setClassOpen] = useState(false);
   const [classCodeInput, setClassCodeInput] = useState("");
   const [alias, setAlias] = useState(() => generateAlias());
   const [avatar, setAvatar] = useState(() => AVATARS[Math.floor(Math.random() * AVATARS.length)]);
 
-  const canSubmit = classCodeInput.trim().length > 0 && alias.trim().length > 0;
+  const canSubmit = alias.trim().length > 0 && !busy;
 
   return (
     <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9]">
@@ -3477,17 +3582,8 @@ function OnboardingScreen({ onCreate, onCancel }) {
           {onCancel ? "Neues Profil" : "Willkommen, Legionär!"}
         </h1>
         <p className="text-center text-[13px] text-[#8A7F68] mb-8">
-          Tritt deiner Klasse bei und leg direkt los — ganz ohne echten Namen.
+          Wähle einen Spitznamen und leg direkt los — komplett kostenlos, ganz ohne echten Namen.
         </p>
-
-        <label className="text-[12px] font-bold text-[#6B5F4E] mb-1.5">KLASSENCODE</label>
-        <input
-          value={classCodeInput}
-          onChange={(e) => setClassCodeInput(e.target.value)}
-          placeholder="z. B. 7A-Latein"
-          className="w-full px-4 py-3.5 rounded-xl glass text-[#2B241D] text-[15px] mb-1 focus:outline-none focus:border-[#EC4899]"
-        />
-        <p className="text-[11px] text-[#A79A7E] mb-5">Von deiner Lehrkraft — alle mit demselben Code sehen sich in der Rangliste.</p>
 
         <label className="text-[12px] font-bold text-[#6B5F4E] mb-1.5">DEIN SPITZNAME</label>
         <div className="flex gap-2 mb-1">
@@ -3495,6 +3591,7 @@ function OnboardingScreen({ onCreate, onCancel }) {
             value={alias}
             onChange={(e) => setAlias(e.target.value)}
             placeholder="Spitzname"
+            maxLength={24}
             className="flex-1 px-4 py-3.5 rounded-xl glass text-[#2B241D] text-[15px] focus:outline-none focus:border-[#EC4899]"
           />
           <button
@@ -3505,10 +3602,10 @@ function OnboardingScreen({ onCreate, onCancel }) {
             <Dices size={20} color="#8A7F68" />
           </button>
         </div>
-        <p className="text-[11px] text-[#A79A7E] mb-5">⚠️ Bitte keinen echten Namen verwenden — nur deine Klasse sieht diesen Spitznamen.</p>
+        <p className="text-[11px] text-[#A79A7E] mb-5">⚠️ Bitte keinen echten Namen verwenden.</p>
 
         <label className="text-[12px] font-bold text-[#6B5F4E] mb-2">AVATAR</label>
-        <div className="grid grid-cols-6 gap-2 mb-8">
+        <div className="grid grid-cols-6 gap-2 mb-6">
           {AVATARS.map((a) => (
             <button
               key={a}
@@ -3523,13 +3620,35 @@ function OnboardingScreen({ onCreate, onCancel }) {
         </div>
 
         <button
+          onClick={() => setClassOpen((o) => !o)}
+          className="flex items-center justify-between w-full px-1 py-2 mb-2"
+        >
+          <span className="text-[12px] font-bold text-[#6B5F4E]">
+            Klassencode <span className="font-normal text-[#A79A7E]">(optional, geht auch später)</span>
+          </span>
+          <ChevronDown size={16} color="#8A7F68" className={`transition-transform ${classOpen ? "rotate-180" : ""}`} />
+        </button>
+        {classOpen && (
+          <div className="mb-3 animate-pop-in">
+            <input
+              value={classCodeInput}
+              onChange={(e) => setClassCodeInput(e.target.value)}
+              placeholder="z. B. 7A-Latein"
+              maxLength={40}
+              className="w-full px-4 py-3.5 rounded-xl glass text-[#2B241D] text-[15px] mb-1 focus:outline-none focus:border-[#EC4899]"
+            />
+            <p className="text-[11px] text-[#A79A7E]">Von deiner Lehrkraft — alle mit demselben Code sehen sich in der Rangliste.</p>
+          </div>
+        )}
+
+        <button
           onClick={() => canSubmit && onCreate({ classCodeInput, alias, avatar })}
           disabled={!canSubmit}
           className={`w-full py-3.5 rounded-xl font-display text-sm tracking-wide mt-auto shadow-md ${
             canSubmit ? "bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white" : "bg-[#E4D7BA] text-[#A79A7E] cursor-not-allowed"
           }`}
         >
-          LOS GEHT'S!
+          {busy ? "WIRD ANGELEGT …" : "KOSTENLOS LOSLEGEN"}
         </button>
         {onCancel && (
           <button onClick={onCancel} className="text-[#8A7F68] text-[13px] underline mt-4">
@@ -3563,13 +3682,33 @@ function ProfileScreen({
   syncCopyLabel,
   onCopySyncCode,
   onLoadSyncCode,
+  onJoinClass,
+  onLeaveClass,
 }) {
   const [editing, setEditing] = useState(false);
   const [alias, setAlias] = useState(active.alias);
   const [avatar, setAvatar] = useState(active.avatar);
+  const [classInput, setClassInput] = useState("");
+  const [classBusy, setClassBusy] = useState(false);
+  const [classMsg, setClassMsg] = useState(null);
 
   const others = profiles.filter((p) => p.id !== active.id);
   const changed = alias !== active.alias || avatar !== active.avatar;
+
+  async function handleJoinClass() {
+    setClassBusy(true);
+    const res = await onJoinClass(classInput);
+    setClassMsg(res);
+    setClassBusy(false);
+    if (res.ok) setClassInput("");
+  }
+
+  async function handleLeaveClass() {
+    setClassBusy(true);
+    await onLeaveClass();
+    setClassMsg(null);
+    setClassBusy(false);
+  }
 
   return (
     <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9]">
@@ -3588,7 +3727,9 @@ function ProfileScreen({
             </div>
             <div className="min-w-0">
               <div className="font-display text-lg text-[#2B241D] truncate">{alias}</div>
-              <div className="text-[12px] text-[#8A7F68]">Klasse „{active.classCodeDisplay}“</div>
+              <div className="text-[12px] text-[#8A7F68]">
+                {active.classCodeDisplay ? `Klasse „${active.classCodeDisplay}“` : "Noch keiner Klasse beigetreten"}
+              </div>
               <div className="text-[11px] font-bold text-[#C2185B] mt-0.5">
                 {rank.current.title.toUpperCase()} · {rank.current.sub}
               </div>
@@ -3686,23 +3827,74 @@ function ProfileScreen({
           <Plus size={16} /> NEUES PROFIL ANLEGEN
         </button>
 
-        <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">GERÄTE-SYNC</div>
-        <div className="glass rounded-2xl p-5 mb-4">
-          <p className="text-[12px] text-[#8A7F68] mb-3">
-            Dein Code — gib ihn auf einem anderen Gerät ein, um dieses Profil dort zu laden:
-          </p>
-          <div className="flex items-center gap-2 mb-1">
-            <div className="flex-1 glass-strong rounded-xl py-3 text-center font-display text-lg tracking-[0.2em] text-[#2B241D]">
-              {active.syncCode || "…"}
-            </div>
+        <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">KLASSE</div>
+        {active.classCodeDisplay ? (
+          <div className="glass rounded-2xl p-5 mb-6">
+            <p className="text-[12px] text-[#8A7F68] mb-3">
+              Du bist Mitglied der Klasse <span className="font-semibold text-[#2B241D]">„{active.classCodeDisplay}“</span>.
+            </p>
             <button
-              onClick={onCopySyncCode}
-              className="px-4 py-3 rounded-xl bg-gradient-to-r from-[#3B82F6] to-[#2EC4B6] text-white font-display text-[11px] tracking-wide shrink-0"
+              onClick={handleLeaveClass}
+              disabled={classBusy}
+              className="w-full py-3 rounded-xl border-2 border-[#E8483A]/40 text-[#B4291D] font-display text-xs tracking-wide"
             >
-              {syncCopyLabel}
+              KLASSE VERLASSEN
             </button>
           </div>
-        </div>
+        ) : (
+          <div className="glass rounded-2xl p-5 mb-6">
+            <p className="text-[12px] text-[#8A7F68] mb-3">
+              Noch in keiner Klasse — tritt bei, um in der Rangliste gegen deine Mitschüler:innen anzutreten.
+            </p>
+            <div className="flex items-center gap-2">
+              <input
+                value={classInput}
+                onChange={(e) => setClassInput(e.target.value)}
+                placeholder="Klassencode eingeben"
+                maxLength={40}
+                className="flex-1 px-3.5 py-3 rounded-xl glass text-[#2B241D] text-[15px] focus:outline-none"
+              />
+              <button
+                onClick={handleJoinClass}
+                disabled={classBusy || classInput.trim().length === 0}
+                className={`px-4 py-3 rounded-xl font-display text-[11px] tracking-wide shrink-0 ${
+                  classInput.trim().length > 0 ? "bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white" : "bg-[#E4D7BA] text-[#A79A7E]"
+                }`}
+              >
+                BEITRETEN
+              </button>
+            </div>
+            {classMsg && (
+              <p className={`text-[12px] mt-2.5 ${classMsg.ok ? "text-[#0E9E85]" : "text-[#B4291D]"}`}>{classMsg.msg}</p>
+            )}
+          </div>
+        )}
+
+        <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">GERÄTE-SYNC</div>
+        {!active.syncCode ? (
+          <div className="glass rounded-2xl p-5 mb-6">
+            <p className="text-[12px] text-[#8A7F68]">
+              Geräteübergreifender Sync ist für dieses Profil nicht verfügbar (Cloud-Sync war beim Anlegen nicht erreichbar).
+            </p>
+          </div>
+        ) : (
+          <div className="glass rounded-2xl p-5 mb-4">
+            <p className="text-[12px] text-[#8A7F68] mb-3">
+              Dein Code — gib ihn auf einem anderen Gerät ein, um dieses Profil dort zu laden. Nach der Nutzung wird automatisch ein neuer Code vergeben.
+            </p>
+            <div className="flex items-center gap-2 mb-1">
+              <div className="flex-1 glass-strong rounded-xl py-3 text-center font-display text-base tracking-[0.15em] text-[#2B241D]">
+                {active.syncCode}
+              </div>
+              <button
+                onClick={onCopySyncCode}
+                className="px-4 py-3 rounded-xl bg-gradient-to-r from-[#3B82F6] to-[#2EC4B6] text-white font-display text-[11px] tracking-wide shrink-0"
+              >
+                {syncCopyLabel}
+              </button>
+            </div>
+          </div>
+        )}
 
         <div className="glass rounded-2xl p-5 mb-6">
           <p className="text-[12px] text-[#8A7F68] mb-3">Code von einem anderen Gerät eingeben:</p>
@@ -3710,9 +3902,9 @@ function ProfileScreen({
             <input
               value={syncCodeInput}
               onChange={(e) => setSyncCodeInput(e.target.value.toUpperCase())}
-              placeholder="Z. B. K7XQ2P"
-              maxLength={6}
-              className="flex-1 px-3.5 py-3 rounded-xl glass text-[#2B241D] text-[15px] tracking-[0.15em] text-center focus:outline-none"
+              placeholder="Code eingeben"
+              maxLength={10}
+              className="flex-1 px-3.5 py-3 rounded-xl glass text-[#2B241D] text-[15px] tracking-[0.1em] text-center focus:outline-none"
             />
             <button
               onClick={onLoadSyncCode}
