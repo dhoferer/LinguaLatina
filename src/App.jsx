@@ -615,18 +615,171 @@ const UNITS = [
       },
     ],
   },
+  {
+    id: "u17",
+    latin: "DEPONENTIA",
+    german: "Deponentien",
+    lessons: [
+      {
+        id: "u17-l1",
+        title: "Deponentien erkennen",
+        exercises: [
+          { type: "mc", q: "„Hortatur“ bedeutet …", options: ["er/sie ermahnt", "er/sie wird ermahnt", "er/sie ist ermahnt worden", "er/sie ermahnte"], correct: 0 },
+          { type: "mc", q: "„Sequitur“ bedeutet …", options: ["er/sie folgt", "er/sie wird gefolgt", "er/sie ist gefolgt", "er/sie folgte"], correct: 0 },
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "loquitur", accept: ["er spricht", "sie spricht", "spricht"] },
+          { type: "mc", q: "Was ist ein Deponens?", options: ["Ein Verb mit passiver Form, aber aktiver Bedeutung.", "Ein Verb nur in der Vergangenheit.", "Ein Verb ohne Endung.", "Ein unregelmäßiges Nomen."], correct: 0 },
+        ],
+      },
+      {
+        id: "u17-l2",
+        title: "Deponentien in Sätzen",
+        exercises: [
+          { type: "mc", q: "Wähle die richtige Form: „Servus dominum ___.“ (Der Sklave folgt dem Herrn.)", options: ["sequit", "sequitur", "sequuntur", "secutus"], correct: 1 },
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Der Sklave folgt dem Herrn.“", words: ["Servus", "dominum", "sequitur"], correct: ["Servus", "dominum", "sequitur"] },
+          { type: "mc", q: "„Puella cum amica loquitur.“ bedeutet …", options: ["Das Mädchen spricht mit der Freundin.", "Das Mädchen folgt der Freundin.", "Die Freundin spricht mit dem Mädchen.", "Das Mädchen ermahnt die Freundin."], correct: 0 },
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "conatur", accept: ["er versucht", "sie versucht", "versucht"] },
+        ],
+      },
+      {
+        id: "u17-l3",
+        title: "Abschluss",
+        exercises: [
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Der König ermahnt das Volk.“", words: ["Rex", "populum", "hortatur"], correct: ["Rex", "populum", "hortatur"] },
+          { type: "mc", q: "„Servi dominum sequuntur.“ bedeutet …", options: ["Die Sklaven folgen dem Herrn.", "Der Sklave folgt den Herren.", "Die Sklaven ermahnen den Herrn.", "Der Herr folgt den Sklaven."], correct: 0 },
+          { type: "mc", q: "„Puer conatur.“ bedeutet …", options: ["Der Junge versucht es.", "Der Junge folgt.", "Der Junge spricht.", "Der Junge wird versucht."], correct: 0 },
+          { type: "mc", q: "Deponentien haben eine ___ Form, aber eine ___ Bedeutung.", options: ["passive; aktive", "aktive; passive", "passive; passive", "aktive; aktive"], correct: 0 },
+        ],
+      },
+    ],
+  },
+  {
+    id: "u18",
+    latin: "PLUSQUAMPERFECTUM",
+    german: "Plusquamperfekt & Futur II",
+    lessons: [
+      {
+        id: "u18-l1",
+        title: "Plusquamperfekt erkennen",
+        exercises: [
+          { type: "mc", q: "„Amaverat“ bedeutet …", options: ["er/sie liebt", "er/sie hat geliebt", "er/sie hatte geliebt", "er/sie wird geliebt haben"], correct: 2 },
+          { type: "mc", q: "„Vocaverat“ bedeutet …", options: ["er/sie ruft", "er/sie hat gerufen", "er/sie hatte gerufen", "er/sie wird rufen"], correct: 2 },
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "laboraverat", accept: ["er hatte gearbeitet", "sie hatte gearbeitet", "hatte gearbeitet"] },
+          { type: "mc", q: "Was ist der Unterschied zwischen „amavit“ und „amaverat“?", options: ["amavit = hat geliebt (Perfekt), amaverat = hatte geliebt (vorzeitig, Plusquamperfekt)", "kein Unterschied", "amaverat ist Zukunft", "amavit ist ein Nomen"], correct: 0 },
+        ],
+      },
+      {
+        id: "u18-l2",
+        title: "Futur II",
+        exercises: [
+          { type: "mc", q: "„Amaverit“ bedeutet …", options: ["er/sie liebt", "er/sie hat geliebt", "er/sie wird geliebt haben", "er/sie hatte geliebt"], correct: 2 },
+          { type: "mc", q: "„Vocaverit“ bedeutet …", options: ["er/sie ruft", "er/sie hat gerufen", "er/sie wird gerufen haben", "er/sie hatte gerufen"], correct: 2 },
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "laboraverit", accept: ["er wird gearbeitet haben", "sie wird gearbeitet haben", "wird gearbeitet haben"] },
+          { type: "mc", q: "Wähle die richtige Form: „Cras dominus servum ___.“ (Morgen wird der Herr den Sklaven gerufen haben.)", options: ["vocat", "vocavit", "vocabit", "vocaverit"], correct: 3 },
+        ],
+      },
+      {
+        id: "u18-l3",
+        title: "Sätze im Plusquamperfekt",
+        exercises: [
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Das Mädchen hatte die Rose geliebt.“", words: ["Puella", "rosam", "amaverat"], correct: ["Puella", "rosam", "amaverat"] },
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Der Sklave hatte den Herrn gerufen.“", words: ["Servus", "dominum", "vocaverat"], correct: ["Servus", "dominum", "vocaverat"] },
+          { type: "mc", q: "„Familia viam viderat.“ bedeutet …", options: ["Die Familie sieht den Weg.", "Die Familie hatte den Weg gesehen.", "Die Familie wird den Weg sehen.", "Die Familie hat den Weg gesehen."], correct: 1 },
+          { type: "mc", q: "„Rex urbem amaverat.“ bedeutet …", options: ["Der König liebt die Stadt.", "Der König hat die Stadt geliebt.", "Der König hatte die Stadt geliebt.", "Der König wird die Stadt lieben."], correct: 2 },
+        ],
+      },
+    ],
+  },
+  {
+    id: "u19",
+    latin: "COMPARATIO",
+    german: "Steigerung",
+    lessons: [
+      {
+        id: "u19-l1",
+        title: "Steigerung erkennen",
+        exercises: [
+          { type: "mc", q: "„Melior“ bedeutet …", options: ["besser", "der/die/das Beste", "gut", "schlechter"], correct: 0 },
+          { type: "mc", q: "„Optimus“ bedeutet …", options: ["besser", "der/die/das Beste", "gut", "schlechter"], correct: 1 },
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "maior", accept: ["größer"] },
+          { type: "mc", q: "„Maximus“ bedeutet …", options: ["groß", "größer", "der/die/das Größte", "klein"], correct: 2 },
+        ],
+      },
+      {
+        id: "u19-l2",
+        title: "Regelmäßige Steigerung",
+        exercises: [
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "longus", accept: ["lang"] },
+          { type: "mc", q: "„Longior“ bedeutet …", options: ["lang", "länger", "der/die/das Längste", "kurz"], correct: 1 },
+          { type: "mc", q: "„Longissimus“ bedeutet …", options: ["lang", "länger", "der/die/das Längste", "kurz"], correct: 2 },
+          { type: "mc", q: "Wie bildet man den Komparativ meist?", options: ["Grundform + -ior", "Grundform + -issimus", "Grundform + -us", "Verdopplung des Wortes"], correct: 0 },
+        ],
+      },
+      {
+        id: "u19-l3",
+        title: "Sätze mit Steigerungsformen",
+        exercises: [
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Das Mädchen ist besser.“", words: ["Puella", "melior", "est"], correct: ["Puella", "melior", "est"] },
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Der Tempel ist am größten.“", words: ["Templum", "maximum", "est"], correct: ["Templum", "maximum", "est"] },
+          { type: "mc", q: "„Via longior est.“ bedeutet …", options: ["Der Weg ist lang.", "Der Weg ist länger.", "Der Weg ist der längste.", "Der Weg ist kurz."], correct: 1 },
+          { type: "mc", q: "„Rex optimus est.“ bedeutet …", options: ["Der König ist gut.", "Der König ist besser.", "Der König ist der beste.", "Der König ist schlecht."], correct: 2 },
+        ],
+      },
+    ],
+  },
+  {
+    id: "u20",
+    latin: "ABLATIVUS ABSOLUTUS",
+    german: "Ablativus absolutus",
+    lessons: [
+      {
+        id: "u20-l1",
+        title: "Ablativus absolutus verstehen",
+        exercises: [
+          { type: "mc", q: "Ein Ablativus absolutus besteht meist aus …", options: ["Ablativ-Nomen + Partizip", "Nominativ + Verb", "Akkusativ + Infinitiv", "Genitiv + Adjektiv"], correct: 0 },
+          { type: "mc", q: "„Servo vocato“ bedeutet ungefähr …", options: ["Nachdem der Sklave gerufen worden war", "Der Sklave ruft", "Weil der Sklave ruft", "Der Sklave wird gerufen"], correct: 0 },
+          { type: "translate", prompt: "Übersetze ins Deutsche:", latin: "domino vocato", accept: ["nachdem der herr gerufen worden war", "nachdem der herr gerufen war"] },
+          { type: "mc", q: "Ein Ablativus absolutus ist im Satz meist …", options: ["ein eigener, unabhängiger Nebensatz-Ersatz", "das Subjekt des Hauptsatzes", "ein einzelnes Adjektiv", "ein Vokativ"], correct: 0 },
+        ],
+      },
+      {
+        id: "u20-l2",
+        title: "Bilden",
+        exercises: [
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Nachdem der Sklave gerufen worden war, ist der Herr froh.“", words: ["Servo", "vocato", "dominus", "laetus", "est"], correct: ["Servo", "vocato", "dominus", "laetus", "est"] },
+          { type: "mc", q: "Wähle die passende Ablativ-Partizip-Form: „___ , populus laetus est.“ (Nachdem der Tempel bewahrt worden war, ist das Volk froh.)", options: ["Templum servatum", "Templo servato", "Templi servati", "Templo servatur"], correct: 1 },
+          { type: "order", prompt: "Bilde den lateinischen Satz für: „Nachdem der Tempel bewahrt worden war, ist das Volk froh.“", words: ["Templo", "servato", "populus", "laetus", "est"], correct: ["Templo", "servato", "populus", "laetus", "est"] },
+          { type: "mc", q: "„Templo servato, populus laetus est.“ bedeutet …", options: ["Nachdem der Tempel bewahrt worden war, ist das Volk froh.", "Das Volk bewahrt den Tempel und ist froh.", "Der Tempel ist froh, weil das Volk ihn bewahrt.", "Das Volk wird den Tempel bewahren."], correct: 0 },
+        ],
+      },
+      {
+        id: "u20-l3",
+        title: "Lesetext: Rex et Populus",
+        exercises: [
+          {
+            type: "reading",
+            title: "Rex et Populus",
+            latin: "Rex, qui urbem amat, magnus est. Populus regem amat. Templum a populo servatur. Servo vocato, rex laetus est. Dei in caelo sunt.",
+          },
+          { type: "mc", q: "Was liebt der König?", options: ["Die Stadt", "Den Sklaven", "Den Tempel", "Das Meer"], correct: 0 },
+          { type: "mc", q: "Wer bewahrt den Tempel?", options: ["Der König", "Das Volk", "Der Sklave", "Die Götter"], correct: 1 },
+          { type: "mc", q: "Was geschieht, bevor der König froh ist?", options: ["Der Sklave wird gerufen.", "Das Volk ruft den König.", "Der Tempel wird gebaut.", "Der König ruft die Götter."], correct: 0 },
+          { type: "mc", q: "Wo sind die Götter?", options: ["Im Tempel", "In der Stadt", "Im Himmel", "Auf dem Forum"], correct: 2 },
+        ],
+      },
+    ],
+  },
 ];
 
 const FLAT_LESSONS = UNITS.flatMap((u) => u.lessons.map((l) => ({ ...l, unitId: u.id })));
 
 const RANKS = [
-  { min: 0, title: "Tiro", sub: "Rekrut" },
-  { min: 50, title: "Discipulus", sub: "Schüler" },
-  { min: 150, title: "Quaestor", sub: "Schatzmeister" },
-  { min: 300, title: "Aedilis", sub: "Ädil" },
-  { min: 500, title: "Praetor", sub: "Prätor" },
-  { min: 800, title: "Consul", sub: "Konsul" },
-  { min: 1200, title: "Caesar", sub: "Imperator" },
+  { min: 0, title: "Tiro", sub: "Rekrut", subKey: "rankTiro" },
+  { min: 50, title: "Discipulus", sub: "Schüler", subKey: "rankDiscipulus" },
+  { min: 150, title: "Quaestor", sub: "Schatzmeister", subKey: "rankQuaestor" },
+  { min: 300, title: "Aedilis", sub: "Ädil", subKey: "rankAedilis" },
+  { min: 500, title: "Praetor", sub: "Prätor", subKey: "rankPraetor" },
+  { min: 800, title: "Consul", sub: "Konsul", subKey: "rankConsul" },
+  { min: 1200, title: "Caesar", sub: "Imperator", subKey: "rankCaesar" },
 ];
 
 function getRank(xp) {
@@ -661,6 +814,489 @@ const CONFETTI_COLORS = ["#E8483A", "#FFB627", "#2EC4B6", "#7C3AED", "#EC4899", 
 const GOLD_COLORS = ["#FFB627", "#FFD166", "#F59E0B", "#FFE08C"];
 
 const AVATARS = ["🦅", "🛡️", "⚔️", "🔥", "🌿", "🦁", "🐺", "🏛️", "⚡", "🐍", "🌊", "☀️"];
+/* ------------------------------------------------------------------ */
+/* I18N: Mehrsprachige Oberflaeche (Lerninhalte bleiben auf Deutsch) */
+/* ------------------------------------------------------------------ */
+
+const SUPPORTED_LANGS = ["de", "en", "fr", "it", "es"];
+const LANG_NAMES = { de: "Deutsch", en: "English", fr: "Français", it: "Italiano", es: "Español" };
+
+function detectDeviceLanguage() {
+  try {
+    const raw = (navigator.language || (navigator.languages && navigator.languages[0]) || "de").slice(0, 2).toLowerCase();
+    return SUPPORTED_LANGS.includes(raw) ? raw : "de";
+  } catch {
+    return "de";
+  }
+}
+
+const T = {
+  de: {
+    navPath: "Pfad", navGrammar: "Grammatik", navVocab: "Vokabeln", navLeaderboard: "Rangliste", navProfile: "Profil",
+    appTagline: "Roma te vocat! 🏛️",
+    xp: "XP", streakLabel: "Serie", heartsLabel: "Herzen",
+    rankTiro: "Rekrut", rankDiscipulus: "Schüler", rankQuaestor: "Schatzmeister", rankAedilis: "Ädil", rankPraetor: "Prätor", rankConsul: "Konsul", rankCaesar: "Imperator",
+    badgesTitle: "AUSZEICHNUNGEN",
+    badgeFirstDesc: "Erste Lektion abgeschlossen",
+    badgePerfectDesc: "Eine Lektion ohne Fehler gemeistert",
+    badgeUnitDesc: "Eine ganze Einheit gemeistert",
+    badgeXpDesc: "150 XP gesammelt",
+    badgeStreakDesc: "Serie von 5 Tagen",
+    dailySentenceTitle: "SATZ DES TAGES",
+    tapToTranslate: "🔄 Zum Übersetzen tippen",
+    lessonsOf: "LEKTIONEN",
+    check: "PRÜFEN", continueBtn: "WEITER",
+    correctFeedback: "OPTIME! · Richtig!", incorrectFeedback: "NON RECTE · Nicht ganz.",
+    correctAnswerIs: "Richtige Antwort:",
+    noHeartsTitle: "KEINE LEBEN MEHR",
+    noHeartsBody: (t) => `Deine Herzen sind aufgebraucht. Versuch die Lektion „${t}" noch einmal.`,
+    retry: "NOCHMAL VERSUCHEN", backToPath: "Zurück zum Pfad",
+    perfectTitle: "OPTIME!", goodTitle: "BENE FACTUM!",
+    perfectSub: "Perfekt, ganz ohne Fehler! 🎉", goodSub: "Gut gemacht — Lektion abgeschlossen.",
+    accuracy: "Genauigkeit",
+    streakMilestone: (n) => `${n} TAGE SERIE!`, streakMilestoneSub: "Du bist on fire — weiter so!",
+    newBadgeTitle: "NEUE AUSZEICHNUNG",
+    vocabTitle: "VOKABELN", vocabSub: "Trainieren, frei entdecken oder in kleinen Spielen üben.",
+    dueToday: "Fällig", learned: "Gelernt", mastered: "Gemeistert",
+    srsTitle: "KARTEIKASTEN-TRAINING", srsSub: "Spaced Repetition — was du oft richtig hast, kommt seltener dran.",
+    finishFirstLesson: "Schließe erst deine erste Lektion ab! 📚",
+    allLearnedToday: "Alles gelernt — komm morgen wieder 🌙✨",
+    startTraining: (n) => `TRAINING STARTEN (${n})`,
+    exploreTitle: "FREI ENTDECKEN", exploreSub: (n) => `Alle ${n} Wörter als Karteikarten durchblättern — auch schon vor dem Lernpfad.`,
+    exploreStart: "ENTDECKEN STARTEN",
+    gamesTitle: "MINI-SPIELE", gamesSub: "Memory & Wortblitz — mit deinen gelernten Wörtern.",
+    gamesGo: "ZU DEN SPIELEN",
+    gamesLocked: (xp) => `🔒 Ab 20 XP freigeschaltet (aktuell: ${xp} XP)`,
+    myWords: "MEINE WÖRTER",
+    latin: "LATEIN", german: "DEUTSCH", tapToFlip: "🔄 Zum Umdrehen tippen",
+    back: "◀ ZURÜCK", forward: "WEITER ▶",
+    grammarTitle: "GRAMMATIK", grammarSub: "Das Herzstück von Latein — Formen erkennen und bilden.",
+    declineTitle: "Deklinieren", declineSub: "Nomen durch die Fälle üben", declineLocked: "Schließe erst eine Lektion mit Nomen ab",
+    conjugateTitle: "Konjugieren", conjugateSub: "Verben durch die Formen üben", conjugateLocked: "Schließe erst eine Lektion mit Verben ab",
+    nounsLookup: "NOMEN NACHSCHLAGEN", verbsLookup: "VERBEN NACHSCHLAGEN",
+    declineHeader: (c) => `Dekliniere: ${c}`, conjugateHeader: (t, p) => `Konjugiere: ${t} — ${p}`,
+    rightAnswerWas: (a) => `Richtig wäre: ${a}`, right: "Richtig!",
+    declinedWell: "GUT DEKLINIERT!", conjugatedWell: "GUT KONJUGIERT!",
+    formsCorrect: (n, m) => `${n} von ${m} Formen richtig.`, correctLabel: "Richtig",
+    gamesHeader: "MINI-SPIELE", memoryTitle: "Memory", memoryDesc: "Finde die passenden Latein-Deutsch-Paare",
+    blitzTitle: "Wortblitz", blitzDesc: "30 Sekunden — so viele Wörter wie möglich!",
+    learnMoreWords: "Lerne mehr Wörter, um zu spielen",
+    memoryDone: "Geschafft!", movesNeeded: (n) => `${n} Züge gebraucht`, xpEarned: "XP verdient",
+    playAgain: "NOCHMAL SPIELEN", backToGames: "Zurück zu den Spielen",
+    points: "Punkte", timeUp: "Zeit um!", wordsCorrect: (n) => `${n} Wörter richtig`,
+    welcomeTitle: "Willkommen, Legionär!", newProfileTitle: "Neues Profil",
+    onboardingSub: "Wähle einen Spitznamen und leg direkt los — komplett kostenlos, ganz ohne echten Namen.",
+    nickname: "DEIN SPITZNAME", noRealNames: "⚠️ Bitte keinen echten Namen verwenden.",
+    avatarLabel: "AVATAR",
+    classCodeOptionalLabel: "Klassencode", classCodeOptionalHint: "(optional, geht auch später)",
+    classCodePlaceholder: "z. B. 7A-Latein", classCodeHelp: "Von deiner Lehrkraft — alle mit demselben Code sehen sich in der Rangliste.",
+    startFree: "KOSTENLOS LOSLEGEN", creating: "WIRD ANGELEGT …", cancel: "Abbrechen",
+    introTitle1: "Willkommen bei Lingua Latina!", introText1: "Lerne Latein spielerisch — mit einem Lernpfad, kleinen Häppchen und jeder Menge Belohnungen.",
+    introTitle2: "Pfad, Grammatik & Vokabeln", introText2: "Der Lernpfad führt dich Schritt für Schritt. Extra-Trainer für Deklinieren, Konjugieren und Vokabeln vertiefen, was du gelernt hast.",
+    introTitle3: "XP, Serien & Abzeichen", introText3: "Sammle XP, halte deine Serie am Leben und tritt mit einem Spitznamen gegen deine Klasse in der Rangliste an — ganz ohne echten Namen.",
+    introTitle4: "Spiele & tägliche Sätze", introText4: "Ab ein paar gesammelten Punkten warten Memory & Wortblitz. Und jeden Tag gibt's einen neuen lateinischen Satz zum Knacken.",
+    introNext: "WEITER", introGo: "LOS GEHT'S!", introSkip: "Überspringen",
+    profileTitle: "PROFIL", noClassYet: "Noch keiner Klasse beigetreten",
+    otherProfiles: "ANDERE PROFILE AUF DIESEM GERÄT", addProfile: "NEUES PROFIL ANLEGEN",
+    classSectionTitle: "KLASSE",
+    memberOfClass: (c) => `Du bist Mitglied der Klasse „${c}".`,
+    leaveClass: "KLASSE VERLASSEN",
+    notInClassYet: "Noch in keiner Klasse — tritt bei, um in der Rangliste gegen deine Mitschüler:innen anzutreten.",
+    classCodeInputPlaceholder: "Klassencode eingeben", join: "BEITRETEN",
+    deviceSyncTitle: "GERÄTE-SYNC",
+    syncUnavailable: "Geräteübergreifender Sync ist für dieses Profil nicht verfügbar (Cloud-Sync war beim Anlegen nicht erreichbar).",
+    syncCodeExplain: "Dein Code — gib ihn auf einem anderen Gerät ein, um dieses Profil dort zu laden. Nach der Nutzung wird automatisch ein neuer Code vergeben.",
+    copy: "KOPIEREN", copied: "KOPIERT! ✓",
+    enterCodeFromOther: "Code von einem anderen Gerät eingeben:", codePlaceholder: "Code eingeben", load: "LADEN",
+    sendFeedback: "FEEDBACK SENDEN", impressum: "Impressum", save: "SPEICHERN",
+    leaderboardTitle: "RANGLISTE",
+    classLabel: (c) => `Klasse „${c}"`,
+    leaderboardNotSetUp: "Rangliste noch nicht eingerichtet", askTeacher: "Frag deine Lehrkraft, ob die Cloud-Anbindung schon aktiv ist.",
+    noClassYetLb: "Noch in keiner Klasse",
+    noClassYetLbBody: "Du kannst schon jetzt alles lernen! Wenn du gegen deine Klasse antreten willst, tritt einfach im Profil mit einem Code bei.",
+    noClassmatesYet: "Noch keine Mitspieler in dieser Klasse gefunden.",
+    youLabel: "(Du)", noClassConnected: "Keine Klasse verbunden",
+    feedbackTitle: "FEEDBACK", feedbackSub: "Fehler gefunden? Idee für eine neue Lektion? Sag Bescheid!",
+    catError: "Fehler", catIdea: "Idee", catOther: "Sonstiges",
+    feedbackPlaceholder: "Was möchtest du uns mitteilen?", sendByMail: "PER MAIL SENDEN",
+    feedbackHint: "Öffnet deine Mail-App, Empfänger ist bereits eingetragen.",
+    impressumTitle: "IMPRESSUM", languageLabel: "SPRACHE",
+  },
+  en: {
+    navPath: "Path", navGrammar: "Grammar", navVocab: "Vocabulary", navLeaderboard: "Leaderboard", navProfile: "Profile",
+    appTagline: "Roma te vocat! 🏛️",
+    xp: "XP", streakLabel: "Streak", heartsLabel: "Hearts",
+    rankTiro: "Recruit", rankDiscipulus: "Student", rankQuaestor: "Treasurer", rankAedilis: "Aedile", rankPraetor: "Praetor", rankConsul: "Consul", rankCaesar: "Emperor",
+    badgesTitle: "ACHIEVEMENTS",
+    badgeFirstDesc: "Completed your first lesson",
+    badgePerfectDesc: "Aced a lesson with no mistakes",
+    badgeUnitDesc: "Mastered a whole unit",
+    badgeXpDesc: "Collected 150 XP",
+    badgeStreakDesc: "5-day streak",
+    dailySentenceTitle: "SENTENCE OF THE DAY",
+    tapToTranslate: "🔄 Tap to translate",
+    lessonsOf: "LESSONS",
+    check: "CHECK", continueBtn: "CONTINUE",
+    correctFeedback: "OPTIME! · Correct!", incorrectFeedback: "NON RECTE · Not quite.",
+    correctAnswerIs: "Correct answer:",
+    noHeartsTitle: "OUT OF HEARTS",
+    noHeartsBody: (t) => `You're out of hearts. Try the lesson "${t}" again.`,
+    retry: "TRY AGAIN", backToPath: "Back to path",
+    perfectTitle: "OPTIME!", goodTitle: "BENE FACTUM!",
+    perfectSub: "Perfect, no mistakes! 🎉", goodSub: "Well done — lesson complete.",
+    accuracy: "Accuracy",
+    streakMilestone: (n) => `${n}-DAY STREAK!`, streakMilestoneSub: "You're on fire — keep it up!",
+    newBadgeTitle: "NEW ACHIEVEMENT",
+    vocabTitle: "VOCABULARY", vocabSub: "Train, browse freely, or practice with mini-games.",
+    dueToday: "Due", learned: "Learned", mastered: "Mastered",
+    srsTitle: "FLASHCARD TRAINING", srsSub: "Spaced repetition — words you know well come up less often.",
+    finishFirstLesson: "Finish your first lesson to collect words! 📚",
+    allLearnedToday: "All done — come back tomorrow 🌙✨",
+    startTraining: (n) => `START TRAINING (${n})`,
+    exploreTitle: "FREE EXPLORE", exploreSub: (n) => `Browse all ${n} words as flashcards — even before starting the path.`,
+    exploreStart: "START EXPLORING",
+    gamesTitle: "MINI-GAMES", gamesSub: "Memory & Word Blitz — using the words you've learned.",
+    gamesGo: "GO TO GAMES",
+    gamesLocked: (xp) => `🔒 Unlocks at 20 XP (currently: ${xp} XP)`,
+    myWords: "MY WORDS",
+    latin: "LATIN", german: "ENGLISH", tapToFlip: "🔄 Tap to flip",
+    back: "◀ BACK", forward: "NEXT ▶",
+    grammarTitle: "GRAMMAR", grammarSub: "The heart of Latin — recognizing and forming words.",
+    declineTitle: "Decline", declineSub: "Practice nouns through the cases", declineLocked: "Finish a lesson with nouns first",
+    conjugateTitle: "Conjugate", conjugateSub: "Practice verbs through their forms", conjugateLocked: "Finish a lesson with verbs first",
+    nounsLookup: "NOUN REFERENCE", verbsLookup: "VERB REFERENCE",
+    declineHeader: (c) => `Decline: ${c}`, conjugateHeader: (t, p) => `Conjugate: ${t} — ${p}`,
+    rightAnswerWas: (a) => `Correct answer: ${a}`, right: "Correct!",
+    declinedWell: "GREAT DECLINING!", conjugatedWell: "GREAT CONJUGATING!",
+    formsCorrect: (n, m) => `${n} of ${m} forms correct.`, correctLabel: "Correct",
+    gamesHeader: "MINI-GAMES", memoryTitle: "Memory", memoryDesc: "Find the matching Latin-English pairs",
+    blitzTitle: "Word Blitz", blitzDesc: "30 seconds — as many words as you can!",
+    learnMoreWords: "Learn more words to unlock this",
+    memoryDone: "Done!", movesNeeded: (n) => `${n} moves used`, xpEarned: "XP earned",
+    playAgain: "PLAY AGAIN", backToGames: "Back to games",
+    points: "points", timeUp: "Time's up!", wordsCorrect: (n) => `${n} words correct`,
+    welcomeTitle: "Welcome, legionary!", newProfileTitle: "New profile",
+    onboardingSub: "Pick a nickname and dive right in — completely free, no real name needed.",
+    nickname: "YOUR NICKNAME", noRealNames: "⚠️ Please don't use your real name.",
+    avatarLabel: "AVATAR",
+    classCodeOptionalLabel: "Class code", classCodeOptionalHint: "(optional, you can add this later)",
+    classCodePlaceholder: "e.g. 7A-Latin", classCodeHelp: "From your teacher — everyone with the same code sees each other on the leaderboard.",
+    startFree: "START FOR FREE", creating: "CREATING …", cancel: "Cancel",
+    introTitle1: "Welcome to Lingua Latina!", introText1: "Learn Latin the fun way — with a learning path, bite-sized lessons, and plenty of rewards.",
+    introTitle2: "Path, Grammar & Vocabulary", introText2: "The path guides you step by step. Extra trainers for declining, conjugating, and vocabulary deepen what you've learned.",
+    introTitle3: "XP, Streaks & Badges", introText3: "Earn XP, keep your streak alive, and compete against your class on the leaderboard with a nickname — no real name needed.",
+    introTitle4: "Games & Daily Sentences", introText4: "Once you've earned a few points, Memory & Word Blitz await. Plus a new Latin sentence to crack every day.",
+    introNext: "NEXT", introGo: "LET'S GO!", introSkip: "Skip",
+    profileTitle: "PROFILE", noClassYet: "Not in a class yet",
+    otherProfiles: "OTHER PROFILES ON THIS DEVICE", addProfile: "CREATE NEW PROFILE",
+    classSectionTitle: "CLASS",
+    memberOfClass: (c) => `You're a member of class "${c}".`,
+    leaveClass: "LEAVE CLASS",
+    notInClassYet: "Not in a class yet — join one to compete against your classmates on the leaderboard.",
+    classCodeInputPlaceholder: "Enter class code", join: "JOIN",
+    deviceSyncTitle: "DEVICE SYNC",
+    syncUnavailable: "Cross-device sync isn't available for this profile (cloud sync wasn't reachable when it was created).",
+    syncCodeExplain: "Your code — enter it on another device to load this profile there. A new code is issued automatically after use.",
+    copy: "COPY", copied: "COPIED! ✓",
+    enterCodeFromOther: "Enter a code from another device:", codePlaceholder: "Enter code", load: "LOAD",
+    sendFeedback: "SEND FEEDBACK", impressum: "Legal notice", save: "SAVE",
+    leaderboardTitle: "LEADERBOARD",
+    classLabel: (c) => `Class "${c}"`,
+    leaderboardNotSetUp: "Leaderboard not set up yet", askTeacher: "Ask your teacher whether cloud sync is active yet.",
+    noClassYetLb: "Not in a class yet",
+    noClassYetLbBody: "You can already learn everything! If you want to compete against your class, just join with a code in your profile.",
+    noClassmatesYet: "No classmates found yet.",
+    youLabel: "(You)", noClassConnected: "No class connected",
+    feedbackTitle: "FEEDBACK", feedbackSub: "Found a bug? Have an idea for a new lesson? Let us know!",
+    catError: "Bug", catIdea: "Idea", catOther: "Other",
+    feedbackPlaceholder: "What would you like to tell us?", sendByMail: "SEND BY EMAIL",
+    feedbackHint: "Opens your mail app with the recipient already filled in.",
+    impressumTitle: "LEGAL NOTICE", languageLabel: "LANGUAGE",
+  },
+  fr: {
+    navPath: "Parcours", navGrammar: "Grammaire", navVocab: "Vocabulaire", navLeaderboard: "Classement", navProfile: "Profil",
+    appTagline: "Roma te vocat! 🏛️",
+    xp: "XP", streakLabel: "Série", heartsLabel: "Vies",
+    rankTiro: "Recrue", rankDiscipulus: "Élève", rankQuaestor: "Questeur", rankAedilis: "Édile", rankPraetor: "Préteur", rankConsul: "Consul", rankCaesar: "Empereur",
+    badgesTitle: "RÉCOMPENSES",
+    badgeFirstDesc: "Première leçon terminée",
+    badgePerfectDesc: "Une leçon réussie sans erreur",
+    badgeUnitDesc: "Une unité entière maîtrisée",
+    badgeXpDesc: "150 XP collectés",
+    badgeStreakDesc: "Série de 5 jours",
+    dailySentenceTitle: "PHRASE DU JOUR",
+    tapToTranslate: "🔄 Toucher pour traduire",
+    lessonsOf: "LEÇONS",
+    check: "VÉRIFIER", continueBtn: "CONTINUER",
+    correctFeedback: "OPTIME ! · Correct !", incorrectFeedback: "NON RECTE · Pas tout à fait.",
+    correctAnswerIs: "Bonne réponse :",
+    noHeartsTitle: "PLUS DE VIES",
+    noHeartsBody: (t) => `Tu n'as plus de vies. Réessaie la leçon « ${t} ».`,
+    retry: "RÉESSAYER", backToPath: "Retour au parcours",
+    perfectTitle: "OPTIME !", goodTitle: "BENE FACTUM !",
+    perfectSub: "Parfait, sans aucune erreur ! 🎉", goodSub: "Bien joué — leçon terminée.",
+    accuracy: "Précision",
+    streakMilestone: (n) => `SÉRIE DE ${n} JOURS !`, streakMilestoneSub: "Tu es en feu — continue comme ça !",
+    newBadgeTitle: "NOUVELLE RÉCOMPENSE",
+    vocabTitle: "VOCABULAIRE", vocabSub: "S'entraîner, explorer librement ou jouer à des mini-jeux.",
+    dueToday: "À réviser", learned: "Appris", mastered: "Maîtrisé",
+    srsTitle: "ENTRAÎNEMENT PAR CARTES", srsSub: "Répétition espacée — les mots que tu maîtrises reviennent moins souvent.",
+    finishFirstLesson: "Termine ta première leçon pour collecter des mots ! 📚",
+    allLearnedToday: "Tout est appris — reviens demain 🌙✨",
+    startTraining: (n) => `COMMENCER (${n})`,
+    exploreTitle: "EXPLORER LIBREMENT", exploreSub: (n) => `Parcours les ${n} mots sous forme de cartes — même avant de commencer le parcours.`,
+    exploreStart: "COMMENCER À EXPLORER",
+    gamesTitle: "MINI-JEUX", gamesSub: "Memory & Éclair de mots — avec les mots que tu as appris.",
+    gamesGo: "VOIR LES JEUX",
+    gamesLocked: (xp) => `🔒 Débloqué à 20 XP (actuellement : ${xp} XP)`,
+    myWords: "MES MOTS",
+    latin: "LATIN", german: "FRANÇAIS", tapToFlip: "🔄 Toucher pour retourner",
+    back: "◀ RETOUR", forward: "SUIVANT ▶",
+    grammarTitle: "GRAMMAIRE", grammarSub: "Le cœur du latin — reconnaître et former les mots.",
+    declineTitle: "Décliner", declineSub: "S'entraîner sur les noms à travers les cas", declineLocked: "Termine d'abord une leçon avec des noms",
+    conjugateTitle: "Conjuguer", conjugateSub: "S'entraîner sur les verbes à travers leurs formes", conjugateLocked: "Termine d'abord une leçon avec des verbes",
+    nounsLookup: "NOMS À CONSULTER", verbsLookup: "VERBES À CONSULTER",
+    declineHeader: (c) => `Décline : ${c}`, conjugateHeader: (t, p) => `Conjugue : ${t} — ${p}`,
+    rightAnswerWas: (a) => `Bonne réponse : ${a}`, right: "Correct !",
+    declinedWell: "BIEN DÉCLINÉ !", conjugatedWell: "BIEN CONJUGUÉ !",
+    formsCorrect: (n, m) => `${n} formes correctes sur ${m}.`, correctLabel: "Correct",
+    gamesHeader: "MINI-JEUX", memoryTitle: "Memory", memoryDesc: "Trouve les paires latin-français correspondantes",
+    blitzTitle: "Éclair de mots", blitzDesc: "30 secondes — autant de mots que possible !",
+    learnMoreWords: "Apprends plus de mots pour débloquer ce jeu",
+    memoryDone: "Terminé !", movesNeeded: (n) => `${n} coups utilisés`, xpEarned: "XP gagnés",
+    playAgain: "REJOUER", backToGames: "Retour aux jeux",
+    points: "points", timeUp: "Temps écoulé !", wordsCorrect: (n) => `${n} mots corrects`,
+    welcomeTitle: "Bienvenue, légionnaire !", newProfileTitle: "Nouveau profil",
+    onboardingSub: "Choisis un pseudo et lance-toi — entièrement gratuit, sans nom réel.",
+    nickname: "TON PSEUDO", noRealNames: "⚠️ Merci de ne pas utiliser ton vrai nom.",
+    avatarLabel: "AVATAR",
+    classCodeOptionalLabel: "Code de classe", classCodeOptionalHint: "(facultatif, possible plus tard)",
+    classCodePlaceholder: "ex. 7A-Latin", classCodeHelp: "Donné par ton enseignant·e — tous ceux qui ont le même code se voient dans le classement.",
+    startFree: "COMMENCER GRATUITEMENT", creating: "CRÉATION EN COURS …", cancel: "Annuler",
+    introTitle1: "Bienvenue sur Lingua Latina !", introText1: "Apprends le latin en t'amusant — avec un parcours, de petites leçons et plein de récompenses.",
+    introTitle2: "Parcours, grammaire & vocabulaire", introText2: "Le parcours te guide pas à pas. Des entraîneurs supplémentaires pour la déclinaison, la conjugaison et le vocabulaire approfondissent tes acquis.",
+    introTitle3: "XP, séries & badges", introText3: "Gagne des XP, maintiens ta série et affronte ta classe au classement avec un pseudo — sans nom réel.",
+    introTitle4: "Jeux & phrases du jour", introText4: "Dès que tu as quelques points, Memory & Éclair de mots t'attendent. Et chaque jour, une nouvelle phrase latine à déchiffrer.",
+    introNext: "SUIVANT", introGo: "C'EST PARTI !", introSkip: "Passer",
+    profileTitle: "PROFIL", noClassYet: "Pas encore dans une classe",
+    otherProfiles: "AUTRES PROFILS SUR CET APPAREIL", addProfile: "CRÉER UN NOUVEAU PROFIL",
+    classSectionTitle: "CLASSE",
+    memberOfClass: (c) => `Tu es membre de la classe « ${c} ».`,
+    leaveClass: "QUITTER LA CLASSE",
+    notInClassYet: "Pas encore dans une classe — rejoins-en une pour affronter tes camarades au classement.",
+    classCodeInputPlaceholder: "Entrer le code de classe", join: "REJOINDRE",
+    deviceSyncTitle: "SYNCHRONISATION",
+    syncUnavailable: "La synchronisation entre appareils n'est pas disponible pour ce profil (le cloud était injoignable à la création).",
+    syncCodeExplain: "Ton code — entre-le sur un autre appareil pour y charger ce profil. Un nouveau code est généré automatiquement après usage.",
+    copy: "COPIER", copied: "COPIÉ ! ✓",
+    enterCodeFromOther: "Entrer un code d'un autre appareil :", codePlaceholder: "Entrer le code", load: "CHARGER",
+    sendFeedback: "ENVOYER UN AVIS", impressum: "Mentions légales", save: "ENREGISTRER",
+    leaderboardTitle: "CLASSEMENT",
+    classLabel: (c) => `Classe « ${c} »`,
+    leaderboardNotSetUp: "Classement pas encore configuré", askTeacher: "Demande à ton enseignant·e si la connexion cloud est déjà active.",
+    noClassYetLb: "Pas encore dans une classe",
+    noClassYetLbBody: "Tu peux déjà tout apprendre ! Pour affronter ta classe, rejoins-la simplement avec un code dans ton profil.",
+    noClassmatesYet: "Aucun camarade trouvé pour l'instant.",
+    youLabel: "(Toi)", noClassConnected: "Aucune classe connectée",
+    feedbackTitle: "AVIS", feedbackSub: "Un bug trouvé ? Une idée de leçon ? Dis-le-nous !",
+    catError: "Bug", catIdea: "Idée", catOther: "Autre",
+    feedbackPlaceholder: "Que veux-tu nous dire ?", sendByMail: "ENVOYER PAR E-MAIL",
+    feedbackHint: "Ouvre ton application mail avec le destinataire déjà rempli.",
+    impressumTitle: "MENTIONS LÉGALES", languageLabel: "LANGUE",
+  },
+  it: {
+    navPath: "Percorso", navGrammar: "Grammatica", navVocab: "Vocabolario", navLeaderboard: "Classifica", navProfile: "Profilo",
+    appTagline: "Roma te vocat! 🏛️",
+    xp: "XP", streakLabel: "Serie", heartsLabel: "Vite",
+    rankTiro: "Recluta", rankDiscipulus: "Studente", rankQuaestor: "Questore", rankAedilis: "Edile", rankPraetor: "Pretore", rankConsul: "Console", rankCaesar: "Imperatore",
+    badgesTitle: "OBIETTIVI",
+    badgeFirstDesc: "Prima lezione completata",
+    badgePerfectDesc: "Lezione superata senza errori",
+    badgeUnitDesc: "Un'intera unità completata",
+    badgeXpDesc: "150 XP raccolti",
+    badgeStreakDesc: "Serie di 5 giorni",
+    dailySentenceTitle: "FRASE DEL GIORNO",
+    tapToTranslate: "🔄 Tocca per tradurre",
+    lessonsOf: "LEZIONI",
+    check: "CONTROLLA", continueBtn: "AVANTI",
+    correctFeedback: "OPTIME! · Corretto!", incorrectFeedback: "NON RECTE · Non proprio.",
+    correctAnswerIs: "Risposta corretta:",
+    noHeartsTitle: "VITE ESAURITE",
+    noHeartsBody: (t) => `Le tue vite sono finite. Riprova la lezione «${t}».`,
+    retry: "RIPROVA", backToPath: "Torna al percorso",
+    perfectTitle: "OPTIME!", goodTitle: "BENE FACTUM!",
+    perfectSub: "Perfetto, senza errori! 🎉", goodSub: "Ben fatto — lezione completata.",
+    accuracy: "Precisione",
+    streakMilestone: (n) => `SERIE DI ${n} GIORNI!`, streakMilestoneSub: "Sei in fiamme — continua così!",
+    newBadgeTitle: "NUOVO OBIETTIVO",
+    vocabTitle: "VOCABOLARIO", vocabSub: "Allenati, esplora liberamente o gioca ai mini-giochi.",
+    dueToday: "Da ripassare", learned: "Imparate", mastered: "Padroneggiate",
+    srsTitle: "ALLENAMENTO A CARTE", srsSub: "Ripetizione dilazionata — le parole che sai bene tornano meno spesso.",
+    finishFirstLesson: "Completa la prima lezione per raccogliere parole! 📚",
+    allLearnedToday: "Tutto imparato — torna domani 🌙✨",
+    startTraining: (n) => `INIZIA ALLENAMENTO (${n})`,
+    exploreTitle: "ESPLORA LIBERAMENTE", exploreSub: (n) => `Sfoglia tutte le ${n} parole come flashcard — anche prima di iniziare il percorso.`,
+    exploreStart: "INIZIA A ESPLORARE",
+    gamesTitle: "MINI-GIOCHI", gamesSub: "Memory e Fulmine di Parole — con le parole che hai imparato.",
+    gamesGo: "VAI AI GIOCHI",
+    gamesLocked: (xp) => `🔒 Si sblocca a 20 XP (attuali: ${xp} XP)`,
+    myWords: "LE MIE PAROLE",
+    latin: "LATINO", german: "ITALIANO", tapToFlip: "🔄 Tocca per girare",
+    back: "◀ INDIETRO", forward: "AVANTI ▶",
+    grammarTitle: "GRAMMATICA", grammarSub: "Il cuore del latino — riconoscere e formare le parole.",
+    declineTitle: "Declinare", declineSub: "Esercitati sui nomi attraverso i casi", declineLocked: "Completa prima una lezione con i nomi",
+    conjugateTitle: "Coniugare", conjugateSub: "Esercitati sui verbi attraverso le loro forme", conjugateLocked: "Completa prima una lezione con i verbi",
+    nounsLookup: "CONSULTA I NOMI", verbsLookup: "CONSULTA I VERBI",
+    declineHeader: (c) => `Declina: ${c}`, conjugateHeader: (t, p) => `Coniuga: ${t} — ${p}`,
+    rightAnswerWas: (a) => `Risposta corretta: ${a}`, right: "Corretto!",
+    declinedWell: "OTTIMA DECLINAZIONE!", conjugatedWell: "OTTIMA CONIUGAZIONE!",
+    formsCorrect: (n, m) => `${n} forme corrette su ${m}.`, correctLabel: "Corrette",
+    gamesHeader: "MINI-GIOCHI", memoryTitle: "Memory", memoryDesc: "Trova le coppie latino-italiano corrispondenti",
+    blitzTitle: "Fulmine di Parole", blitzDesc: "30 secondi — quante più parole possibile!",
+    learnMoreWords: "Impara altre parole per sbloccare questo gioco",
+    memoryDone: "Fatto!", movesNeeded: (n) => `${n} mosse usate`, xpEarned: "XP guadagnati",
+    playAgain: "GIOCA ANCORA", backToGames: "Torna ai giochi",
+    points: "punti", timeUp: "Tempo scaduto!", wordsCorrect: (n) => `${n} parole corrette`,
+    welcomeTitle: "Benvenuto, legionario!", newProfileTitle: "Nuovo profilo",
+    onboardingSub: "Scegli un soprannome e inizia subito — completamente gratis, senza nome reale.",
+    nickname: "IL TUO SOPRANNOME", noRealNames: "⚠️ Per favore non usare il tuo vero nome.",
+    avatarLabel: "AVATAR",
+    classCodeOptionalLabel: "Codice classe", classCodeOptionalHint: "(facoltativo, puoi aggiungerlo anche dopo)",
+    classCodePlaceholder: "es. 7A-Latino", classCodeHelp: "Dal tuo insegnante — chi ha lo stesso codice si vede in classifica.",
+    startFree: "INIZIA GRATIS", creating: "CREAZIONE IN CORSO …", cancel: "Annulla",
+    introTitle1: "Benvenuto su Lingua Latina!", introText1: "Impara il latino in modo divertente — con un percorso, lezioni brevi e tante ricompense.",
+    introTitle2: "Percorso, Grammatica e Vocabolario", introText2: "Il percorso ti guida passo dopo passo. Allenamenti extra per declinare, coniugare e il vocabolario approfondiscono ciò che hai imparato.",
+    introTitle3: "XP, Serie e Obiettivi", introText3: "Guadagna XP, mantieni viva la tua serie e sfida la tua classe in classifica con un soprannome — senza nome reale.",
+    introTitle4: "Giochi e frasi quotidiane", introText4: "Con qualche punto guadagnato ti aspettano Memory e Fulmine di Parole. E ogni giorno una nuova frase latina da decifrare.",
+    introNext: "AVANTI", introGo: "INIZIAMO!", introSkip: "Salta",
+    profileTitle: "PROFILO", noClassYet: "Non ancora in una classe",
+    otherProfiles: "ALTRI PROFILI SU QUESTO DISPOSITIVO", addProfile: "CREA NUOVO PROFILO",
+    classSectionTitle: "CLASSE",
+    memberOfClass: (c) => `Sei membro della classe «${c}».`,
+    leaveClass: "ESCI DALLA CLASSE",
+    notInClassYet: "Non ancora in una classe — unisciti a una per sfidare i tuoi compagni in classifica.",
+    classCodeInputPlaceholder: "Inserisci il codice classe", join: "UNISCITI",
+    deviceSyncTitle: "SINCRONIZZAZIONE",
+    syncUnavailable: "La sincronizzazione tra dispositivi non è disponibile per questo profilo (il cloud non era raggiungibile alla creazione).",
+    syncCodeExplain: "Il tuo codice — inseriscilo su un altro dispositivo per caricare qui il profilo. Dopo l'uso viene generato automaticamente un nuovo codice.",
+    copy: "COPIA", copied: "COPIATO! ✓",
+    enterCodeFromOther: "Inserisci un codice da un altro dispositivo:", codePlaceholder: "Inserisci codice", load: "CARICA",
+    sendFeedback: "INVIA FEEDBACK", impressum: "Note legali", save: "SALVA",
+    leaderboardTitle: "CLASSIFICA",
+    classLabel: (c) => `Classe «${c}»`,
+    leaderboardNotSetUp: "Classifica non ancora configurata", askTeacher: "Chiedi al tuo insegnante se la connessione cloud è già attiva.",
+    noClassYetLb: "Non ancora in una classe",
+    noClassYetLbBody: "Puoi già imparare tutto! Se vuoi sfidare la tua classe, unisciti semplicemente con un codice nel profilo.",
+    noClassmatesYet: "Nessun compagno trovato ancora.",
+    youLabel: "(Tu)", noClassConnected: "Nessuna classe collegata",
+    feedbackTitle: "FEEDBACK", feedbackSub: "Hai trovato un errore? Un'idea per una nuova lezione? Faccelo sapere!",
+    catError: "Errore", catIdea: "Idea", catOther: "Altro",
+    feedbackPlaceholder: "Cosa vuoi dirci?", sendByMail: "INVIA VIA EMAIL",
+    feedbackHint: "Apre la tua app di posta con il destinatario già inserito.",
+    impressumTitle: "NOTE LEGALI", languageLabel: "LINGUA",
+  },
+  es: {
+    navPath: "Ruta", navGrammar: "Gramática", navVocab: "Vocabulario", navLeaderboard: "Clasificación", navProfile: "Perfil",
+    appTagline: "Roma te vocat! 🏛️",
+    xp: "XP", streakLabel: "Racha", heartsLabel: "Vidas",
+    rankTiro: "Recluta", rankDiscipulus: "Estudiante", rankQuaestor: "Cuestor", rankAedilis: "Edil", rankPraetor: "Pretor", rankConsul: "Cónsul", rankCaesar: "Emperador",
+    badgesTitle: "LOGROS",
+    badgeFirstDesc: "Primera lección completada",
+    badgePerfectDesc: "Lección superada sin errores",
+    badgeUnitDesc: "Una unidad completa dominada",
+    badgeXpDesc: "150 XP acumulados",
+    badgeStreakDesc: "Racha de 5 días",
+    dailySentenceTitle: "FRASE DEL DÍA",
+    tapToTranslate: "🔄 Toca para traducir",
+    lessonsOf: "LECCIONES",
+    check: "COMPROBAR", continueBtn: "CONTINUAR",
+    correctFeedback: "OPTIME! · ¡Correcto!", incorrectFeedback: "NON RECTE · No del todo.",
+    correctAnswerIs: "Respuesta correcta:",
+    noHeartsTitle: "SIN VIDAS",
+    noHeartsBody: (t) => `Te has quedado sin vidas. Vuelve a intentar la lección «${t}».`,
+    retry: "REINTENTAR", backToPath: "Volver a la ruta",
+    perfectTitle: "¡OPTIME!", goodTitle: "¡BENE FACTUM!",
+    perfectSub: "¡Perfecto, sin errores! 🎉", goodSub: "Bien hecho — lección completada.",
+    accuracy: "Precisión",
+    streakMilestone: (n) => `¡RACHA DE ${n} DÍAS!`, streakMilestoneSub: "Estás que ardes — ¡sigue así!",
+    newBadgeTitle: "NUEVO LOGRO",
+    vocabTitle: "VOCABULARIO", vocabSub: "Entrena, explora libremente o juega mini-juegos.",
+    dueToday: "Pendiente", learned: "Aprendidas", mastered: "Dominadas",
+    srsTitle: "ENTRENAMIENTO CON TARJETAS", srsSub: "Repetición espaciada — las palabras que dominas aparecen con menos frecuencia.",
+    finishFirstLesson: "¡Termina tu primera lección para reunir palabras! 📚",
+    allLearnedToday: "Todo aprendido — vuelve mañana 🌙✨",
+    startTraining: (n) => `EMPEZAR ENTRENAMIENTO (${n})`,
+    exploreTitle: "EXPLORAR LIBREMENTE", exploreSub: (n) => `Explora las ${n} palabras como tarjetas — incluso antes de empezar la ruta.`,
+    exploreStart: "EMPEZAR A EXPLORAR",
+    gamesTitle: "MINI-JUEGOS", gamesSub: "Memory y Ráfaga de Palabras — con las palabras que has aprendido.",
+    gamesGo: "IR A LOS JUEGOS",
+    gamesLocked: (xp) => `🔒 Se desbloquea con 20 XP (actual: ${xp} XP)`,
+    myWords: "MIS PALABRAS",
+    latin: "LATÍN", german: "ESPAÑOL", tapToFlip: "🔄 Toca para voltear",
+    back: "◀ ATRÁS", forward: "SIGUIENTE ▶",
+    grammarTitle: "GRAMÁTICA", grammarSub: "El corazón del latín — reconocer y formar palabras.",
+    declineTitle: "Declinar", declineSub: "Practica los sustantivos a través de los casos", declineLocked: "Termina primero una lección con sustantivos",
+    conjugateTitle: "Conjugar", conjugateSub: "Practica los verbos a través de sus formas", conjugateLocked: "Termina primero una lección con verbos",
+    nounsLookup: "CONSULTAR SUSTANTIVOS", verbsLookup: "CONSULTAR VERBOS",
+    declineHeader: (c) => `Declina: ${c}`, conjugateHeader: (t, p) => `Conjuga: ${t} — ${p}`,
+    rightAnswerWas: (a) => `Respuesta correcta: ${a}`, right: "¡Correcto!",
+    declinedWell: "¡BIEN DECLINADO!", conjugatedWell: "¡BIEN CONJUGADO!",
+    formsCorrect: (n, m) => `${n} de ${m} formas correctas.`, correctLabel: "Correctas",
+    gamesHeader: "MINI-JUEGOS", memoryTitle: "Memory", memoryDesc: "Encuentra las parejas latín-español correspondientes",
+    blitzTitle: "Ráfaga de Palabras", blitzDesc: "30 segundos — ¡tantas palabras como puedas!",
+    learnMoreWords: "Aprende más palabras para desbloquear esto",
+    memoryDone: "¡Listo!", movesNeeded: (n) => `${n} movimientos usados`, xpEarned: "XP ganados",
+    playAgain: "JUGAR DE NUEVO", backToGames: "Volver a los juegos",
+    points: "puntos", timeUp: "¡Se acabó el tiempo!", wordsCorrect: (n) => `${n} palabras correctas`,
+    welcomeTitle: "¡Bienvenido, legionario!", newProfileTitle: "Nuevo perfil",
+    onboardingSub: "Elige un apodo y empieza ya — totalmente gratis, sin nombre real.",
+    nickname: "TU APODO", noRealNames: "⚠️ Por favor no uses tu nombre real.",
+    avatarLabel: "AVATAR",
+    classCodeOptionalLabel: "Código de clase", classCodeOptionalHint: "(opcional, puedes añadirlo más tarde)",
+    classCodePlaceholder: "p. ej. 7A-Latín", classCodeHelp: "De tu profesor/a — todos con el mismo código se ven en la clasificación.",
+    startFree: "EMPEZAR GRATIS", creating: "CREANDO …", cancel: "Cancelar",
+    introTitle1: "¡Bienvenido a Lingua Latina!", introText1: "Aprende latín de forma divertida — con una ruta de aprendizaje, lecciones cortas y muchas recompensas.",
+    introTitle2: "Ruta, Gramática y Vocabulario", introText2: "La ruta te guía paso a paso. Entrenadores extra para declinar, conjugar y vocabulario profundizan lo aprendido.",
+    introTitle3: "XP, rachas e insignias", introText3: "Gana XP, mantén tu racha viva y compite contra tu clase en la clasificación con un apodo — sin nombre real.",
+    introTitle4: "Juegos y frases diarias", introText4: "En cuanto tengas algunos puntos, te esperan Memory y Ráfaga de Palabras. Y cada día una nueva frase en latín para descifrar.",
+    introNext: "SIGUIENTE", introGo: "¡EMPEZAMOS!", introSkip: "Omitir",
+    profileTitle: "PERFIL", noClassYet: "Aún no estás en una clase",
+    otherProfiles: "OTROS PERFILES EN ESTE DISPOSITIVO", addProfile: "CREAR NUEVO PERFIL",
+    classSectionTitle: "CLASE",
+    memberOfClass: (c) => `Eres miembro de la clase «${c}».`,
+    leaveClass: "ABANDONAR CLASE",
+    notInClassYet: "Aún no estás en una clase — únete a una para competir contra tus compañeros en la clasificación.",
+    classCodeInputPlaceholder: "Introduce el código de clase", join: "UNIRSE",
+    deviceSyncTitle: "SINCRONIZACIÓN",
+    syncUnavailable: "La sincronización entre dispositivos no está disponible para este perfil (la nube no estaba disponible al crearlo).",
+    syncCodeExplain: "Tu código — introdúcelo en otro dispositivo para cargar allí este perfil. Se emite un nuevo código automáticamente tras su uso.",
+    copy: "COPIAR", copied: "¡COPIADO! ✓",
+    enterCodeFromOther: "Introduce un código de otro dispositivo:", codePlaceholder: "Introduce el código", load: "CARGAR",
+    sendFeedback: "ENVIAR COMENTARIOS", impressum: "Aviso legal", save: "GUARDAR",
+    leaderboardTitle: "CLASIFICACIÓN",
+    classLabel: (c) => `Clase «${c}»`,
+    leaderboardNotSetUp: "Clasificación aún no configurada", askTeacher: "Pregunta a tu profesor/a si la conexión a la nube ya está activa.",
+    noClassYetLb: "Aún no estás en una clase",
+    noClassYetLbBody: "¡Ya puedes aprenderlo todo! Si quieres competir contra tu clase, únete con un código en tu perfil.",
+    noClassmatesYet: "Aún no se han encontrado compañeros.",
+    youLabel: "(Tú)", noClassConnected: "Ninguna clase conectada",
+    feedbackTitle: "COMENTARIOS", feedbackSub: "¿Encontraste un error? ¿Una idea para una lección? ¡Cuéntanoslo!",
+    catError: "Error", catIdea: "Idea", catOther: "Otro",
+    feedbackPlaceholder: "¿Qué quieres decirnos?", sendByMail: "ENVIAR POR CORREO",
+    feedbackHint: "Abre tu app de correo con el destinatario ya rellenado.",
+    impressumTitle: "AVISO LEGAL", languageLabel: "IDIOMA",
+  },
+};
+
+function useTranslator(lang) {
+  const dict = T[lang] || T.de;
+  return function t(key, ...args) {
+    const entry = dict[key] ?? T.de[key] ?? key;
+    return typeof entry === "function" ? entry(...args) : entry;
+  };
+}
+
+
 const ALIAS_NOUNS = ["Aquila", "Lupus", "Leo", "Draco", "Falco", "Ursus", "Corvus", "Vulpes", "Taurus", "Phoenix", "Cato", "Nova"];
 
 /* ------------------------------------------------------------------ */
@@ -755,6 +1391,16 @@ const VOCAB_POOL = [
   { id: "v85", latin: "qui", german: "der/welcher", lessonId: "u16-l1" },
   { id: "v86", latin: "quae", german: "die/welche", lessonId: "u16-l1" },
   { id: "v87", latin: "quod", german: "das/welches", lessonId: "u16-l1" },
+  { id: "v88", latin: "hortari", german: "ermahnen", lessonId: "u17-l1" },
+  { id: "v89", latin: "sequi", german: "folgen", lessonId: "u17-l1" },
+  { id: "v90", latin: "loqui", german: "sprechen", lessonId: "u17-l1" },
+  { id: "v91", latin: "conari", german: "versuchen", lessonId: "u17-l2" },
+  { id: "v92", latin: "amaverat", german: "er/sie hatte geliebt", lessonId: "u18-l1" },
+  { id: "v93", latin: "amaverit", german: "er/sie wird geliebt haben", lessonId: "u18-l2" },
+  { id: "v94", latin: "melior", german: "besser", lessonId: "u19-l1" },
+  { id: "v95", latin: "optimus", german: "der/die/das Beste", lessonId: "u19-l1" },
+  { id: "v96", latin: "maior", german: "größer", lessonId: "u19-l1" },
+  { id: "v97", latin: "longus", german: "lang", lessonId: "u19-l2" },
 ];
 
 const BOX_INTERVAL_DAYS = [0, 1, 3, 7, 14, 30];
@@ -924,6 +1570,12 @@ const DAILY_SENTENCES = [
   { latin: "Dico servum laborare.", german: "Ich sage, dass der Sklave arbeitet." },
   { latin: "Servus, qui laborat, bonus est.", german: "Der Sklave, der arbeitet, ist gut." },
   { latin: "Rex, qui urbem amat, bonus est.", german: "Der König, der die Stadt liebt, ist gut." },
+  { latin: "Servus dominum sequitur.", german: "Der Sklave folgt dem Herrn." },
+  { latin: "Rex populum hortatur.", german: "Der König ermahnt das Volk." },
+  { latin: "Puella rosam amaverat.", german: "Das Mädchen hatte die Rose geliebt." },
+  { latin: "Rex optimus est.", german: "Der König ist der beste." },
+  { latin: "Via longior est.", german: "Der Weg ist länger." },
+  { latin: "Servo vocato, dominus laetus est.", german: "Nachdem der Sklave gerufen worden war, ist der Herr froh." },
 ];
 
 function getDailySentence() {
@@ -1280,13 +1932,13 @@ function ComboToast({ text }) {
   );
 }
 
-function BottomNav({ screen, setScreen }) {
+function BottomNav({ screen, setScreen, t }) {
   const items = [
-    { id: "path", label: "Pfad", icon: Map },
-    { id: "grammar-home", label: "Grammatik", icon: LayoutGrid },
-    { id: "vocab-home", label: "Vokabeln", icon: BookOpen },
-    { id: "leaderboard", label: "Rangliste", icon: Trophy },
-    { id: "profile", label: "Profil", icon: User },
+    { id: "path", label: t("navPath"), icon: Map },
+    { id: "grammar-home", label: t("navGrammar"), icon: LayoutGrid },
+    { id: "vocab-home", label: t("navVocab"), icon: BookOpen },
+    { id: "leaderboard", label: t("navLeaderboard"), icon: Trophy },
+    { id: "profile", label: t("navProfile"), icon: User },
   ];
   return (
     <div className="fixed bottom-0 left-0 right-0 flex justify-center z-30">
@@ -1319,6 +1971,20 @@ function BottomNav({ screen, setScreen }) {
 
 export default function App() {
   const [screen, setScreen] = useState("loading");
+  const [lang, setLang] = useState(() => {
+    try {
+      return localStorage.getItem("ll_lang") || detectDeviceLanguage();
+    } catch {
+      return detectDeviceLanguage();
+    }
+  });
+  const t = useTranslator(lang);
+  function changeLang(code) {
+    setLang(code);
+    try {
+      localStorage.setItem("ll_lang", code);
+    } catch {}
+  }
   const [profiles, setProfiles] = useState([]);
   const [activeId, setActiveId] = useState(null);
   const [addingProfile, setAddingProfile] = useState(false);
@@ -2141,7 +2807,7 @@ export default function App() {
             <div className="mt-2.5">
               <div className="flex items-baseline justify-between mb-1">
                 <span className="text-[11px] font-bold text-[#C2185B] tracking-wide">
-                  {rank.current.title.toUpperCase()} · {rank.current.sub}
+                  {rank.current.title.toUpperCase()} · {t(rank.current.subKey)}
                 </span>
                 <span className="text-[11px] text-[#8A7F68] font-mono">
                   {xp} XP{rank.next ? ` / ${rank.next.min}` : " · MAX"}
@@ -2227,7 +2893,7 @@ export default function App() {
             ))}
           </div>
         </div>
-        <BottomNav screen={screen} setScreen={setScreen} />
+        <BottomNav screen={screen} setScreen={setScreen} t={t} />
       </div>
     );
   }
@@ -2342,7 +3008,7 @@ export default function App() {
             </>
           )}
         </div>
-        <BottomNav screen={screen} setScreen={setScreen} />
+        <BottomNav screen={screen} setScreen={setScreen} t={t} />
       </div>
     );
   }
@@ -2659,7 +3325,7 @@ export default function App() {
             </>
           )}
         </div>
-        <BottomNav screen={screen} setScreen={setScreen} />
+        <BottomNav screen={screen} setScreen={setScreen} t={t} />
       </div>
     );
   }
@@ -2835,7 +3501,7 @@ export default function App() {
             </div>
           </button>
         </div>
-        <BottomNav screen="vocab-home" setScreen={setScreen} />
+        <BottomNav screen="vocab-home" setScreen={setScreen} t={t} />
       </div>
     );
   }
@@ -3447,7 +4113,7 @@ export default function App() {
             )}
           </div>
         </div>
-        <BottomNav screen={screen} setScreen={setScreen} />
+        <BottomNav screen={screen} setScreen={setScreen} t={t} />
       </div>
     );
   }
@@ -3479,6 +4145,9 @@ export default function App() {
         onLoadSyncCode={loadProfileFromSyncCode}
         onJoinClass={joinClass}
         onLeaveClass={leaveClass}
+        t={t}
+        lang={lang}
+        onChangeLang={changeLang}
       />
     );
   }
@@ -3684,6 +4353,9 @@ function ProfileScreen({
   onLoadSyncCode,
   onJoinClass,
   onLeaveClass,
+  t,
+  lang,
+  onChangeLang,
 }) {
   const [editing, setEditing] = useState(false);
   const [alias, setAlias] = useState(active.alias);
@@ -3715,7 +4387,7 @@ function ProfileScreen({
       <FontImport />
       <BackgroundBlobs />
       <div className="w-full max-w-md min-h-screen pb-28 px-5 pt-6">
-        <h1 className="font-display text-lg text-[#2B241D] mb-5">PROFIL</h1>
+        <h1 className="font-display text-lg text-[#2B241D] mb-5">{t("profileTitle")}</h1>
 
         <div className="glass rounded-2xl p-5 mb-5 shadow-sm">
           <div className="flex items-center gap-4 mb-4">
@@ -3728,10 +4400,10 @@ function ProfileScreen({
             <div className="min-w-0">
               <div className="font-display text-lg text-[#2B241D] truncate">{alias}</div>
               <div className="text-[12px] text-[#8A7F68]">
-                {active.classCodeDisplay ? `Klasse „${active.classCodeDisplay}“` : "Noch keiner Klasse beigetreten"}
+                {active.classCodeDisplay ? t("classLabel", active.classCodeDisplay) : t("noClassYet")}
               </div>
               <div className="text-[11px] font-bold text-[#C2185B] mt-0.5">
-                {rank.current.title.toUpperCase()} · {rank.current.sub}
+                {rank.current.title.toUpperCase()} · {t(rank.current.subKey)}
               </div>
             </div>
             <button onClick={() => setEditing((e) => !e)} className="ml-auto w-9 h-9 rounded-full bg-[#FFF6E9] border-2 border-[#F0DFC0] flex items-center justify-center shrink-0">
@@ -3766,19 +4438,19 @@ function ProfileScreen({
                 }}
                 className="w-full py-2.5 rounded-lg bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white font-display text-xs tracking-wide"
               >
-                SPEICHERN
+                {t("save")}
               </button>
             </div>
           )}
 
           <div className="grid grid-cols-3 gap-2.5">
-            <SummaryStat label="XP" value={xp} color="#F59E0B" />
-            <SummaryStat label="Serie" value={streak} color="#FF7A1A" />
-            <SummaryStat label="Abzeichen" value={unlockedBadges.size} color="#0E9E85" />
+            <SummaryStat label={t("xp")} value={xp} color="#F59E0B" />
+            <SummaryStat label={t("streakLabel")} value={streak} color="#FF7A1A" />
+            <SummaryStat label={t("badgesTitle")} value={unlockedBadges.size} color="#0E9E85" />
           </div>
         </div>
 
-        <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">AUSZEICHNUNGEN</div>
+        <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">{t("badgesTitle")}</div>
         <div className="flex gap-2 overflow-x-auto pb-2 mb-6 no-scrollbar">
           {BADGES.map((b) => {
             const on = unlockedBadges.has(b.id);
@@ -3799,7 +4471,7 @@ function ProfileScreen({
 
         {others.length > 0 && (
           <>
-            <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">ANDERE PROFILE AUF DIESEM GERÄT</div>
+            <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">{t("otherProfiles")}</div>
             <div className="flex flex-col gap-2 mb-4">
               {others.map((p) => (
                 <button
@@ -3812,7 +4484,7 @@ function ProfileScreen({
                   </div>
                   <div className="min-w-0">
                     <div className="font-display text-[13px] text-[#2B241D] truncate">{p.alias}</div>
-                    <div className="text-[11px] text-[#8A7F68]">Klasse „{p.classCodeDisplay}“ · {p.xp} XP</div>
+                    <div className="text-[11px] text-[#8A7F68]">{t("classLabel", p.classCodeDisplay)} · {p.xp} XP</div>
                   </div>
                 </button>
               ))}
@@ -3824,33 +4496,33 @@ function ProfileScreen({
           onClick={onAddProfile}
           className="w-full py-3.5 rounded-xl border-2 border-dashed border-[#EC4899]/40 text-[#C2185B] font-display text-xs tracking-wide flex items-center justify-center gap-2 mb-6"
         >
-          <Plus size={16} /> NEUES PROFIL ANLEGEN
+          <Plus size={16} /> {t("addProfile")}
         </button>
 
-        <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">KLASSE</div>
+        <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">{t("classSectionTitle")}</div>
         {active.classCodeDisplay ? (
           <div className="glass rounded-2xl p-5 mb-6">
             <p className="text-[12px] text-[#8A7F68] mb-3">
-              Du bist Mitglied der Klasse <span className="font-semibold text-[#2B241D]">„{active.classCodeDisplay}“</span>.
+              {t("memberOfClass", active.classCodeDisplay)}
             </p>
             <button
               onClick={handleLeaveClass}
               disabled={classBusy}
               className="w-full py-3 rounded-xl border-2 border-[#E8483A]/40 text-[#B4291D] font-display text-xs tracking-wide"
             >
-              KLASSE VERLASSEN
+              {t("leaveClass")}
             </button>
           </div>
         ) : (
           <div className="glass rounded-2xl p-5 mb-6">
             <p className="text-[12px] text-[#8A7F68] mb-3">
-              Noch in keiner Klasse — tritt bei, um in der Rangliste gegen deine Mitschüler:innen anzutreten.
+              {t("notInClassYet")}
             </p>
             <div className="flex items-center gap-2">
               <input
                 value={classInput}
                 onChange={(e) => setClassInput(e.target.value)}
-                placeholder="Klassencode eingeben"
+                placeholder={t("classCodeInputPlaceholder")}
                 maxLength={40}
                 className="flex-1 px-3.5 py-3 rounded-xl glass text-[#2B241D] text-[15px] focus:outline-none"
               />
@@ -3861,7 +4533,7 @@ function ProfileScreen({
                   classInput.trim().length > 0 ? "bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white" : "bg-[#E4D7BA] text-[#A79A7E]"
                 }`}
               >
-                BEITRETEN
+                {t("join")}
               </button>
             </div>
             {classMsg && (
@@ -3870,17 +4542,17 @@ function ProfileScreen({
           </div>
         )}
 
-        <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">GERÄTE-SYNC</div>
+        <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">{t("deviceSyncTitle")}</div>
         {!active.syncCode ? (
           <div className="glass rounded-2xl p-5 mb-6">
             <p className="text-[12px] text-[#8A7F68]">
-              Geräteübergreifender Sync ist für dieses Profil nicht verfügbar (Cloud-Sync war beim Anlegen nicht erreichbar).
+              {t("syncUnavailable")}
             </p>
           </div>
         ) : (
           <div className="glass rounded-2xl p-5 mb-4">
             <p className="text-[12px] text-[#8A7F68] mb-3">
-              Dein Code — gib ihn auf einem anderen Gerät ein, um dieses Profil dort zu laden. Nach der Nutzung wird automatisch ein neuer Code vergeben.
+              {t("syncCodeExplain")}
             </p>
             <div className="flex items-center gap-2 mb-1">
               <div className="flex-1 glass-strong rounded-xl py-3 text-center font-display text-base tracking-[0.15em] text-[#2B241D]">
@@ -3897,12 +4569,12 @@ function ProfileScreen({
         )}
 
         <div className="glass rounded-2xl p-5 mb-6">
-          <p className="text-[12px] text-[#8A7F68] mb-3">Code von einem anderen Gerät eingeben:</p>
+          <p className="text-[12px] text-[#8A7F68] mb-3">{t("enterCodeFromOther")}</p>
           <div className="flex items-center gap-2">
             <input
               value={syncCodeInput}
               onChange={(e) => setSyncCodeInput(e.target.value.toUpperCase())}
-              placeholder="Code eingeben"
+              placeholder={t("codePlaceholder")}
               maxLength={10}
               className="flex-1 px-3.5 py-3 rounded-xl glass text-[#2B241D] text-[15px] tracking-[0.1em] text-center focus:outline-none"
             />
@@ -3913,7 +4585,7 @@ function ProfileScreen({
                 syncCodeInput.trim().length > 0 ? "bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white" : "bg-[#E4D7BA] text-[#A79A7E]"
               }`}
             >
-              LADEN
+              {t("load")}
             </button>
           </div>
           {syncStatus && (
@@ -3927,14 +4599,29 @@ function ProfileScreen({
           onClick={() => setScreen("feedback")}
           className="w-full py-3.5 rounded-xl glass text-[#2B241D] font-display text-xs tracking-wide flex items-center justify-center gap-2 mb-3"
         >
-          ✉️ FEEDBACK SENDEN
+          ✉️ {t("sendFeedback")}
         </button>
 
         <button onClick={() => setScreen("impressum")} className="w-full text-center text-[#A79A7E] text-[12px] underline py-2">
-          Impressum
+          {t("impressum")}
         </button>
+
+        <div className="mb-2 mt-4 text-[11px] tracking-widest text-[#8A7F68] font-bold text-center">{t("languageLabel")}</div>
+        <div className="flex gap-1.5 justify-center flex-wrap">
+          {SUPPORTED_LANGS.map((code) => (
+            <button
+              key={code}
+              onClick={() => onChangeLang(code)}
+              className={`px-3 py-1.5 rounded-full text-[11px] font-semibold ${
+                lang === code ? "bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white" : "glass text-[#8A7F68]"
+              }`}
+            >
+              {LANG_NAMES[code]}
+            </button>
+          ))}
+        </div>
       </div>
-      <BottomNav screen={screen} setScreen={setScreen} />
+      <BottomNav screen={screen} setScreen={setScreen} t={t} />
     </div>
   );
 }
