@@ -2083,7 +2083,6 @@ export default function App() {
 
   const [syncCodeInput, setSyncCodeInput] = useState("");
   const [syncStatus, setSyncStatus] = useState(null);
-  const [syncCopyLabel, setSyncCopyLabel] = useState("KOPIEREN");
 
   const [feedbackText, setFeedbackText] = useState("");
   const [feedbackCategory, setFeedbackCategory] = useState("Idee");
@@ -2597,15 +2596,14 @@ export default function App() {
 
   /* ---- Geräte-Sync ---- */
 
+  const [syncJustCopied, setSyncJustCopied] = useState(false);
   async function copySyncCode() {
     if (!active?.syncCode) return;
     try {
       await navigator.clipboard.writeText(active.syncCode);
-      setSyncCopyLabel("KOPIERT! ✓");
-      setTimeout(() => setSyncCopyLabel("KOPIEREN"), 1800);
-    } catch {
-      setSyncCopyLabel("Fehler");
-    }
+      setSyncJustCopied(true);
+      setTimeout(() => setSyncJustCopied(false), 1800);
+    } catch {}
   }
 
   // Stellt ein Profil per Sync-Code wieder her. Laeuft ausschliesslich ueber die RPC
@@ -2812,6 +2810,7 @@ export default function App() {
           } catch {}
           setScreen("onboarding");
         }}
+        t={t}
       />
     );
   }
@@ -2824,6 +2823,7 @@ export default function App() {
         onCreate={createProfile}
         onCancel={addingProfile ? () => { setAddingProfile(false); setScreen("profile"); } : null}
         busy={onboardingBusy}
+        t={t}
       />
     );
   }
@@ -3733,21 +3733,25 @@ export default function App() {
             <button onClick={() => setScreen("profile")} className="text-[#8A7F68]">
               <X size={22} />
             </button>
-            <h1 className="font-display text-lg text-[#2B241D]">FEEDBACK</h1>
+            <h1 className="font-display text-lg text-[#2B241D]">{t("feedbackTitle")}</h1>
           </div>
 
-          <p className="text-[13px] text-[#8A7F68] mb-5">Fehler gefunden? Idee für eine neue Lektion? Sag Bescheid!</p>
+          <p className="text-[13px] text-[#8A7F68] mb-5">{t("feedbackSub")}</p>
 
           <div className="flex gap-2 mb-4">
-            {["Fehler", "Idee", "Sonstiges"].map((cat) => (
+            {[
+              { key: "Fehler", label: t("catError") },
+              { key: "Idee", label: t("catIdea") },
+              { key: "Sonstiges", label: t("catOther") },
+            ].map((cat) => (
               <button
-                key={cat}
-                onClick={() => setFeedbackCategory(cat)}
+                key={cat.key}
+                onClick={() => setFeedbackCategory(cat.key)}
                 className={`flex-1 py-2.5 rounded-xl text-[12px] font-display tracking-wide ${
-                  feedbackCategory === cat ? "bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white shadow-md" : "glass text-[#2B241D]"
+                  feedbackCategory === cat.key ? "bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white shadow-md" : "glass text-[#2B241D]"
                 }`}
               >
-                {cat}
+                {cat.label}
               </button>
             ))}
           </div>
@@ -3755,7 +3759,7 @@ export default function App() {
           <textarea
             value={feedbackText}
             onChange={(e) => setFeedbackText(e.target.value)}
-            placeholder="Was möchtest du uns mitteilen?"
+            placeholder={t("feedbackPlaceholder")}
             rows={6}
             className="w-full px-4 py-3.5 rounded-xl glass text-[#2B241D] text-[15px] mb-5 resize-none focus:outline-none"
           />
@@ -3767,9 +3771,9 @@ export default function App() {
               feedbackText.trim().length > 0 ? "bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white" : "bg-[#E4D7BA] text-[#A79A7E] cursor-not-allowed"
             }`}
           >
-            PER MAIL SENDEN
+            {t("sendByMail")}
           </button>
-          <p className="text-[11px] text-[#A79A7E] text-center mt-3">Öffnet deine Mail-App, Empfänger ist bereits eingetragen.</p>
+          <p className="text-[11px] text-[#A79A7E] text-center mt-3">{t("feedbackHint")}</p>
         </div>
       </div>
     );
@@ -3787,7 +3791,7 @@ export default function App() {
             <button onClick={() => setScreen("profile")} className="text-[#8A7F68]">
               <X size={22} />
             </button>
-            <h1 className="font-display text-lg text-[#2B241D]">IMPRESSUM</h1>
+            <h1 className="font-display text-lg text-[#2B241D]">{t("impressumTitle")}</h1>
           </div>
 
           <div className="glass rounded-2xl p-5 mb-4">
@@ -4108,9 +4112,9 @@ export default function App() {
         <div className="w-full max-w-md min-h-screen pb-28">
           <div className="sticky top-0 z-20 glass-strong border-b-0 px-5 py-4 flex items-center justify-between">
             <div>
-              <h1 className="font-display text-lg text-[#2B241D]">RANGLISTE</h1>
+              <h1 className="font-display text-lg text-[#2B241D]">{t("leaderboardTitle")}</h1>
               <div className="text-[11px] text-[#8A7F68]">
-                {active?.classCodeDisplay ? `Klasse „${active.classCodeDisplay}“` : "Keine Klasse verbunden"}
+                {active?.classCodeDisplay ? t("classLabel", active.classCodeDisplay) : t("noClassConnected")}
               </div>
             </div>
             <button onClick={loadLeaderboard} className="w-9 h-9 rounded-full glass flex items-center justify-center">
@@ -4122,25 +4126,22 @@ export default function App() {
             {!cloudEnabled && (
               <div className="glass rounded-2xl p-5 text-center">
                 <Trophy size={28} color="#DCCFA9" className="mx-auto mb-2" />
-                <div className="font-display text-sm text-[#2B241D] mb-1">Rangliste noch nicht eingerichtet</div>
-                <div className="text-[13px] text-[#8A7F68]">Frag deine Lehrkraft, ob die Cloud-Anbindung schon aktiv ist.</div>
+                <div className="font-display text-sm text-[#2B241D] mb-1">{t("leaderboardNotSetUp")}</div>
+                <div className="text-[13px] text-[#8A7F68]">{t("askTeacher")}</div>
               </div>
             )}
 
             {cloudEnabled && !active?.classCodeDisplay && (
               <div className="glass rounded-2xl p-6 text-center">
                 <div className="text-3xl mb-3">🏆</div>
-                <div className="font-display text-sm text-[#2B241D] mb-1.5">Noch in keiner Klasse</div>
-                <div className="text-[13px] text-[#8A7F68] leading-relaxed">
-                  Du kannst schon jetzt alles lernen! Wenn du gegen deine Klasse antreten willst, tritt einfach im{" "}
-                  <span className="font-semibold text-[#C2185B]">Profil</span> mit einem Code bei.
-                </div>
+                <div className="font-display text-sm text-[#2B241D] mb-1.5">{t("noClassYetLb")}</div>
+                <div className="text-[13px] text-[#8A7F68] leading-relaxed">{t("noClassYetLbBody")}</div>
               </div>
             )}
 
             {cloudEnabled && active?.classCodeDisplay && !leaderboardLoading && leaderboardRows.length === 0 && (
               <div className="glass rounded-2xl p-5 text-center text-[13px] text-[#8A7F68]">
-                Noch keine Mitspieler in dieser Klasse gefunden.
+                {t("noClassmatesYet")}
               </div>
             )}
 
@@ -4162,7 +4163,7 @@ export default function App() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="font-display text-[13px] text-[#2B241D] truncate">
-                          {row.alias} {isMe && <span className="text-[10px] text-[#C2185B]">(Du)</span>}
+                          {row.alias} {isMe && <span className="text-[10px] text-[#C2185B]">{t("youLabel")}</span>}
                         </div>
                         <div className="text-[11px] text-[#8A7F68] flex items-center gap-1">
                           <Flame size={11} color="#FF7A1A" fill="#FF7A1A" /> {row.streak}
@@ -4203,7 +4204,7 @@ export default function App() {
         syncCodeInput={syncCodeInput}
         setSyncCodeInput={setSyncCodeInput}
         syncStatus={syncStatus}
-        syncCopyLabel={syncCopyLabel}
+        syncJustCopied={syncJustCopied}
         onCopySyncCode={copySyncCode}
         onLoadSyncCode={loadProfileFromSyncCode}
         onJoinClass={joinClass}
@@ -4228,33 +4229,13 @@ export default function App() {
 /* ------------------------------------------------------------------ */
 
 const INTRO_SLIDES = [
-  {
-    emoji: "🏛️",
-    gradient: "linear-gradient(135deg, #FF4FA3, #8B5CF6)",
-    title: "Willkommen bei Lingua Latina!",
-    text: "Lerne Latein spielerisch — mit einem Lernpfad, kleinen Häppchen und jeder Menge Belohnungen.",
-  },
-  {
-    emoji: "📚",
-    gradient: "linear-gradient(135deg, #3B82F6, #2EC4B6)",
-    title: "Pfad, Grammatik & Vokabeln",
-    text: "Der Lernpfad führt dich Schritt für Schritt. Extra-Trainer für Deklinieren, Konjugieren und Vokabeln vertiefen, was du gelernt hast.",
-  },
-  {
-    emoji: "🔥",
-    gradient: "linear-gradient(135deg, #F59E0B, #EC4899)",
-    title: "XP, Serien & Abzeichen",
-    text: "Sammle XP, halte deine Serie am Leben und tritt mit einem Spitznamen gegen deine Klasse in der Rangliste an — ganz ohne echten Namen.",
-  },
-  {
-    emoji: "🎮",
-    gradient: "linear-gradient(135deg, #7C3AED, #EC4899)",
-    title: "Spiele & tägliche Sätze",
-    text: "Ab ein paar gesammelten Punkten warten Memory & Wortblitz. Und jeden Tag gibt's einen neuen lateinischen Satz zum Knacken.",
-  },
+  { emoji: "🏛️", gradient: "linear-gradient(135deg, #FF4FA3, #8B5CF6)", titleKey: "introTitle1", textKey: "introText1" },
+  { emoji: "📚", gradient: "linear-gradient(135deg, #3B82F6, #2EC4B6)", titleKey: "introTitle2", textKey: "introText2" },
+  { emoji: "🔥", gradient: "linear-gradient(135deg, #F59E0B, #EC4899)", titleKey: "introTitle3", textKey: "introText3" },
+  { emoji: "🎮", gradient: "linear-gradient(135deg, #7C3AED, #EC4899)", titleKey: "introTitle4", textKey: "introText4" },
 ];
 
-function IntroScreen({ onFinish }) {
+function IntroScreen({ onFinish, t }) {
   const [idx, setIdx] = useState(0);
   const slide = INTRO_SLIDES[idx];
   const isLast = idx === INTRO_SLIDES.length - 1;
@@ -4268,8 +4249,8 @@ function IntroScreen({ onFinish }) {
           <div className="glossy w-24 h-24 rounded-full flex items-center justify-center text-5xl mb-8 animate-pop-in" style={{ background: slide.gradient }} key={idx}>
             {slide.emoji}
           </div>
-          <h1 className="font-display text-2xl text-[#2B241D] mb-3">{slide.title}</h1>
-          <p className="text-[14px] text-[#6B5F4E] leading-relaxed">{slide.text}</p>
+          <h1 className="font-display text-2xl text-[#2B241D] mb-3">{t(slide.titleKey)}</h1>
+          <p className="text-[14px] text-[#6B5F4E] leading-relaxed">{t(slide.textKey)}</p>
         </div>
 
         <div className="flex items-center justify-center gap-2 mb-6">
@@ -4282,11 +4263,11 @@ function IntroScreen({ onFinish }) {
           onClick={() => (isLast ? onFinish() : setIdx((i) => i + 1))}
           className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white font-display text-sm tracking-wide shadow-md flex items-center justify-center gap-2"
         >
-          {isLast ? "LOS GEHT'S!" : "WEITER"} <ArrowRight size={16} />
+          {isLast ? t("introGo") : t("introNext")} <ArrowRight size={16} />
         </button>
         {!isLast && (
           <button onClick={onFinish} className="text-[#8A7F68] text-[12px] underline mt-4">
-            Überspringen
+            {t("introSkip")}
           </button>
         )}
       </div>
@@ -4294,7 +4275,7 @@ function IntroScreen({ onFinish }) {
   );
 }
 
-function OnboardingScreen({ onCreate, onCancel, busy }) {
+function OnboardingScreen({ onCreate, onCancel, busy, t }) {
   const [classOpen, setClassOpen] = useState(false);
   const [classCodeInput, setClassCodeInput] = useState("");
   const [alias, setAlias] = useState(() => generateAlias());
@@ -4312,32 +4293,32 @@ function OnboardingScreen({ onCreate, onCancel, busy }) {
           <Landmark size={30} color="white" className="relative" />
         </div>
         <h1 className="font-display text-2xl text-center text-[#2B241D] mb-1">
-          {onCancel ? "Neues Profil" : "Willkommen, Legionär!"}
+          {onCancel ? t("newProfileTitle") : t("welcomeTitle")}
         </h1>
         <p className="text-center text-[13px] text-[#8A7F68] mb-8">
-          Wähle einen Spitznamen und leg direkt los — komplett kostenlos, ganz ohne echten Namen.
+          {t("onboardingSub")}
         </p>
 
-        <label className="text-[12px] font-bold text-[#6B5F4E] mb-1.5">DEIN SPITZNAME</label>
+        <label className="text-[12px] font-bold text-[#6B5F4E] mb-1.5">{t("nickname")}</label>
         <div className="flex gap-2 mb-1">
           <input
             value={alias}
             onChange={(e) => setAlias(e.target.value)}
-            placeholder="Spitzname"
+            placeholder={t("nickname")}
             maxLength={24}
             className="flex-1 px-4 py-3.5 rounded-xl glass text-[#2B241D] text-[15px] focus:outline-none focus:border-[#EC4899]"
           />
           <button
             onClick={() => setAlias(generateAlias())}
             className="w-14 rounded-xl glass flex items-center justify-center"
-            title="Zufallsname"
+            title={t("nickname")}
           >
             <Dices size={20} color="#8A7F68" />
           </button>
         </div>
-        <p className="text-[11px] text-[#A79A7E] mb-5">⚠️ Bitte keinen echten Namen verwenden.</p>
+        <p className="text-[11px] text-[#A79A7E] mb-5">{t("noRealNames")}</p>
 
-        <label className="text-[12px] font-bold text-[#6B5F4E] mb-2">AVATAR</label>
+        <label className="text-[12px] font-bold text-[#6B5F4E] mb-2">{t("avatarLabel")}</label>
         <div className="grid grid-cols-6 gap-2 mb-6">
           {AVATARS.map((a) => (
             <button
@@ -4357,7 +4338,7 @@ function OnboardingScreen({ onCreate, onCancel, busy }) {
           className="flex items-center justify-between w-full px-1 py-2 mb-2"
         >
           <span className="text-[12px] font-bold text-[#6B5F4E]">
-            Klassencode <span className="font-normal text-[#A79A7E]">(optional, geht auch später)</span>
+            {t("classCodeOptionalLabel")} <span className="font-normal text-[#A79A7E]">{t("classCodeOptionalHint")}</span>
           </span>
           <ChevronDown size={16} color="#8A7F68" className={`transition-transform ${classOpen ? "rotate-180" : ""}`} />
         </button>
@@ -4366,11 +4347,11 @@ function OnboardingScreen({ onCreate, onCancel, busy }) {
             <input
               value={classCodeInput}
               onChange={(e) => setClassCodeInput(e.target.value)}
-              placeholder="z. B. 7A-Latein"
+              placeholder={t("classCodePlaceholder")}
               maxLength={40}
               className="w-full px-4 py-3.5 rounded-xl glass text-[#2B241D] text-[15px] mb-1 focus:outline-none focus:border-[#EC4899]"
             />
-            <p className="text-[11px] text-[#A79A7E]">Von deiner Lehrkraft — alle mit demselben Code sehen sich in der Rangliste.</p>
+            <p className="text-[11px] text-[#A79A7E]">{t("classCodeHelp")}</p>
           </div>
         )}
 
@@ -4381,11 +4362,11 @@ function OnboardingScreen({ onCreate, onCancel, busy }) {
             canSubmit ? "bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white" : "bg-[#E4D7BA] text-[#A79A7E] cursor-not-allowed"
           }`}
         >
-          {busy ? "WIRD ANGELEGT …" : "KOSTENLOS LOSLEGEN"}
+          {busy ? t("creating") : t("startFree")}
         </button>
         {onCancel && (
           <button onClick={onCancel} className="text-[#8A7F68] text-[13px] underline mt-4">
-            Abbrechen
+            {t("cancel")}
           </button>
         )}
       </div>
@@ -4412,7 +4393,7 @@ function ProfileScreen({
   syncCodeInput,
   setSyncCodeInput,
   syncStatus,
-  syncCopyLabel,
+  syncJustCopied,
   onCopySyncCode,
   onLoadSyncCode,
   onJoinClass,
@@ -4644,7 +4625,7 @@ function ProfileScreen({
                 onClick={onCopySyncCode}
                 className="px-4 py-3 rounded-xl bg-gradient-to-r from-[#3B82F6] to-[#2EC4B6] text-white font-display text-[11px] tracking-wide shrink-0"
               >
-                {syncCopyLabel}
+                {syncJustCopied ? t("copied") : t("copy")}
               </button>
             </div>
           </div>
