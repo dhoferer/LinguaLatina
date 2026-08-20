@@ -795,11 +795,11 @@ function getRank(xp) {
 }
 
 const BADGES = [
-  { id: "first", title: "Prima Lectio", desc: "Erste Lektion abgeschlossen", icon: Sparkles },
-  { id: "perfect", title: "Sine Errore", desc: "Eine Lektion ohne Fehler gemeistert", icon: Star },
-  { id: "unit", title: "Cursus Confectus", desc: "Eine ganze Einheit gemeistert", icon: Trophy },
-  { id: "xp150", title: "Centurio", desc: "150 XP gesammelt", icon: Award },
-  { id: "streak5", title: "Quinque Dies", desc: "Serie von 5 Tagen", icon: Flame },
+  { id: "first", title: "Prima Lectio", desc: "Erste Lektion abgeschlossen", descKey: "badgeFirstDesc", icon: Sparkles },
+  { id: "perfect", title: "Sine Errore", desc: "Eine Lektion ohne Fehler gemeistert", descKey: "badgePerfectDesc", icon: Star },
+  { id: "unit", title: "Cursus Confectus", desc: "Eine ganze Einheit gemeistert", descKey: "badgeUnitDesc", icon: Trophy },
+  { id: "xp150", title: "Centurio", desc: "150 XP gesammelt", descKey: "badgeXpDesc", icon: Award },
+  { id: "streak5", title: "Quinque Dies", desc: "Serie von 5 Tagen", descKey: "badgeStreakDesc", icon: Flame },
 ];
 
 const UNIT_GRADIENTS = [
@@ -2387,6 +2387,39 @@ export default function App() {
     }
   }
 
+  // Registriert ein bisher rein lokales Profil nachtraeglich in der Cloud
+  // (fuer den Fall, dass Supabase beim Anlegen noch nicht eingerichtet war).
+  // Bestehender Fortschritt bleibt erhalten - er wird nach der Registrierung
+  // direkt mit hochgeladen.
+  async function retryCloudRegistration() {
+    if (!supabase || !active || active.syncCode) return { ok: false, msg: "Nicht möglich." };
+    try {
+      const { data, error } = await supabase.rpc("create_player_profile", {
+        p_alias: active.alias,
+        p_avatar: active.avatar,
+        p_class_code: active.classCodeDisplay || null,
+      });
+      if (error) throw error;
+      const remote = Array.isArray(data) ? data[0] : data;
+      const oldId = active.id;
+      const updated = {
+        ...active,
+        id: remote.id,
+        deviceSecret: remote.device_secret,
+        syncCode: remote.sync_code,
+      };
+      const nextList = profiles.map((p) => (p.id === oldId ? updated : p));
+      setProfiles(nextList);
+      saveProfilesLS(nextList);
+      setActiveId(remote.id);
+      saveActiveIdLS(remote.id);
+      await syncProgressToCloud(updated);
+      return { ok: true, msg: "Cloud-Sync eingerichtet! Dein Fortschritt ist jetzt gesichert." };
+    } catch (e) {
+      return { ok: false, msg: "Hat noch nicht geklappt. Ist die Supabase-Migration schon ausgeführt?" };
+    }
+  }
+
   async function joinClass(codeInput) {
     if (!active) return { ok: false, msg: "Kein Profil aktiv." };
     const code = codeInput.trim();
@@ -2789,7 +2822,7 @@ export default function App() {
                   >
                     LINGUA LATINA
                   </div>
-                  <div className="text-[10px] text-[#8B5CF6] mt-0.5 italic font-semibold">Roma te vocat! 🏛️</div>
+                  <div className="text-[10px] text-[#8B5CF6] mt-0.5 italic font-semibold">{t("appTagline")}</div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -2834,7 +2867,7 @@ export default function App() {
               return (
                 <div
                   key={b.id}
-                  title={b.desc}
+                  title={t(b.descKey)}
                   className={`shrink-0 w-14 h-14 rounded-full border-2 flex items-center justify-center ${
                     on ? "bg-gradient-to-br from-[#FFE08C] to-[#FFB627] border-[#F59E0B]" : "bg-[#EFE6D4] border-[#E4D7BA] grayscale opacity-60"
                   }`}
@@ -2846,13 +2879,13 @@ export default function App() {
           </div>
 
           <div className="px-4">
-            <DailySentenceCard revealed={dailyRevealed} onToggle={() => setDailyRevealed((r) => !r)} />
+            <DailySentenceCard revealed={dailyRevealed} onToggle={() => setDailyRevealed((r) => !r)} t={t} />
           </div>
 
           <div className="relative px-4 pt-2">
             {UNITS.map((unit, uIdx) => (
               <div key={unit.id} className="relative">
-                <UnitBanner unit={unit} completed={completed} gradient={UNIT_GRADIENTS[uIdx % UNIT_GRADIENTS.length]} />
+                <UnitBanner unit={unit} completed={completed} gradient={UNIT_GRADIENTS[uIdx % UNIT_GRADIENTS.length]} t={t} />
                 <div className="relative py-4">
                   <StoneRoad />
                   <div className="flex flex-col gap-7 relative">
@@ -2907,32 +2940,32 @@ export default function App() {
         <FontImport />
         <BackgroundBlobs />
         <div className="w-full max-w-md min-h-screen pb-28 px-5 pt-6">
-          <h1 className="font-display text-lg text-[#2B241D] mb-1">VOKABELN</h1>
-          <p className="text-[13px] text-[#8A7F68] mb-5">Trainieren, frei entdecken oder in kleinen Spielen üben.</p>
+          <h1 className="font-display text-lg text-[#2B241D] mb-1">{t("vocabTitle")}</h1>
+          <p className="text-[13px] text-[#8A7F68] mb-5">{t("vocabSub")}</p>
 
           <div className="grid grid-cols-3 gap-2.5 mb-5">
-            <SummaryStat label="Fällig" value={dueVocab.length} color="#EC4899" />
-            <SummaryStat label="Gelernt" value={availableVocab.length} color="#8B5CF6" />
-            <SummaryStat label="Gemeistert" value={masteredVocabCount} color="#F59E0B" />
+            <SummaryStat label={t("dueToday")} value={dueVocab.length} color="#EC4899" />
+            <SummaryStat label={t("learned")} value={availableVocab.length} color="#8B5CF6" />
+            <SummaryStat label={t("mastered")} value={masteredVocabCount} color="#F59E0B" />
           </div>
 
           {/* Karteikasten-Training */}
           <div className="glass rounded-2xl p-5 mb-4">
             <div className="flex items-center gap-2 mb-2">
               <BookOpen size={17} color="#8B5CF6" />
-              <div className="font-display text-[13px] text-[#2B241D]">KARTEIKASTEN-TRAINING</div>
+              <div className="font-display text-[13px] text-[#2B241D]">{t("srsTitle")}</div>
             </div>
-            <p className="text-[12px] text-[#8A7F68] mb-3">Spaced Repetition — was du oft richtig hast, kommt seltener dran.</p>
+            <p className="text-[12px] text-[#8A7F68] mb-3">{t("srsSub")}</p>
             {availableVocab.length === 0 ? (
-              <div className="text-[12px] text-[#8A7F68] py-1">Schließe erst deine erste Lektion ab! 📚</div>
+              <div className="text-[12px] text-[#8A7F68] py-1">{t("finishFirstLesson")}</div>
             ) : dueVocab.length === 0 ? (
-              <div className="text-[12px] text-[#8A7F68] py-1">Alles gelernt — komm morgen wieder 🌙✨</div>
+              <div className="text-[12px] text-[#8A7F68] py-1">{t("allLearnedToday")}</div>
             ) : (
               <button
                 onClick={startVocabTraining}
                 className="w-full py-3 rounded-xl bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white font-display text-xs tracking-wide shadow-md"
               >
-                TRAINING STARTEN ({Math.min(dueVocab.length, 10)})
+                {t("startTraining", Math.min(dueVocab.length, 10))}
               </button>
             )}
           </div>
@@ -2941,9 +2974,9 @@ export default function App() {
           <div className="glass rounded-2xl p-5 mb-4">
             <div className="flex items-center gap-2 mb-2">
               <Sparkles size={17} color="#3B82F6" />
-              <div className="font-display text-[13px] text-[#2B241D]">FREI ENTDECKEN</div>
+              <div className="font-display text-[13px] text-[#2B241D]">{t("exploreTitle")}</div>
             </div>
-            <p className="text-[12px] text-[#8A7F68] mb-3">Alle {VOCAB_POOL.length} Wörter als Karteikarten durchblättern — auch schon vor dem Lernpfad.</p>
+            <p className="text-[12px] text-[#8A7F68] mb-3">{t("exploreSub", VOCAB_POOL.length)}</p>
             <button
               onClick={() => {
                 setExploreIdx(0);
@@ -2952,7 +2985,7 @@ export default function App() {
               }}
               className="w-full py-3 rounded-xl bg-gradient-to-r from-[#3B82F6] to-[#2EC4B6] text-white font-display text-xs tracking-wide shadow-md"
             >
-              ENTDECKEN STARTEN
+              {t("exploreStart")}
             </button>
           </div>
 
@@ -2960,26 +2993,26 @@ export default function App() {
           <div className="glass rounded-2xl p-5 mb-6">
             <div className="flex items-center gap-2 mb-2">
               <Zap size={17} color="#F59E0B" />
-              <div className="font-display text-[13px] text-[#2B241D]">MINI-SPIELE</div>
+              <div className="font-display text-[13px] text-[#2B241D]">{t("gamesTitle")}</div>
             </div>
             {gamesUnlocked ? (
               <>
-                <p className="text-[12px] text-[#8A7F68] mb-3">Memory & Wortblitz — mit deinen gelernten Wörtern.</p>
+                <p className="text-[12px] text-[#8A7F68] mb-3">{t("gamesSub")}</p>
                 <button
                   onClick={() => setScreen("games-home")}
                   className="w-full py-3 rounded-xl bg-gradient-to-r from-[#F59E0B] to-[#EC4899] text-white font-display text-xs tracking-wide shadow-md"
                 >
-                  ZU DEN SPIELEN
+                  {t("gamesGo")}
                 </button>
               </>
             ) : (
-              <div className="text-[12px] text-[#8A7F68] py-1">🔒 Ab 20 XP freigeschaltet (aktuell: {xp} XP)</div>
+              <div className="text-[12px] text-[#8A7F68] py-1">{t("gamesLocked", xp)}</div>
             )}
           </div>
 
           {availableVocab.length > 0 && (
             <>
-              <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">MEINE WÖRTER</div>
+              <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">{t("myWords")}</div>
               <div className="grid grid-cols-2 gap-2.5">
                 {availableVocab.map((w) => {
                   const box = vocabProgress[w.id]?.box ?? -1;
@@ -3040,7 +3073,7 @@ export default function App() {
             >
               {!exploreFlipped ? (
                 <>
-                  <div className="text-[11px] tracking-widest text-[#8A7F68] font-bold mb-3">LATEIN</div>
+                  <div className="text-[11px] tracking-widest text-[#8A7F68] font-bold mb-3">{t("latin")}</div>
                   <div className="font-serif-latin italic text-4xl text-[#2B241D] text-center">{word.latin}</div>
                 </>
               ) : (
@@ -3049,7 +3082,7 @@ export default function App() {
                   <div className="font-display text-3xl text-[#2B241D] text-center">{word.german}</div>
                 </>
               )}
-              <div className="text-[11px] text-[#A79A7E] mt-5">🔄 Zum Umdrehen tippen</div>
+              <div className="text-[11px] text-[#A79A7E] mt-5">{t("tapToFlip")}</div>
             </button>
           </div>
 
@@ -3061,7 +3094,7 @@ export default function App() {
               }}
               className="flex-1 py-3.5 rounded-xl glass text-[#2B241D] font-display text-xs tracking-wide"
             >
-              ◀ ZURÜCK
+              {t("back")}
             </button>
             <button
               onClick={() => {
@@ -3139,7 +3172,7 @@ export default function App() {
                     {vocabIsCorrect ? <Check size={22} color="#0E7A5F" strokeWidth={3} /> : <X size={20} color="#B4291D" />}
                   </div>
                   <div className={`font-display text-sm ${vocabIsCorrect ? "text-[#0E7A5F]" : "text-[#B4291D]"}`}>
-                    {vocabIsCorrect ? "Richtig!" : `Richtig wäre: ${q.options[q.correctIndex]}`}
+                    {vocabIsCorrect ? t("right") : t("rightAnswerWas", q.options[q.correctIndex])}
                   </div>
                 </div>
               )}
@@ -3151,7 +3184,7 @@ export default function App() {
                     vocabSelected !== null ? "bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white shadow-md" : "bg-[#E4D7BA] text-[#A79A7E] cursor-not-allowed"
                   }`}
                 >
-                  PRÜFEN
+                  {t("check")}
                 </button>
               ) : (
                 <button
@@ -3160,7 +3193,7 @@ export default function App() {
                     vocabIsCorrect ? "bg-gradient-to-r from-[#2EC4B6] to-[#0E9E85] text-white" : "bg-gradient-to-r from-[#E8483A] to-[#B4291D] text-white"
                   }`}
                 >
-                  WEITER <ArrowRight size={16} />
+                  {t("continueBtn")} <ArrowRight size={16} />
                 </button>
               )}
             </div>
@@ -3197,7 +3230,7 @@ export default function App() {
             onClick={() => setScreen("vocab-home")}
             className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white font-display text-sm tracking-wide mt-auto shadow-md"
           >
-            WEITER
+            {t("continueBtn")}
           </button>
         </div>
       </div>
@@ -3389,7 +3422,7 @@ export default function App() {
                     {grammarIsCorrect ? <Check size={22} color="#0E7A5F" strokeWidth={3} /> : <X size={20} color="#B4291D" />}
                   </div>
                   <div className={`font-display text-sm ${grammarIsCorrect ? "text-[#0E7A5F]" : "text-[#B4291D]"}`}>
-                    {grammarIsCorrect ? "Richtig!" : `Richtig wäre: ${q.options[q.correctIndex]}`}
+                    {grammarIsCorrect ? t("right") : t("rightAnswerWas", q.options[q.correctIndex])}
                   </div>
                 </div>
               )}
@@ -3401,7 +3434,7 @@ export default function App() {
                     grammarSelected !== null ? "bg-gradient-to-r from-[#3B82F6] to-[#8B5CF6] text-white shadow-md" : "bg-[#E4D7BA] text-[#A79A7E] cursor-not-allowed"
                   }`}
                 >
-                  PRÜFEN
+                  {t("check")}
                 </button>
               ) : (
                 <button
@@ -3410,7 +3443,7 @@ export default function App() {
                     grammarIsCorrect ? "bg-gradient-to-r from-[#2EC4B6] to-[#0E9E85] text-white" : "bg-gradient-to-r from-[#E8483A] to-[#B4291D] text-white"
                   }`}
                 >
-                  WEITER <ArrowRight size={16} />
+                  {t("continueBtn")} <ArrowRight size={16} />
                 </button>
               )}
             </div>
@@ -3447,7 +3480,7 @@ export default function App() {
             onClick={() => setScreen("grammar-home")}
             className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#3B82F6] to-[#8B5CF6] text-white font-display text-sm tracking-wide mt-auto shadow-md"
           >
-            WEITER
+            {t("continueBtn")}
           </button>
         </div>
       </div>
@@ -3882,11 +3915,11 @@ export default function App() {
                   </div>
                   <div>
                     <div className={`font-display text-sm ${isCorrect ? "text-[#0E7A5F]" : "text-[#B4291D]"}`}>
-                      {isCorrect ? "OPTIME! · Richtig!" : "NON RECTE · Nicht ganz."}
+                      {isCorrect ? t("correctFeedback") : t("incorrectFeedback")}
                     </div>
                     {!isCorrect && (
                       <div className="text-[13px] text-[#6B5F4E] mt-0.5">
-                        Richtige Antwort:{" "}
+                        {t("correctAnswerIs")}{" "}
                         <span className="font-semibold text-[#2B241D]">
                           {ex.type === "mc" && ex.options[ex.correct]}
                           {ex.type === "translate" && ex.accept[0]}
@@ -3902,7 +3935,7 @@ export default function App() {
                   onClick={continueReading}
                   className="w-full py-3.5 rounded-xl font-display text-sm tracking-wide flex items-center justify-center gap-2 shadow-md bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white"
                 >
-                  WEITER <ArrowRight size={16} />
+                  {t("continueBtn")} <ArrowRight size={16} />
                 </button>
               ) : !checked ? (
                 <button
@@ -3912,7 +3945,7 @@ export default function App() {
                     canCheck() ? "bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white shadow-md" : "bg-[#E4D7BA] text-[#A79A7E] cursor-not-allowed"
                   }`}
                 >
-                  PRÜFEN
+                  {t("check")}
                 </button>
               ) : (
                 <button
@@ -3921,7 +3954,7 @@ export default function App() {
                     isCorrect ? "bg-gradient-to-r from-[#2EC4B6] to-[#0E9E85] text-white" : "bg-gradient-to-r from-[#E8483A] to-[#B4291D] text-white"
                   }`}
                 >
-                  WEITER <ArrowRight size={16} />
+                  {t("continueBtn")} <ArrowRight size={16} />
                 </button>
               )}
             </div>
@@ -3940,18 +3973,18 @@ export default function App() {
         <BackgroundBlobs />
         <div className="w-full max-w-md min-h-screen flex flex-col items-center justify-center px-8 text-center">
           <Heart size={56} color="#E8483A" className="mb-5 animate-shake" />
-          <h1 className="font-display text-2xl text-[#2B241D] mb-2">KEINE LEBEN MEHR</h1>
+          <h1 className="font-display text-2xl text-[#2B241D] mb-2">{t("noHeartsTitle")}</h1>
           <p className="text-[#6B5F4E] text-[14px] mb-8">
-            Deine Herzen sind aufgebraucht. Versuch die Lektion „{currentLesson.title}“ noch einmal.
+            {t("noHeartsBody", currentLesson.title)}
           </p>
           <button
             onClick={retryLesson}
             className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white font-display text-sm tracking-wide flex items-center justify-center gap-2 mb-3 shadow-md"
           >
-            <RotateCcw size={16} /> NOCHMAL VERSUCHEN
+            <RotateCcw size={16} /> {t("retry")}
           </button>
           <button onClick={() => setScreen("path")} className="text-[#8A7F68] text-[13px] underline">
-            Zurück zum Pfad
+            {t("backToPath")}
           </button>
         </div>
       </div>
@@ -3979,29 +4012,29 @@ export default function App() {
             className="font-display text-3xl mb-1 bg-clip-text text-transparent"
             style={{ backgroundImage: perfect ? "linear-gradient(90deg, #FF4FA3, #F59E0B, #2EC4B6, #8B5CF6)" : "linear-gradient(90deg, #FF4FA3, #F59E0B)" }}
           >
-            {perfect ? "OPTIME!" : "BENE FACTUM!"}
+            {perfect ? t("perfectTitle") : t("goodTitle")}
           </h1>
-          <p className="text-[#6B5F4E] text-[14px] mb-8">{perfect ? "Perfekt, ganz ohne Fehler! 🎉" : "Gut gemacht — Lektion abgeschlossen."}</p>
+          <p className="text-[#6B5F4E] text-[14px] mb-8">{perfect ? t("perfectSub") : t("goodSub")}</p>
 
           <div className="w-full grid grid-cols-3 gap-3 mb-6">
-            <SummaryStat label="XP" value={`+${animatedXp}`} color="#F59E0B" />
-            <SummaryStat label="Genauigkeit" value={`${accuracy}%`} color="#0E9E85" />
-            <SummaryStat label="Serie" value={streak} color="#FF7A1A" />
+            <SummaryStat label={t("xp")} value={`+${animatedXp}`} color="#F59E0B" />
+            <SummaryStat label={t("accuracy")} value={`${accuracy}%`} color="#0E9E85" />
+            <SummaryStat label={t("streakLabel")} value={streak} color="#FF7A1A" />
           </div>
 
           {streakMilestone && (
             <div className="w-full mb-6 rounded-xl px-4 py-3 flex items-center gap-3 shadow-md animate-pop-in" style={{ background: "linear-gradient(135deg, #FF7A1A, #E8483A)" }}>
               <PartyPopper size={22} color="white" />
               <div className="text-white">
-                <div className="font-display text-sm">{newStreakValue} TAGE SERIE!</div>
-                <div className="text-[12px] opacity-90">Du bist on fire — weiter so!</div>
+                <div className="font-display text-sm">{t("streakMilestone", newStreakValue)}</div>
+                <div className="text-[12px] opacity-90">{t("streakMilestoneSub")}</div>
               </div>
             </div>
           )}
 
           {newBadges.length > 0 && (
             <div className="w-full mb-8">
-              <div className="text-[11px] tracking-widest text-[#8A7F68] font-bold mb-3">NEUE AUSZEICHNUNG</div>
+              <div className="text-[11px] tracking-widest text-[#8A7F68] font-bold mb-3">{t("newBadgeTitle")}</div>
               {newBadges.map((id, i) => {
                 const b = BADGES.find((x) => x.id === id);
                 const Icon = b.icon;
@@ -4016,7 +4049,7 @@ export default function App() {
                     </div>
                     <div>
                       <div className="font-display text-[13px] text-[#2B241D]">{b.title}</div>
-                      <div className="text-[12px] text-[#6B5F4E]">{b.desc}</div>
+                      <div className="text-[12px] text-[#6B5F4E]">{t(b.descKey)}</div>
                     </div>
                   </div>
                 );
@@ -4028,7 +4061,7 @@ export default function App() {
             onClick={() => setScreen("path")}
             className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#FF4FA3] to-[#8B5CF6] text-white font-display text-sm tracking-wide mt-auto shadow-md"
           >
-            WEITER
+            {t("continueBtn")}
           </button>
         </div>
       </div>
@@ -4144,6 +4177,7 @@ export default function App() {
         onCopySyncCode={copySyncCode}
         onLoadSyncCode={loadProfileFromSyncCode}
         onJoinClass={joinClass}
+        onRetryCloud={retryCloudRegistration}
         onLeaveClass={leaveClass}
         t={t}
         lang={lang}
@@ -4352,6 +4386,7 @@ function ProfileScreen({
   onCopySyncCode,
   onLoadSyncCode,
   onJoinClass,
+  onRetryCloud,
   onLeaveClass,
   t,
   lang,
@@ -4458,7 +4493,7 @@ function ProfileScreen({
             return (
               <div
                 key={b.id}
-                title={b.desc}
+                title={t(b.descKey)}
                 className={`shrink-0 w-14 h-14 rounded-full border-2 flex items-center justify-center ${
                   on ? "bg-gradient-to-br from-[#FFE08C] to-[#FFB627] border-[#F59E0B]" : "bg-[#EFE6D4] border-[#E4D7BA] grayscale opacity-60"
                 }`}
@@ -4545,9 +4580,26 @@ function ProfileScreen({
         <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">{t("deviceSyncTitle")}</div>
         {!active.syncCode ? (
           <div className="glass rounded-2xl p-5 mb-6">
-            <p className="text-[12px] text-[#8A7F68]">
+            <p className="text-[12px] text-[#8A7F68] mb-3">
               {t("syncUnavailable")}
             </p>
+            {supabase && (
+              <button
+                onClick={async () => {
+                  setClassBusy(true);
+                  const res = await onRetryCloud();
+                  setClassMsg(res);
+                  setClassBusy(false);
+                }}
+                disabled={classBusy}
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-[#3B82F6] to-[#2EC4B6] text-white font-display text-xs tracking-wide"
+              >
+                🔄 JETZT ERNEUT VERSUCHEN
+              </button>
+            )}
+            {classMsg && (
+              <p className={`text-[12px] mt-2.5 ${classMsg.ok ? "text-[#0E9E85]" : "text-[#B4291D]"}`}>{classMsg.msg}</p>
+            )}
           </div>
         ) : (
           <div className="glass rounded-2xl p-5 mb-4">
@@ -4650,30 +4702,30 @@ function SummaryStat({ label, value, color }) {
   );
 }
 
-function DailySentenceCard({ revealed, onToggle }) {
+function DailySentenceCard({ revealed, onToggle, t }) {
   const sentence = useMemo(() => getDailySentence(), []);
   return (
     <button onClick={onToggle} className="w-full glass rounded-2xl px-5 py-4 mb-4 text-left">
       <div className="flex items-center gap-2 mb-2">
         <Sparkles size={15} color="#F59E0B" />
-        <div className="text-[11px] tracking-widest text-[#C2185B] font-bold">SATZ DES TAGES</div>
+        <div className="text-[11px] tracking-widest text-[#C2185B] font-bold">{t("dailySentenceTitle")}</div>
       </div>
       <div className="font-serif-latin italic text-[18px] text-[#2B241D] mb-1">{sentence.latin}</div>
       {revealed ? (
         <div className="text-[13px] text-[#8A7F68]">{sentence.german}</div>
       ) : (
-        <div className="text-[12px] text-[#A79A7E]">🔄 Zum Übersetzen tippen</div>
+        <div className="text-[12px] text-[#A79A7E]">{t("tapToTranslate")}</div>
       )}
     </button>
   );
 }
 
-function UnitBanner({ unit, completed, gradient }) {
+function UnitBanner({ unit, completed, gradient, t }) {
   const done = unit.lessons.filter((l) => completed.has(l.id)).length;
   return (
     <div className="rounded-2xl px-5 py-4 my-4 shadow-md" style={{ background: gradient }}>
       <div className="text-[10px] tracking-widest text-white/80 font-bold mb-1">
-        {done}/{unit.lessons.length} LEKTIONEN
+        {done}/{unit.lessons.length} {t("lessonsOf")}
       </div>
       <div className="font-display text-lg text-white tracking-wide">{unit.latin}</div>
       <div className="text-[12px] text-white/85">{unit.german}</div>
