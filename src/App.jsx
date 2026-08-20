@@ -921,6 +921,10 @@ const T = {
     feedbackPlaceholder: "Was möchtest du uns mitteilen?", sendByMail: "PER MAIL SENDEN",
     feedbackHint: "Öffnet deine Mail-App, Empfänger ist bereits eingetragen.",
     impressumTitle: "IMPRESSUM", languageLabel: "SPRACHE",
+    caseNominativ: "Nominativ", caseGenitiv: "Genitiv", caseDativ: "Dativ", caseAkkusativ: "Akkusativ", caseAblativ: "Ablativ",
+    tensePraesens: "Präsens", tensePerfekt: "Perfekt", tenseImperfekt: "Imperfekt", tenseFutur: "Futur",
+    personIch: "ich", personDu: "du", personErSieEs: "er/sie/es", personWir: "wir", personIhr: "ihr", personSie: "sie",
+    declineHeader2: (c) => `Dekliniere: ${c}`, conjugateHeader2: (t, p) => `Konjugiere: ${t} — ${p}`,
   },
   en: {
     navPath: "Path", navGrammar: "Grammar", navVocab: "Vocabulary", navLeaderboard: "Leaderboard", navProfile: "Profile",
@@ -1012,6 +1016,9 @@ const T = {
     feedbackPlaceholder: "What would you like to tell us?", sendByMail: "SEND BY EMAIL",
     feedbackHint: "Opens your mail app with the recipient already filled in.",
     impressumTitle: "LEGAL NOTICE", languageLabel: "LANGUAGE",
+    caseNominativ: "Nominative", caseGenitiv: "Genitive", caseDativ: "Dative", caseAkkusativ: "Accusative", caseAblativ: "Ablative",
+    tensePraesens: "Present", tensePerfekt: "Perfect", tenseImperfekt: "Imperfect", tenseFutur: "Future",
+    personIch: "I", personDu: "you", personErSieEs: "he/she/it", personWir: "we", personIhr: "you (pl.)", personSie: "they",
   },
   fr: {
     navPath: "Parcours", navGrammar: "Grammaire", navVocab: "Vocabulaire", navLeaderboard: "Classement", navProfile: "Profil",
@@ -1103,6 +1110,9 @@ const T = {
     feedbackPlaceholder: "Que veux-tu nous dire ?", sendByMail: "ENVOYER PAR E-MAIL",
     feedbackHint: "Ouvre ton application mail avec le destinataire déjà rempli.",
     impressumTitle: "MENTIONS LÉGALES", languageLabel: "LANGUE",
+    caseNominativ: "Nominatif", caseGenitiv: "Génitif", caseDativ: "Datif", caseAkkusativ: "Accusatif", caseAblativ: "Ablatif",
+    tensePraesens: "Présent", tensePerfekt: "Parfait", tenseImperfekt: "Imparfait", tenseFutur: "Futur",
+    personIch: "je", personDu: "tu", personErSieEs: "il/elle", personWir: "nous", personIhr: "vous", personSie: "ils/elles",
   },
   it: {
     navPath: "Percorso", navGrammar: "Grammatica", navVocab: "Vocabolario", navLeaderboard: "Classifica", navProfile: "Profilo",
@@ -1194,6 +1204,9 @@ const T = {
     feedbackPlaceholder: "Cosa vuoi dirci?", sendByMail: "INVIA VIA EMAIL",
     feedbackHint: "Apre la tua app di posta con il destinatario già inserito.",
     impressumTitle: "NOTE LEGALI", languageLabel: "LINGUA",
+    caseNominativ: "Nominativo", caseGenitiv: "Genitivo", caseDativ: "Dativo", caseAkkusativ: "Accusativo", caseAblativ: "Ablativo",
+    tensePraesens: "Presente", tensePerfekt: "Perfetto", tenseImperfekt: "Imperfetto", tenseFutur: "Futuro",
+    personIch: "io", personDu: "tu", personErSieEs: "lui/lei", personWir: "noi", personIhr: "voi", personSie: "loro",
   },
   es: {
     navPath: "Ruta", navGrammar: "Gramática", navVocab: "Vocabulario", navLeaderboard: "Clasificación", navProfile: "Perfil",
@@ -1285,6 +1298,9 @@ const T = {
     feedbackPlaceholder: "¿Qué quieres decirnos?", sendByMail: "ENVIAR POR CORREO",
     feedbackHint: "Abre tu app de correo con el destinatario ya rellenado.",
     impressumTitle: "AVISO LEGAL", languageLabel: "IDIOMA",
+    caseNominativ: "Nominativo", caseGenitiv: "Genitivo", caseDativ: "Dativo", caseAkkusativ: "Acusativo", caseAblativ: "Ablativo",
+    tensePraesens: "Presente", tensePerfekt: "Perfecto", tenseImperfekt: "Imperfecto", tenseFutur: "Futuro",
+    personIch: "yo", personDu: "tú", personErSieEs: "él/ella", personWir: "nosotros", personIhr: "vosotros", personSie: "ellos",
   },
 };
 
@@ -1294,6 +1310,20 @@ function useTranslator(lang) {
     const entry = dict[key] ?? T.de[key] ?? key;
     return typeof entry === "function" ? entry(...args) : entry;
   };
+}
+
+const CASE_KEY_MAP = { Nominativ: "caseNominativ", Genitiv: "caseGenitiv", Dativ: "caseDativ", Akkusativ: "caseAkkusativ", Ablativ: "caseAblativ" };
+const TENSE_KEY_MAP = { Präsens: "tensePraesens", Perfekt: "tensePerfekt", Imperfekt: "tenseImperfekt", Futur: "tenseFutur" };
+const PERSON_KEY_MAP = { "ich": "personIch", "du": "personDu", "er/sie/es": "personErSieEs", "wir": "personWir", "ihr": "personIhr", "sie": "personSie" };
+
+function tCase(t, c) {
+  return t(CASE_KEY_MAP[c] || c);
+}
+function tTense(t, tense) {
+  return t(TENSE_KEY_MAP[tense] || tense);
+}
+function tPerson(t, p) {
+  return t(PERSON_KEY_MAP[p] || p);
 }
 
 
@@ -3134,7 +3164,7 @@ export default function App() {
 
           <div className="flex-1 px-5 pt-8 pb-40">
             <div className="text-[11px] tracking-widest text-[#C2185B] font-bold mb-2">
-              {q.direction === "latin-de" ? "LATEIN → DEUTSCH" : "DEUTSCH → LATEIN"}
+              {q.direction === "latin-de" ? `${t("latin")} → DEUTSCH` : `DEUTSCH → ${t("latin")}`}
             </div>
             <div className={`text-3xl text-[#2B241D] mb-8 ${q.direction === "latin-de" ? "font-serif-latin italic" : "font-display"}`}>
               {q.prompt}
@@ -3245,8 +3275,8 @@ export default function App() {
         <FontImport />
         <BackgroundBlobs />
         <div className="w-full max-w-md min-h-screen pb-28 px-5 pt-6">
-          <h1 className="font-display text-lg text-[#2B241D] mb-1">GRAMMATIK</h1>
-          <p className="text-[13px] text-[#8A7F68] mb-5">Das Herzstück von Latein — Formen erkennen und bilden.</p>
+          <h1 className="font-display text-lg text-[#2B241D] mb-1">{t("grammarTitle")}</h1>
+          <p className="text-[13px] text-[#8A7F68] mb-5">{t("grammarSub")}</p>
 
           <button
             onClick={startDeclensionTraining}
@@ -3257,9 +3287,9 @@ export default function App() {
               <LayoutGrid size={24} color="white" />
             </div>
             <div>
-              <div className="font-display text-[14px] text-[#2B241D] mb-0.5">Deklinieren</div>
+              <div className="font-display text-[14px] text-[#2B241D] mb-0.5">{t("declineTitle")}</div>
               <div className="text-[12px] text-[#8A7F68]">
-                {availableNouns.length === 0 ? "Schließe erst eine Lektion mit Nomen ab" : "Nomen durch die Fälle üben"}
+                {availableNouns.length === 0 ? t("declineLocked") : t("declineSub")}
               </div>
             </div>
           </button>
@@ -3273,16 +3303,16 @@ export default function App() {
               <Zap size={24} color="white" />
             </div>
             <div>
-              <div className="font-display text-[14px] text-[#2B241D] mb-0.5">Konjugieren</div>
+              <div className="font-display text-[14px] text-[#2B241D] mb-0.5">{t("conjugateTitle")}</div>
               <div className="text-[12px] text-[#8A7F68]">
-                {availableVerbs.length === 0 ? "Schließe erst eine Lektion mit Verben ab" : "Verben durch die Formen üben"}
+                {availableVerbs.length === 0 ? t("conjugateLocked") : t("conjugateSub")}
               </div>
             </div>
           </button>
 
           {availableNouns.length > 0 && (
             <>
-              <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">NOMEN NACHSCHLAGEN</div>
+              <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">{t("nounsLookup")}</div>
               <div className="flex flex-col gap-2 mb-6">
                 {availableNouns.map((n) => {
                   const open = expandedParadigm === `n-${n.id}`;
@@ -3302,7 +3332,7 @@ export default function App() {
                         <div className="px-4 pb-3 grid grid-cols-2 gap-1.5">
                           {availableCases.map((c) => (
                             <div key={c} className="flex justify-between text-[12px] bg-white/40 rounded-lg px-2.5 py-1.5">
-                              <span className="text-[#8A7F68]">{c}</span>
+                              <span className="text-[#8A7F68]">{tCase(t, c)}</span>
                               <span className="font-serif-latin italic text-[#2B241D]">{n.forms[c]}</span>
                             </div>
                           ))}
@@ -3317,7 +3347,7 @@ export default function App() {
 
           {availableVerbs.length > 0 && (
             <>
-              <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">VERBEN NACHSCHLAGEN</div>
+              <div className="mb-2 text-[11px] tracking-widest text-[#8A7F68] font-bold">{t("verbsLookup")}</div>
               <div className="flex flex-col gap-2">
                 {availableVerbs.map((v) => {
                   const open = expandedParadigm === `v-${v.id}`;
@@ -3336,14 +3366,14 @@ export default function App() {
                       </button>
                       {open && (
                         <div className="px-4 pb-3">
-                          {tensesForVerb.map((t) => (
-                            <div key={t} className="mb-2 last:mb-0">
-                              <div className="text-[10px] tracking-widest text-[#C2185B] font-bold mb-1">{t.toUpperCase()}</div>
+                          {tensesForVerb.map((tense) => (
+                            <div key={tense} className="mb-2 last:mb-0">
+                              <div className="text-[10px] tracking-widest text-[#C2185B] font-bold mb-1">{tTense(t, tense).toUpperCase()}</div>
                               <div className="grid grid-cols-2 gap-1.5">
-                                {PERSONS.filter((p) => v.tenses[t][p]).map((p) => (
+                                {PERSONS.filter((p) => v.tenses[tense][p]).map((p) => (
                                   <div key={p} className="flex justify-between text-[12px] bg-white/40 rounded-lg px-2.5 py-1.5">
-                                    <span className="text-[#8A7F68]">{p}</span>
-                                    <span className="font-serif-latin italic text-[#2B241D]">{v.tenses[t][p]}</span>
+                                    <span className="text-[#8A7F68]">{tPerson(t, p)}</span>
+                                    <span className="font-serif-latin italic text-[#2B241D]">{v.tenses[tense][p]}</span>
                                   </div>
                                 ))}
                               </div>
@@ -3368,7 +3398,7 @@ export default function App() {
   if (screen === "grammar-quiz" && grammarRound[grammarIdx]) {
     const q = grammarRound[grammarIdx];
     const promptTitle =
-      grammarMode === "declension" ? `Dekliniere: ${q.targetCase}` : `Konjugiere: ${q.targetTense} — ${q.targetPerson}`;
+      grammarMode === "declension" ? t("declineHeader", tCase(t, q.targetCase)) : t("conjugateHeader", tTense(t, q.targetTense), tPerson(t, q.targetPerson));
     return (
       <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9]">
         <FontImport />
@@ -3465,15 +3495,15 @@ export default function App() {
             <LayoutGrid size={34} color="white" />
           </div>
           <h1 className="font-display text-2xl text-[#2B241D] mb-1">
-            {grammarMode === "declension" ? "GUT DEKLINIERT!" : "GUT KONJUGIERT!"}
+            {grammarMode === "declension" ? t("declinedWell") : t("conjugatedWell")}
           </h1>
           <p className="text-[#6B5F4E] text-[14px] mb-8">
-            {grammarCorrectCount} von {grammarRound.length} Formen richtig.
+            {t("formsCorrect", grammarCorrectCount, grammarRound.length)}
           </p>
 
           <div className="w-full grid grid-cols-2 gap-3 mb-8">
-            <SummaryStat label="XP" value={`+${grammarXpEarned}`} color="#F59E0B" />
-            <SummaryStat label="Richtig" value={grammarCorrectCount} color="#0E9E85" />
+            <SummaryStat label={t("xp")} value={`+${grammarXpEarned}`} color="#F59E0B" />
+            <SummaryStat label={t("correctLabel")} value={grammarCorrectCount} color="#0E9E85" />
           </div>
 
           <button
@@ -3499,7 +3529,7 @@ export default function App() {
             <button onClick={() => setScreen("vocab-home")} className="text-[#8A7F68]">
               <X size={22} />
             </button>
-            <h1 className="font-display text-lg text-[#2B241D]">MINI-SPIELE</h1>
+            <h1 className="font-display text-lg text-[#2B241D]">{t("gamesHeader")}</h1>
           </div>
 
           <button
@@ -3511,9 +3541,9 @@ export default function App() {
               🧠
             </div>
             <div>
-              <div className="font-display text-[14px] text-[#2B241D] mb-0.5">Memory</div>
+              <div className="font-display text-[14px] text-[#2B241D] mb-0.5">{t("memoryTitle")}</div>
               <div className="text-[12px] text-[#8A7F68]">
-                {availableVocab.length < 3 ? "Lerne mehr Wörter, um zu spielen" : "Finde die passenden Latein-Deutsch-Paare"}
+                {availableVocab.length < 3 ? t("learnMoreWords") : t("memoryDesc")}
               </div>
             </div>
           </button>
@@ -3527,9 +3557,9 @@ export default function App() {
               ⚡
             </div>
             <div>
-              <div className="font-display text-[14px] text-[#2B241D] mb-0.5">Wortblitz</div>
+              <div className="font-display text-[14px] text-[#2B241D] mb-0.5">{t("blitzTitle")}</div>
               <div className="text-[12px] text-[#8A7F68]">
-                {availableVocab.length < 4 ? "Lerne mehr Wörter, um zu spielen" : "30 Sekunden — so viele Wörter wie möglich!"}
+                {availableVocab.length < 4 ? t("learnMoreWords") : t("blitzDesc")}
               </div>
             </div>
           </button>
@@ -3552,7 +3582,7 @@ export default function App() {
             <button onClick={() => setScreen("games-home")} className="text-[#8A7F68]">
               <X size={22} />
             </button>
-            <div className="flex-1 text-center font-display text-sm text-[#2B241D]">🧠 MEMORY</div>
+            <div className="flex-1 text-center font-display text-sm text-[#2B241D]">🧠 {t("memoryTitle")}</div>
             <div className="text-[12px] font-bold text-[#8A7F68] w-[40px] text-right">{memoryMoves}x</div>
           </div>
 
@@ -3590,19 +3620,19 @@ export default function App() {
               <div className="glossy w-20 h-20 rounded-full flex items-center justify-center text-4xl mb-4 animate-pop-in" style={{ background: "linear-gradient(135deg, #7C3AED, #EC4899)" }}>
                 🎉
               </div>
-              <h1 className="font-display text-xl text-[#2B241D] mb-1">Geschafft!</h1>
-              <p className="text-[13px] text-[#8A7F68] mb-6">{memoryMoves} Züge gebraucht</p>
+              <h1 className="font-display text-xl text-[#2B241D] mb-1">{t("memoryDone")}</h1>
+              <p className="text-[13px] text-[#8A7F68] mb-6">{t("movesNeeded", memoryMoves)}</p>
               <div className="w-full grid grid-cols-1 gap-3 mb-8">
-                <SummaryStat label="XP verdient" value={`+${memoryXpEarned}`} color="#F59E0B" />
+                <SummaryStat label={t("xpEarned")} value={`+${memoryXpEarned}`} color="#F59E0B" />
               </div>
               <button
                 onClick={startMemoryGame}
                 className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#7C3AED] to-[#EC4899] text-white font-display text-sm tracking-wide shadow-md mb-3"
               >
-                NOCHMAL SPIELEN
+                {t("playAgain")}
               </button>
               <button onClick={() => setScreen("games-home")} className="text-[#8A7F68] text-[13px] underline">
-                Zurück zu den Spielen
+                {t("backToGames")}
               </button>
             </div>
           )}
@@ -3624,7 +3654,7 @@ export default function App() {
             <button onClick={() => { setBlitzActive(false); setScreen("games-home"); }} className="text-[#8A7F68]">
               <X size={22} />
             </button>
-            <div className="flex-1 text-center font-display text-sm text-[#2B241D]">⚡ WORTBLITZ</div>
+            <div className="flex-1 text-center font-display text-sm text-[#2B241D]">⚡ {t("blitzTitle")}</div>
             <div className="text-[13px] font-bold text-[#EC4899] w-[40px] text-right">{blitzTimeLeft}s</div>
           </div>
 
@@ -3635,12 +3665,12 @@ export default function App() {
               </div>
               <div className="text-center mb-6">
                 <span className="font-display text-2xl text-[#2B241D]">{blitzScore}</span>
-                <span className="text-[12px] text-[#8A7F68]"> Punkte</span>
+                <span className="text-[12px] text-[#8A7F68]"> {t("points")}</span>
               </div>
               {blitzQuestion && (
                 <>
                   <div className="text-[11px] tracking-widest text-[#C2185B] font-bold mb-2 text-center">
-                    {blitzQuestion.direction === "latin-de" ? "LATEIN → DEUTSCH" : "DEUTSCH → LATEIN"}
+                    {blitzQuestion.direction === "latin-de" ? `${t("latin")} → DEUTSCH` : `DEUTSCH → ${t("latin")}`}
                   </div>
                   <div className={`text-2xl text-[#2B241D] mb-6 text-center ${blitzQuestion.direction === "latin-de" ? "font-serif-latin italic" : "font-display"}`}>
                     {blitzQuestion.prompt}
@@ -3670,19 +3700,19 @@ export default function App() {
               <div className="glossy w-20 h-20 rounded-full flex items-center justify-center text-4xl mb-4 animate-pop-in" style={{ background: "linear-gradient(135deg, #F59E0B, #EC4899)" }}>
                 ⚡
               </div>
-              <h1 className="font-display text-xl text-[#2B241D] mb-1">Zeit um!</h1>
-              <p className="text-[13px] text-[#8A7F68] mb-6">{blitzScore} Wörter richtig</p>
+              <h1 className="font-display text-xl text-[#2B241D] mb-1">{t("timeUp")}</h1>
+              <p className="text-[13px] text-[#8A7F68] mb-6">{t("wordsCorrect", blitzScore)}</p>
               <div className="w-full grid grid-cols-1 gap-3 mb-8">
-                <SummaryStat label="XP verdient" value={`+${blitzXpEarned}`} color="#F59E0B" />
+                <SummaryStat label={t("xpEarned")} value={`+${blitzXpEarned}`} color="#F59E0B" />
               </div>
               <button
                 onClick={startBlitzGame}
                 className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#F59E0B] to-[#EC4899] text-white font-display text-sm tracking-wide shadow-md mb-3"
               >
-                NOCHMAL SPIELEN
+                {t("playAgain")}
               </button>
               <button onClick={() => setScreen("games-home")} className="text-[#8A7F68] text-[13px] underline">
-                Zurück zu den Spielen
+                {t("backToGames")}
               </button>
             </div>
           )}
