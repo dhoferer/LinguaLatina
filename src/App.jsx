@@ -921,6 +921,11 @@ const T = {
     feedbackPlaceholder: "Was möchtest du uns mitteilen?", sendByMail: "PER MAIL SENDEN",
     feedbackHint: "Öffnet deine Mail-App, Empfänger ist bereits eingetragen.",
     impressumTitle: "IMPRESSUM", languageLabel: "SPRACHE",
+    legionTitle: "Legion", legionDesc: "Lenke deinen Soldaten zum richtigen Wort — lass deine Legion wachsen!",
+    legionHeader: "LEGION", soldiers: "Soldaten", wave: "Welle",
+    legionWon: "LEGION TRIUMPHIERT!", legionLost: "LEGION AUFGELÖST",
+    legionWavesSurvived: (n) => `${n} Wellen überstanden`,
+    legionFinalSize: "Endgröße",
     caseNominativ: "Nominativ", caseGenitiv: "Genitiv", caseDativ: "Dativ", caseAkkusativ: "Akkusativ", caseAblativ: "Ablativ",
     tensePraesens: "Präsens", tensePerfekt: "Perfekt", tenseImperfekt: "Imperfekt", tenseFutur: "Futur",
     personIch: "ich", personDu: "du", personErSieEs: "er/sie/es", personWir: "wir", personIhr: "ihr", personSie: "sie",
@@ -1016,6 +1021,11 @@ const T = {
     feedbackPlaceholder: "What would you like to tell us?", sendByMail: "SEND BY EMAIL",
     feedbackHint: "Opens your mail app with the recipient already filled in.",
     impressumTitle: "LEGAL NOTICE", languageLabel: "LANGUAGE",
+    legionTitle: "Legion", legionDesc: "Steer your soldier to the correct word — grow your legion!",
+    legionHeader: "LEGION", soldiers: "Soldiers", wave: "Wave",
+    legionWon: "LEGION TRIUMPHANT!", legionLost: "LEGION DISBANDED",
+    legionWavesSurvived: (n) => `${n} waves survived`,
+    legionFinalSize: "Final size",
     caseNominativ: "Nominative", caseGenitiv: "Genitive", caseDativ: "Dative", caseAkkusativ: "Accusative", caseAblativ: "Ablative",
     tensePraesens: "Present", tensePerfekt: "Perfect", tenseImperfekt: "Imperfect", tenseFutur: "Future",
     personIch: "I", personDu: "you", personErSieEs: "he/she/it", personWir: "we", personIhr: "you (pl.)", personSie: "they",
@@ -1110,6 +1120,11 @@ const T = {
     feedbackPlaceholder: "Que veux-tu nous dire ?", sendByMail: "ENVOYER PAR E-MAIL",
     feedbackHint: "Ouvre ton application mail avec le destinataire déjà rempli.",
     impressumTitle: "MENTIONS LÉGALES", languageLabel: "LANGUE",
+    legionTitle: "Légion", legionDesc: "Guide ton soldat vers le bon mot — fais grandir ta légion !",
+    legionHeader: "LÉGION", soldiers: "Soldats", wave: "Vague",
+    legionWon: "LÉGION TRIOMPHANTE !", legionLost: "LÉGION DISSOUTE",
+    legionWavesSurvived: (n) => `${n} vagues survécues`,
+    legionFinalSize: "Taille finale",
     caseNominativ: "Nominatif", caseGenitiv: "Génitif", caseDativ: "Datif", caseAkkusativ: "Accusatif", caseAblativ: "Ablatif",
     tensePraesens: "Présent", tensePerfekt: "Parfait", tenseImperfekt: "Imparfait", tenseFutur: "Futur",
     personIch: "je", personDu: "tu", personErSieEs: "il/elle", personWir: "nous", personIhr: "vous", personSie: "ils/elles",
@@ -1204,6 +1219,11 @@ const T = {
     feedbackPlaceholder: "Cosa vuoi dirci?", sendByMail: "INVIA VIA EMAIL",
     feedbackHint: "Apre la tua app di posta con il destinatario già inserito.",
     impressumTitle: "NOTE LEGALI", languageLabel: "LINGUA",
+    legionTitle: "Legione", legionDesc: "Guida il tuo soldato verso la parola giusta — fai crescere la tua legione!",
+    legionHeader: "LEGIONE", soldiers: "Soldati", wave: "Ondata",
+    legionWon: "LEGIONE TRIONFANTE!", legionLost: "LEGIONE SCIOLTA",
+    legionWavesSurvived: (n) => `${n} ondate superate`,
+    legionFinalSize: "Dimensione finale",
     caseNominativ: "Nominativo", caseGenitiv: "Genitivo", caseDativ: "Dativo", caseAkkusativ: "Accusativo", caseAblativ: "Ablativo",
     tensePraesens: "Presente", tensePerfekt: "Perfetto", tenseImperfekt: "Imperfetto", tenseFutur: "Futuro",
     personIch: "io", personDu: "tu", personErSieEs: "lui/lei", personWir: "noi", personIhr: "voi", personSie: "loro",
@@ -1298,6 +1318,11 @@ const T = {
     feedbackPlaceholder: "¿Qué quieres decirnos?", sendByMail: "ENVIAR POR CORREO",
     feedbackHint: "Abre tu app de correo con el destinatario ya rellenado.",
     impressumTitle: "AVISO LEGAL", languageLabel: "IDIOMA",
+    legionTitle: "Legión", legionDesc: "Guía a tu soldado hacia la palabra correcta — ¡haz crecer tu legión!",
+    legionHeader: "LEGIÓN", soldiers: "Soldados", wave: "Oleada",
+    legionWon: "¡LEGIÓN TRIUNFANTE!", legionLost: "LEGIÓN DISUELTA",
+    legionWavesSurvived: (n) => `${n} oleadas superadas`,
+    legionFinalSize: "Tamaño final",
     caseNominativ: "Nominativo", caseGenitiv: "Genitivo", caseDativ: "Dativo", caseAkkusativ: "Acusativo", caseAblativ: "Ablativo",
     tensePraesens: "Presente", tensePerfekt: "Perfecto", tenseImperfekt: "Imperfecto", tenseFutur: "Futuro",
     personIch: "yo", personDu: "tú", personErSieEs: "él/ella", personWir: "nosotros", personIhr: "vosotros", personSie: "ellos",
@@ -2139,6 +2164,9 @@ export default function App() {
   const [blitzDone, setBlitzDone] = useState(false);
   const [blitzXpEarned, setBlitzXpEarned] = useState(0);
 
+  const [legion, setLegion] = useState(null);
+  const [legionXpEarned, setLegionXpEarned] = useState(0);
+
   const [syncCodeInput, setSyncCodeInput] = useState("");
   const [syncStatus, setSyncStatus] = useState(null);
 
@@ -2652,7 +2680,89 @@ export default function App() {
     return () => clearTimeout(t);
   }, [blitzActive, blitzTimeLeft]);
 
-  /* ---- Geräte-Sync ---- */
+  /* ---- Mini-Spiel: Legion (Gate-Runner) ---- */
+
+  function buildLegionPrompt(pool) {
+    const word = pool[Math.floor(Math.random() * pool.length)];
+    const others = pool.filter((w) => w.id !== word.id);
+    const wrong = others[Math.floor(Math.random() * others.length)] || word;
+    const correctLane = Math.random() < 0.5 ? 0 : 1;
+    return {
+      german: word.german,
+      leftLatin: correctLane === 0 ? word.latin : wrong.latin,
+      rightLatin: correctLane === 1 ? word.latin : wrong.latin,
+      correctLane,
+    };
+  }
+
+  function startLegionGame() {
+    const pool = availableVocab.length >= 2 ? availableVocab : VOCAB_POOL;
+    setLegion({
+      count: 3,
+      wave: 0,
+      lane: 0,
+      prompt: buildLegionPrompt(pool),
+      progress: 0,
+      running: true,
+      done: false,
+      won: false,
+      flash: null,
+      pool,
+    });
+    setLegionXpEarned(0);
+    setScreen("game-legion");
+  }
+
+  function moveLegionLane(lane) {
+    setLegion((prev) => (prev ? { ...prev, lane } : prev));
+  }
+
+  useEffect(() => {
+    if (!legion?.running) return;
+    const iv = setInterval(() => {
+      setLegion((prev) => {
+        if (!prev || !prev.running) return prev;
+        const step = 2.4 + Math.min(prev.wave * 0.12, 2.2);
+        const progress = prev.progress + step;
+        if (progress < 90) {
+          return { ...prev, progress };
+        }
+        const correct = prev.lane === prev.prompt.correctLane;
+        const count = correct ? prev.count + 1 : Math.max(0, prev.count - 1);
+        const wave = prev.wave + 1;
+        const won = wave >= 15 && count > 0;
+        const done = count === 0 || won;
+        return {
+          ...prev,
+          count,
+          wave,
+          progress: 0,
+          prompt: done ? prev.prompt : buildLegionPrompt(prev.pool),
+          running: !done,
+          done,
+          won,
+          flash: correct ? "good" : "bad",
+        };
+      });
+    }, 30);
+    return () => clearInterval(iv);
+  }, [legion?.running]);
+
+  useEffect(() => {
+    if (!legion?.flash) return;
+    const t = setTimeout(() => setLegion((prev) => (prev ? { ...prev, flash: null } : prev)), 350);
+    return () => clearTimeout(t);
+  }, [legion?.wave, legion?.flash]);
+
+  useEffect(() => {
+    if (!legion?.done) return;
+    const earned = Math.min(60, legion.count * 6 + legion.wave * 2);
+    setLegionXpEarned(earned);
+    const totalXp = xp + earned;
+    setXp(totalXp);
+    syncProgressToCloud(persistProfile({ xp: totalXp }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [legion?.done]);
 
   const [syncJustCopied, setSyncJustCopied] = useState(false);
   async function copySyncCode() {
@@ -3624,6 +3734,22 @@ export default function App() {
               </div>
             </div>
           </button>
+
+          <button
+            onClick={startLegionGame}
+            disabled={availableVocab.length < 2}
+            className="w-full glass rounded-2xl p-5 mt-4 text-left flex items-center gap-4 disabled:opacity-50"
+          >
+            <div className="glossy w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shrink-0" style={{ background: "linear-gradient(135deg, #A5342A, #F59E0B)" }}>
+              🛡️
+            </div>
+            <div>
+              <div className="font-display text-[14px] text-[#2B241D] mb-0.5">{t("legionTitle")}</div>
+              <div className="text-[12px] text-[#8A7F68]">
+                {availableVocab.length < 2 ? t("learnMoreWords") : t("legionDesc")}
+              </div>
+            </div>
+          </button>
         </div>
         <BottomNav screen="vocab-home" setScreen={setScreen} t={t} />
       </div>
@@ -3769,6 +3895,127 @@ export default function App() {
               <button
                 onClick={startBlitzGame}
                 className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#F59E0B] to-[#EC4899] text-white font-display text-sm tracking-wide shadow-md mb-3"
+              >
+                {t("playAgain")}
+              </button>
+              <button onClick={() => setScreen("games-home")} className="text-[#8A7F68] text-[13px] underline">
+                {t("backToGames")}
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  /* -------------------------------- GAME: LEGION (Gate-Runner) -------------------------------- */
+
+  if (screen === "game-legion" && legion) {
+    return (
+      <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9] relative overflow-hidden">
+        <FontImport />
+        <BackgroundBlobs />
+        {legion.done && legion.won && <Confetti pieceCount={60} gold />}
+        <div className="w-full max-w-md min-h-screen px-5 pt-4 pb-10 flex flex-col">
+          <div className="flex items-center gap-3 mb-3">
+            <button
+              onClick={() => {
+                setLegion((prev) => (prev ? { ...prev, running: false } : prev));
+                setScreen("games-home");
+              }}
+              className="text-[#8A7F68]"
+            >
+              <X size={22} />
+            </button>
+            <div className="flex-1 text-center font-display text-sm text-[#2B241D]">🛡️ {t("legionHeader")}</div>
+            <div className="text-[12px] font-bold text-[#8A7F68] w-[60px] text-right">
+              {t("wave")} {legion.wave}
+            </div>
+          </div>
+
+          {!legion.done ? (
+            <>
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <Sparkles size={16} color="#A5342A" />
+                <span className="font-display text-xl text-[#2B241D]">{legion.count}</span>
+                <span className="text-[12px] text-[#8A7F68]">{t("soldiers")}</span>
+              </div>
+
+              <div className="text-center mb-3">
+                <div className="text-[11px] tracking-widest text-[#C2185B] font-bold mb-1">DEUTSCH</div>
+                <div className="font-display text-2xl text-[#2B241D]">{legion.prompt.german}</div>
+              </div>
+
+              <div
+                className={`relative grid grid-cols-2 gap-3 rounded-3xl overflow-hidden mb-4 transition-colors ${
+                  legion.flash === "good" ? "bg-[#2EC4B6]/15" : legion.flash === "bad" ? "bg-[#E8483A]/15" : "glass"
+                }`}
+                style={{ height: "360px" }}
+              >
+                {/* Fahrbahn-Mitte */}
+                <div className="absolute left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 bg-white/40" />
+
+                {[0, 1].map((laneIdx) => (
+                  <button
+                    key={laneIdx}
+                    onClick={() => moveLegionLane(laneIdx)}
+                    className="relative h-full"
+                  >
+                    {/* Fallender Balken mit lateinischem Wort */}
+                    <div
+                      className={`absolute left-2 right-2 py-3 rounded-xl text-center font-serif-latin italic text-[15px] shadow-md ${
+                        laneIdx === legion.prompt.correctLane ? "bg-gradient-to-r from-[#2EC4B6] to-[#0E9E85]" : "bg-gradient-to-r from-[#E8483A] to-[#B4291D]"
+                      } text-white`}
+                      style={{ top: `${legion.progress}%` }}
+                    >
+                      {laneIdx === 0 ? legion.prompt.leftLatin : legion.prompt.rightLatin}
+                    </div>
+                    {/* Spieler-Soldat */}
+                    {legion.lane === laneIdx && (
+                      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 text-3xl glossy rounded-full">
+                        {active?.avatar || "🪖"}
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={() => moveLegionLane(0)}
+                  className={`py-3.5 rounded-xl font-display text-xs tracking-wide transition-colors ${
+                    legion.lane === 0 ? "bg-gradient-to-r from-[#A5342A] to-[#F59E0B] text-white shadow-md" : "glass text-[#2B241D]"
+                  }`}
+                >
+                  ◀
+                </button>
+                <button
+                  onClick={() => moveLegionLane(1)}
+                  className={`py-3.5 rounded-xl font-display text-xs tracking-wide transition-colors ${
+                    legion.lane === 1 ? "bg-gradient-to-r from-[#A5342A] to-[#F59E0B] text-white shadow-md" : "glass text-[#2B241D]"
+                  }`}
+                >
+                  ▶
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center">
+              <div
+                className="glossy w-20 h-20 rounded-full flex items-center justify-center text-4xl mb-4 animate-pop-in"
+                style={{ background: legion.won ? "linear-gradient(135deg, #FFD166, #FFB627)" : "linear-gradient(135deg, #A5342A, #7A2E24)" }}
+              >
+                {legion.won ? "🏆" : "🛡️"}
+              </div>
+              <h1 className="font-display text-xl text-[#2B241D] mb-1">{legion.won ? t("legionWon") : t("legionLost")}</h1>
+              <p className="text-[13px] text-[#8A7F68] mb-6">{t("legionWavesSurvived", legion.wave)}</p>
+              <div className="w-full grid grid-cols-2 gap-3 mb-8">
+                <SummaryStat label={t("legionFinalSize")} value={legion.count} color="#A5342A" />
+                <SummaryStat label={t("xpEarned")} value={`+${legionXpEarned}`} color="#F59E0B" />
+              </div>
+              <button
+                onClick={startLegionGame}
+                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#A5342A] to-[#F59E0B] text-white font-display text-sm tracking-wide shadow-md mb-3"
               >
                 {t("playAgain")}
               </button>
