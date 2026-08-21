@@ -871,8 +871,8 @@ const T = {
     latin: "LATEIN", german: "DEUTSCH", tapToFlip: "🔄 Zum Umdrehen tippen",
     back: "◀ ZURÜCK", forward: "WEITER ▶",
     grammarTitle: "GRAMMATIK", grammarSub: "Das Herzstück von Latein — Formen erkennen und bilden.",
-    declineTitle: "Deklinieren", declineSub: "Nomen durch die Fälle üben", declineLocked: "Schließe erst eine Lektion mit Nomen ab",
-    conjugateTitle: "Konjugieren", conjugateSub: "Verben durch die Formen üben", conjugateLocked: "Schließe erst eine Lektion mit Verben ab",
+    declineTitle: "Deklinieren", declineSub: "Nomen durch die Fälle üben", declineLocked: "Lerne noch mehr, um genug Abwechslung freizuschalten",
+    conjugateTitle: "Konjugieren", conjugateSub: "Verben durch die Formen üben", conjugateLocked: "Lerne noch mehr, um genug Abwechslung freizuschalten",
     nounsLookup: "NOMEN NACHSCHLAGEN", verbsLookup: "VERBEN NACHSCHLAGEN",
     declineHeader: (c) => `Dekliniere: ${c}`, conjugateHeader: (t, p) => `Konjugiere: ${t} — ${p}`,
     rightAnswerWas: (a) => `Richtig wäre: ${a}`, right: "Richtig!",
@@ -966,8 +966,8 @@ const T = {
     latin: "LATIN", german: "ENGLISH", tapToFlip: "🔄 Tap to flip",
     back: "◀ BACK", forward: "NEXT ▶",
     grammarTitle: "GRAMMAR", grammarSub: "The heart of Latin — recognizing and forming words.",
-    declineTitle: "Decline", declineSub: "Practice nouns through the cases", declineLocked: "Finish a lesson with nouns first",
-    conjugateTitle: "Conjugate", conjugateSub: "Practice verbs through their forms", conjugateLocked: "Finish a lesson with verbs first",
+    declineTitle: "Decline", declineSub: "Practice nouns through the cases", declineLocked: "Learn a bit more to unlock enough variety",
+    conjugateTitle: "Conjugate", conjugateSub: "Practice verbs through their forms", conjugateLocked: "Learn a bit more to unlock enough variety",
     nounsLookup: "NOUN REFERENCE", verbsLookup: "VERB REFERENCE",
     declineHeader: (c) => `Decline: ${c}`, conjugateHeader: (t, p) => `Conjugate: ${t} — ${p}`,
     rightAnswerWas: (a) => `Correct answer: ${a}`, right: "Correct!",
@@ -1060,8 +1060,8 @@ const T = {
     latin: "LATIN", german: "FRANÇAIS", tapToFlip: "🔄 Toucher pour retourner",
     back: "◀ RETOUR", forward: "SUIVANT ▶",
     grammarTitle: "GRAMMAIRE", grammarSub: "Le cœur du latin — reconnaître et former les mots.",
-    declineTitle: "Décliner", declineSub: "S'entraîner sur les noms à travers les cas", declineLocked: "Termine d'abord une leçon avec des noms",
-    conjugateTitle: "Conjuguer", conjugateSub: "S'entraîner sur les verbes à travers leurs formes", conjugateLocked: "Termine d'abord une leçon avec des verbes",
+    declineTitle: "Décliner", declineSub: "S'entraîner sur les noms à travers les cas", declineLocked: "Apprends encore un peu pour débloquer assez de variété",
+    conjugateTitle: "Conjuguer", conjugateSub: "S'entraîner sur les verbes à travers leurs formes", conjugateLocked: "Apprends encore un peu pour débloquer assez de variété",
     nounsLookup: "NOMS À CONSULTER", verbsLookup: "VERBES À CONSULTER",
     declineHeader: (c) => `Décline : ${c}`, conjugateHeader: (t, p) => `Conjugue : ${t} — ${p}`,
     rightAnswerWas: (a) => `Bonne réponse : ${a}`, right: "Correct !",
@@ -1154,8 +1154,8 @@ const T = {
     latin: "LATINO", german: "ITALIANO", tapToFlip: "🔄 Tocca per girare",
     back: "◀ INDIETRO", forward: "AVANTI ▶",
     grammarTitle: "GRAMMATICA", grammarSub: "Il cuore del latino — riconoscere e formare le parole.",
-    declineTitle: "Declinare", declineSub: "Esercitati sui nomi attraverso i casi", declineLocked: "Completa prima una lezione con i nomi",
-    conjugateTitle: "Coniugare", conjugateSub: "Esercitati sui verbi attraverso le loro forme", conjugateLocked: "Completa prima una lezione con i verbi",
+    declineTitle: "Declinare", declineSub: "Esercitati sui nomi attraverso i casi", declineLocked: "Impara ancora un po' per sbloccare abbastanza varietà",
+    conjugateTitle: "Coniugare", conjugateSub: "Esercitati sui verbi attraverso le loro forme", conjugateLocked: "Impara ancora un po' per sbloccare abbastanza varietà",
     nounsLookup: "CONSULTA I NOMI", verbsLookup: "CONSULTA I VERBI",
     declineHeader: (c) => `Declina: ${c}`, conjugateHeader: (t, p) => `Coniuga: ${t} — ${p}`,
     rightAnswerWas: (a) => `Risposta corretta: ${a}`, right: "Corretto!",
@@ -1248,8 +1248,8 @@ const T = {
     latin: "LATÍN", german: "ESPAÑOL", tapToFlip: "🔄 Toca para voltear",
     back: "◀ ATRÁS", forward: "SIGUIENTE ▶",
     grammarTitle: "GRAMÁTICA", grammarSub: "El corazón del latín — reconocer y formar palabras.",
-    declineTitle: "Declinar", declineSub: "Practica los sustantivos a través de los casos", declineLocked: "Termina primero una lección con sustantivos",
-    conjugateTitle: "Conjugar", conjugateSub: "Practica los verbos a través de sus formas", conjugateLocked: "Termina primero una lección con verbos",
+    declineTitle: "Declinar", declineSub: "Practica los sustantivos a través de los casos", declineLocked: "Aprende un poco más para desbloquear suficiente variedad",
+    conjugateTitle: "Conjugar", conjugateSub: "Practica los verbos a través de sus formas", conjugateLocked: "Aprende un poco más para desbloquear suficiente variedad",
     nounsLookup: "CONSULTAR SUSTANTIVOS", verbsLookup: "CONSULTAR VERBOS",
     declineHeader: (c) => `Declina: ${c}`, conjugateHeader: (t, p) => `Conjuga: ${t} — ${p}`,
     rightAnswerWas: (a) => `Respuesta correcta: ${a}`, right: "¡Correcto!",
@@ -1765,9 +1765,7 @@ function getAvailableTenses(verb, completed) {
   return Object.keys(verb.tenses).filter((t) => completed.has(TENSE_UNLOCK_LESSON[t]));
 }
 
-function buildDeclensionQuestion(noun, availableCases) {
-  const casesForNoun = availableCases.filter((c) => noun.forms[c] !== undefined);
-  const targetCase = casesForNoun[Math.floor(Math.random() * casesForNoun.length)];
+function buildDeclensionQuestionFor(noun, targetCase) {
   const correctForm = noun.forms[targetCase];
   const allForms = NOUN_PARADIGMS.flatMap((n) => Object.values(n.forms));
   const distractorPool = [...new Set(allForms)].filter((f) => f !== correctForm);
@@ -1784,11 +1782,37 @@ function buildDeclensionQuestion(noun, availableCases) {
   };
 }
 
-function buildConjugationQuestion(verb, availableTenses) {
-  const tensesForVerb = availableTenses.filter((t) => verb.tenses[t]);
-  const targetTense = tensesForVerb[Math.floor(Math.random() * tensesForVerb.length)];
-  const personKeys = Object.keys(verb.tenses[targetTense]);
-  const targetPerson = personKeys[Math.floor(Math.random() * personKeys.length)];
+// Baut eine ganze Runde aus allen moeglichen (Nomen, Fall)-Kombinationen. Wiederholt
+// sich erst, wenn wirklich alle Kombinationen einmal drankamen, und vermeidet dabei
+// zwei identische Fragen direkt hintereinander - genau das Problem, das vorher zu
+// "5x hintereinander derselbe Nominativ von puella" fuehren konnte.
+function buildDeclensionRound(availableNouns, availableCases, count = 8) {
+  const combos = [];
+  for (const noun of availableNouns) {
+    for (const c of availableCases) {
+      if (noun.forms[c] !== undefined) combos.push({ noun, targetCase: c });
+    }
+  }
+  if (combos.length === 0) return [];
+
+  const pool = [];
+  while (pool.length < count) pool.push(...shuffle(combos));
+  const picked = pool.slice(0, count);
+
+  // Direkt aufeinanderfolgende identische Kombinationen entschaerfen
+  for (let i = 1; i < picked.length; i++) {
+    if (picked[i].noun.id === picked[i - 1].noun.id && picked[i].targetCase === picked[i - 1].targetCase) {
+      const swapWith = picked.findIndex(
+        (c, j) => j > i && !(c.noun.id === picked[i - 1].noun.id && c.targetCase === picked[i - 1].targetCase)
+      );
+      if (swapWith !== -1) [picked[i], picked[swapWith]] = [picked[swapWith], picked[i]];
+    }
+  }
+
+  return picked.map((c) => buildDeclensionQuestionFor(c.noun, c.targetCase));
+}
+
+function buildConjugationQuestionFor(verb, targetTense, targetPerson) {
   const correctForm = verb.tenses[targetTense][targetPerson];
   const allForms = VERB_PARADIGMS.flatMap((v) => Object.values(v.tenses).flatMap((t) => Object.values(t)));
   const distractorPool = [...new Set(allForms)].filter((f) => f !== correctForm);
@@ -1804,6 +1828,40 @@ function buildConjugationQuestion(verb, availableTenses) {
     correctIndex: options.indexOf(correctForm),
     options,
   };
+}
+
+function buildConjugationRound(availableVerbs, completed, count = 8) {
+  const combos = [];
+  for (const verb of availableVerbs) {
+    const tensesForVerb = getAvailableTenses(verb, completed);
+    for (const tense of tensesForVerb) {
+      for (const person of Object.keys(verb.tenses[tense])) {
+        combos.push({ verb, targetTense: tense, targetPerson: person });
+      }
+    }
+  }
+  if (combos.length === 0) return [];
+
+  const pool = [];
+  while (pool.length < count) pool.push(...shuffle(combos));
+  const picked = pool.slice(0, count);
+
+  for (let i = 1; i < picked.length; i++) {
+    if (
+      picked[i].verb.id === picked[i - 1].verb.id &&
+      picked[i].targetTense === picked[i - 1].targetTense &&
+      picked[i].targetPerson === picked[i - 1].targetPerson
+    ) {
+      const swapWith = picked.findIndex(
+        (c, j) =>
+          j > i &&
+          !(c.verb.id === picked[i - 1].verb.id && c.targetTense === picked[i - 1].targetTense && c.targetPerson === picked[i - 1].targetPerson)
+      );
+      if (swapWith !== -1) [picked[i], picked[swapWith]] = [picked[swapWith], picked[i]];
+    }
+  }
+
+  return picked.map((c) => buildConjugationQuestionFor(c.verb, c.targetTense, c.targetPerson));
 }
 
 function computeNewStreak(profile) {
@@ -2677,11 +2735,8 @@ export default function App() {
   const availableVerbs = getAvailableVerbs(completed);
 
   function startDeclensionTraining() {
-    const round = [];
-    for (let i = 0; i < 8; i++) {
-      const noun = availableNouns[Math.floor(Math.random() * availableNouns.length)];
-      round.push(buildDeclensionQuestion(noun, availableCases));
-    }
+    const round = buildDeclensionRound(availableNouns, availableCases, 8);
+    if (round.length === 0) return;
     setGrammarMode("declension");
     setGrammarRound(round);
     setGrammarIdx(0);
@@ -2694,13 +2749,8 @@ export default function App() {
   }
 
   function startConjugationTraining() {
-    const round = [];
-    for (let i = 0; i < 8; i++) {
-      const verb = availableVerbs[Math.floor(Math.random() * availableVerbs.length)];
-      const tensesForVerb = getAvailableTenses(verb, completed);
-      if (tensesForVerb.length === 0) continue;
-      round.push(buildConjugationQuestion(verb, tensesForVerb));
-    }
+    const round = buildConjugationRound(availableVerbs, completed, 8);
+    if (round.length === 0) return;
     setGrammarMode("conjugation");
     setGrammarRound(round);
     setGrammarIdx(0);
@@ -3270,6 +3320,17 @@ export default function App() {
   /* -------------------------------- GRAMMAR HOME -------------------------------- */
 
   if (screen === "grammar-home") {
+    const declensionCombos = availableNouns.reduce(
+      (sum, n) => sum + availableCases.filter((c) => n.forms[c] !== undefined).length,
+      0
+    );
+    const conjugationCombos = availableVerbs.reduce(
+      (sum, v) => sum + getAvailableTenses(v, completed).reduce((s, tense) => s + Object.keys(v.tenses[tense]).length, 0),
+      0
+    );
+    const declensionReady = declensionCombos >= 4;
+    const conjugationReady = conjugationCombos >= 4;
+
     return (
       <div className="min-h-screen w-full flex justify-center bg-[#FFF6E9]">
         <FontImport />
@@ -3280,7 +3341,7 @@ export default function App() {
 
           <button
             onClick={startDeclensionTraining}
-            disabled={availableNouns.length === 0 || availableCases.length === 0}
+            disabled={!declensionReady}
             className="w-full glass rounded-2xl p-5 mb-4 text-left flex items-center gap-4 disabled:opacity-50"
           >
             <div className="glossy w-14 h-14 rounded-2xl flex items-center justify-center shrink-0" style={{ background: "linear-gradient(135deg, #3B82F6, #8B5CF6)" }}>
@@ -3289,14 +3350,14 @@ export default function App() {
             <div>
               <div className="font-display text-[14px] text-[#2B241D] mb-0.5">{t("declineTitle")}</div>
               <div className="text-[12px] text-[#8A7F68]">
-                {availableNouns.length === 0 ? t("declineLocked") : t("declineSub")}
+                {!declensionReady ? t("declineLocked") : t("declineSub")}
               </div>
             </div>
           </button>
 
           <button
             onClick={startConjugationTraining}
-            disabled={availableVerbs.length === 0}
+            disabled={!conjugationReady}
             className="w-full glass rounded-2xl p-5 mb-6 text-left flex items-center gap-4 disabled:opacity-50"
           >
             <div className="glossy w-14 h-14 rounded-2xl flex items-center justify-center shrink-0" style={{ background: "linear-gradient(135deg, #F59E0B, #EF4444)" }}>
@@ -3305,7 +3366,7 @@ export default function App() {
             <div>
               <div className="font-display text-[14px] text-[#2B241D] mb-0.5">{t("conjugateTitle")}</div>
               <div className="text-[12px] text-[#8A7F68]">
-                {availableVerbs.length === 0 ? t("conjugateLocked") : t("conjugateSub")}
+                {!conjugationReady ? t("conjugateLocked") : t("conjugateSub")}
               </div>
             </div>
           </button>
