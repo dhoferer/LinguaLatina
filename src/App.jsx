@@ -2722,7 +2722,7 @@ export default function App() {
     const iv = setInterval(() => {
       setLegion((prev) => {
         if (!prev || !prev.running) return prev;
-        const step = 2.4 + Math.min(prev.wave * 0.12, 2.2);
+        const step = 0.68 + Math.min(prev.wave * 0.04, 0.6);
         const progress = prev.progress + step;
         if (progress < 90) {
           return { ...prev, progress };
@@ -3916,7 +3916,7 @@ export default function App() {
         <FontImport />
         <BackgroundBlobs />
         {legion.done && legion.won && <Confetti pieceCount={60} gold />}
-        <div className="w-full max-w-md min-h-screen px-5 pt-4 pb-10 flex flex-col">
+        <div className="w-full max-w-md min-h-screen px-5 pt-4 pb-6 flex flex-col">
           <div className="flex items-center gap-3 mb-3">
             <button
               onClick={() => {
@@ -3947,10 +3947,9 @@ export default function App() {
               </div>
 
               <div
-                className={`relative grid grid-cols-2 gap-3 rounded-3xl overflow-hidden mb-4 transition-colors ${
+                className={`relative grid grid-cols-2 gap-3 rounded-3xl overflow-hidden mb-5 flex-1 transition-colors ${
                   legion.flash === "good" ? "bg-[#2EC4B6]/15" : legion.flash === "bad" ? "bg-[#E8483A]/15" : "glass"
                 }`}
-                style={{ height: "360px" }}
               >
                 {/* Fahrbahn-Mitte */}
                 <div className="absolute left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 bg-white/40" />
@@ -3972,7 +3971,10 @@ export default function App() {
                     </div>
                     {/* Spieler-Soldat */}
                     {legion.lane === laneIdx && (
-                      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 text-3xl glossy rounded-full">
+                      <div
+                        className="absolute bottom-3 left-1/2 -translate-x-1/2 w-11 h-11 rounded-full flex items-center justify-center text-2xl shadow-lg border-2 border-white"
+                        style={{ background: "linear-gradient(135deg, #FFD166, #FFB627)" }}
+                      >
                         {active?.avatar || "🪖"}
                       </div>
                     )}
@@ -3983,7 +3985,7 @@ export default function App() {
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={() => moveLegionLane(0)}
-                  className={`py-3.5 rounded-xl font-display text-xs tracking-wide transition-colors ${
+                  className={`py-4 rounded-xl font-display text-base tracking-wide transition-colors ${
                     legion.lane === 0 ? "bg-gradient-to-r from-[#A5342A] to-[#F59E0B] text-white shadow-md" : "glass text-[#2B241D]"
                   }`}
                 >
@@ -3991,7 +3993,7 @@ export default function App() {
                 </button>
                 <button
                   onClick={() => moveLegionLane(1)}
-                  className={`py-3.5 rounded-xl font-display text-xs tracking-wide transition-colors ${
+                  className={`py-4 rounded-xl font-display text-base tracking-wide transition-colors ${
                     legion.lane === 1 ? "bg-gradient-to-r from-[#A5342A] to-[#F59E0B] text-white shadow-md" : "glass text-[#2B241D]"
                   }`}
                 >
