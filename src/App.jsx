@@ -813,6 +813,15 @@ const UNIT_GRADIENTS = [
 const CONFETTI_COLORS = ["#E8483A", "#FFB627", "#2EC4B6", "#7C3AED", "#EC4899", "#3B82F6"];
 const GOLD_COLORS = ["#FFB627", "#FFD166", "#F59E0B", "#FFE08C"];
 
+// Bewusst UNABHAENGIG von richtig/falsch - nur nach Welle rotierend, damit die Farbe
+// selbst niemals einen Hinweis auf die richtige Antwort gibt.
+const LEGION_LANE_PALETTES = [
+  ["#7C3AED", "#EC4899", "#3B82F6", "#2EC4B6"],
+  ["#F59E0B", "#EF4444", "#8B5CF6", "#6366F1"],
+  ["#0EA5E9", "#06B6D4", "#D946EF", "#EC4899"],
+  ["#EC4899", "#FF4FA3", "#059669", "#14B8A6"],
+];
+
 const AVATARS = ["🦅", "🛡️", "⚔️", "🔥", "🌿", "🦁", "🐺", "🏛️", "⚡", "🐍", "🌊", "☀️"];
 /* ------------------------------------------------------------------ */
 /* I18N: Mehrsprachige Oberflaeche (Lerninhalte bleiben auf Deutsch) */
@@ -3935,10 +3944,20 @@ export default function App() {
 
           {!legion.done ? (
             <>
-              <div className="flex items-center justify-center gap-2 mb-4">
-                <Sparkles size={16} color="#A5342A" />
-                <span className="font-display text-xl text-[#2B241D]">{legion.count}</span>
-                <span className="text-[12px] text-[#8A7F68]">{t("soldiers")}</span>
+              <div className="flex flex-col items-center gap-1.5 mb-4">
+                <div className="flex items-center gap-1.5 flex-wrap justify-center px-6">
+                  {Array.from({ length: Math.min(legion.count, 12) }).map((_, i) => (
+                    <span key={i} className="text-base animate-pop-in" style={{ animationDelay: `${i * 0.02}s` }}>
+                      🛡️
+                    </span>
+                  ))}
+                  {legion.count > 12 && (
+                    <span className="text-[12px] font-bold text-[#A5342A]">+{legion.count - 12}</span>
+                  )}
+                </div>
+                <span className="text-[11px] text-[#8A7F68]">
+                  {legion.count} {t("soldiers")}
+                </span>
               </div>
 
               <div className="text-center mb-3">
@@ -3948,38 +3967,44 @@ export default function App() {
 
               <div
                 className={`relative grid grid-cols-2 gap-3 rounded-3xl overflow-hidden mb-5 flex-1 transition-colors ${
-                  legion.flash === "good" ? "bg-[#2EC4B6]/15" : legion.flash === "bad" ? "bg-[#E8483A]/15" : "glass"
+                  legion.flash === "good" ? "bg-[#2EC4B6]/20" : legion.flash === "bad" ? "bg-[#E8483A]/20" : "glass"
                 }`}
               >
+                {/* Dekoratives Wasserzeichen */}
+                <div className="absolute inset-0 flex items-center justify-center text-[120px] opacity-[0.05] pointer-events-none select-none">
+                  🏛️
+                </div>
                 {/* Fahrbahn-Mitte */}
-                <div className="absolute left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 bg-white/40" />
+                <div className="absolute left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 bg-white/50 z-10" />
 
-                {[0, 1].map((laneIdx) => (
-                  <button
-                    key={laneIdx}
-                    onClick={() => moveLegionLane(laneIdx)}
-                    className="relative h-full"
-                  >
-                    {/* Fallender Balken mit lateinischem Wort */}
-                    <div
-                      className={`absolute left-2 right-2 py-3 rounded-xl text-center font-serif-latin italic text-[15px] shadow-md ${
-                        laneIdx === legion.prompt.correctLane ? "bg-gradient-to-r from-[#2EC4B6] to-[#0E9E85]" : "bg-gradient-to-r from-[#E8483A] to-[#B4291D]"
-                      } text-white`}
-                      style={{ top: `${legion.progress}%` }}
-                    >
-                      {laneIdx === 0 ? legion.prompt.leftLatin : legion.prompt.rightLatin}
-                    </div>
-                    {/* Spieler-Soldat */}
-                    {legion.lane === laneIdx && (
+                {[0, 1].map((laneIdx) => {
+                  const palette = LEGION_LANE_PALETTES[legion.wave % LEGION_LANE_PALETTES.length];
+                  const [fromC, toC] = laneIdx === 0 ? [palette[0], palette[1]] : [palette[2], palette[3]];
+                  return (
+                    <button key={laneIdx} onClick={() => moveLegionLane(laneIdx)} className="relative h-full">
+                      {/* Fallender Balken mit lateinischem Wort - Farbe verraet NIE die richtige Antwort */}
                       <div
-                        className="absolute bottom-3 left-1/2 -translate-x-1/2 w-11 h-11 rounded-full flex items-center justify-center text-2xl shadow-lg border-2 border-white"
-                        style={{ background: "linear-gradient(135deg, #FFD166, #FFB627)" }}
+                        className="absolute left-2 right-2 py-3 rounded-xl text-center font-serif-latin italic text-[15px] shadow-md text-white"
+                        style={{ top: `${legion.progress}%`, background: `linear-gradient(135deg, ${fromC}, ${toC})` }}
                       >
-                        {active?.avatar || "🪖"}
+                        {laneIdx === 0 ? legion.prompt.leftLatin : legion.prompt.rightLatin}
                       </div>
-                    )}
-                  </button>
-                ))}
+                    </button>
+                  );
+                })}
+
+                {/* Spieler-Soldat - ein Element, das sanft zwischen den Spuren gleitet */}
+                <div
+                  className="absolute bottom-3 z-20 transition-all duration-300 ease-out"
+                  style={{ left: legion.lane === 0 ? "25%" : "75%", transform: "translateX(-50%)" }}
+                >
+                  <div
+                    className="animate-bounce-slow w-11 h-11 rounded-full flex items-center justify-center text-2xl shadow-lg border-2 border-white"
+                    style={{ background: "linear-gradient(135deg, #FFD166, #FFB627)" }}
+                  >
+                    {active?.avatar || "🪖"}
+                  </div>
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
